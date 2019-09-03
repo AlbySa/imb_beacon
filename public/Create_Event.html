@@ -1,0 +1,64 @@
+<html lang="en">
+    <head>
+        <!--Written By Luke Sturgiss
+		ToDo
+		pull all registered Beacons
+		push data
+		pull any data with same name for reuse of events
+		-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" type="text/css" href = "style.css">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<!--Jquery stuffs-->
+		<link rel="stylesheet" href="jquery-ui-themes-1.12.1/jquery-ui.min.css">
+		<!--Firebase import-->
+		<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+		
+		<title>Home</title>
+    </head>
+    <body>
+		<div style="width: 50vw; margin-left: 5vw;">
+			<form id = "eventForm">
+				<!--event name-->
+				<div class="form-group">
+				  <label for="eName">Name:</label>
+				  <input type="text" class="form-control" name ="eName" id = "eName">
+				</div>
+				<!--@TODO Beacon Select?-->
+				<!--sDate time-->
+				<p>Start Date: <input type="text" name="startDate" id = "sDate"></p>
+				<p>Start Time: <input type="text" name="startTime" id = "sTime"></p>
+				<!--end Date-->
+				<p>End Date: <input type="text" name="endDate" id = "eDate"></p>
+				<p>End Time: <input type="text" name="endTime" id = "eTime"></p>
+
+				<p>Beacon List either select or write beacon UUID separated by comma: <input type="text" name="beaconListString" id = "blist" disabled = 'true' style = "background-color: white; color:black"> 
+					<select name="beacons" id = 'beaconList' >
+						<option>None</option>
+					</select>
+				<button type = 'button' id = 'addDisplayingBeacon' onClick = 'addBeacon()'>Add Beacon</button></p>
+				<!--discount Code-->
+				<div class="form-group">
+					<label for="dCode">Discount Name:</label>
+					<input type="text" class="form-control" name="dCodeName" id = "dCodeName">
+				  </div>
+				<div class="form-group">
+				  <label for="dCode">Discount Code:</label>
+				  <input type="text" class="form-control" name="dCode" id = "dCode">
+				</div>
+				<!--Event Description-->
+				<div class="form-group">
+				  <label for="eventD">Event Description:</label>
+				  <textarea class="form-control" rows="5" name ="eventD" id = "eventD"></textarea>
+				</div>
+				<input class="btn btn-primary" type="submit" value="Submit">
+			</form>
+		</div>
+		<!--database script-->		
+		<script src = "JS/saveEvent.js"></script>
+	</body>
+
+</html>

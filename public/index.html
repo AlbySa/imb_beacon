@@ -1,0 +1,35 @@
+<html lang="en">
+    <head>
+		<!--@TODO add account authentication-->
+        <!--Written By Luke Sturgiss-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" type="text/css" href = "style.css">
+        <title>Create Event</title>
+		<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+    </head>
+    <body>
+		<!--<div id = "sidebar" style = "height:100vh; background-color:#CCCCCC; width:25vw;">
+			<img src = "Images/logo.png" style="width:25vw"/>
+			<h5>Events</h5>
+			<h5>Beacons</h5>
+		</div>-->
+		
+		<div style="width: 85vw; height:95vh; overflow:scroll" id = "beaconDisplayWindow">
+			<h5>Events</h5>
+			<input type = "text" id = "eventsearch"/>
+			<button id = "eventSearchButton" onclick="eventSearch()">Search...</button>
+			<ul id="events"></ul>
+		</div>
+		<div style="width: 85vw; height:95vh;" id = "EventDisplayWindow">
+			<h5>Beacons</h5>
+			<input type = "text" id = "beaconsearch"/>
+			<button id = "beaconSearchButton" onclick="beaconSearch()">Search...</button>
+			<ul id="beacons"></ul>
+		</div>
+	</body>
+	<script src = "JS/load.js"></script>
+
+</html>
