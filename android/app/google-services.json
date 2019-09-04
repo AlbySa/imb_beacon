@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "499323749972",
+    "firebase_url": "https://pineappleproximity.firebaseio.com",
+    "project_id": "pineappleproximity",
+    "storage_bucket": "pineappleproximity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499323749972:android:26421c9e6a539547",
+        "android_client_info": {
+          "package_name": "com.pineappleproximity.imb_beacon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499323749972-nkq437rhmkps5986b8lpmom9ijtn86ni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9_T2TcmOUgCBbmMWpjeAVAToHaperVPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499323749972-nkq437rhmkps5986b8lpmom9ijtn86ni.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "499323749972-sl8n5bsbij2d0vje9pj26gtkasgdn2d3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pineappleproximity.imbBeacon"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
