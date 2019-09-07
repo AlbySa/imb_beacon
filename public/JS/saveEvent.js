@@ -22,7 +22,6 @@ var beaconListIDArray = [];
 
 //save event data
 form.addEventListener('submit', (e) =>{
-	//@TODO 	add form checks
 	e.preventDefault();
 
 	//get values
@@ -35,33 +34,89 @@ form.addEventListener('submit', (e) =>{
 	var eventCodeName = document.getElementById("dCodeName").value;
 	var eventDescription = document.getElementById("eventD").value;
 
-	db.collection('events').add({
-		title: eventName,
-		startDate: startDate,
-		startTime: startTime,
-		endDate: endDate,
-		endTime: endTime,
-		description: eventDescription
-	})
-	.then(function(docRef){
-		db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
-			Name:eventCode
+	if (eventCode && eventCodeName != ""){
+		db.collection('events').add({
+			title: eventName,
+			startDate: startDate,
+			startTime: startTime,
+			endDate: endDate,
+			endTime: endTime,
+			description: eventDescription
 		})
-		var uuid = "";
-		for (var i = 0; i < beaconListIDArray.length; i++){
-			uuid = beaconListIDArray[i];
-			console.log(uuid);
-			//set uid var
-			db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-				uid:uuid
+		.then(function(docRef){
+			db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
+				Name:eventCode
 			});
-		}
-	});
-	db.collection('events')
+			var uuid = "";
+			for (var i = 0; i < beaconListIDArray.length; i++){
+				uuid = beaconListIDArray[i];
+				//set uid var
+				db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
+					uid:uuid
+				});
+				db.collection('beacons').doc(uuid).update({
+					event: docRef.id
+				});
+			}
+		});
+	}
+	else if(eventCode != ""){
+		db.collection('events').add({
+			title: eventName,
+			startDate: startDate,
+			startTime: startTime,
+			endDate: endDate,
+			endTime: endTime,
+			description: eventDescription
+		})
+		.then(function(docRef){
+			db.collection('events').doc(docRef.id).collection('Rewards').doc().set({
+				Name:eventCode
+			});
+			var uuid = "";
+			for (var i = 0; i < beaconListIDArray.length; i++){
+				uuid = beaconListIDArray[i];
+				//set uid var
+				db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
+					uid:uuid
+				});
+				db.collection('beacons').doc(uuid).update({
+					event: docRef.id
+				});
+			}
+		});
+	}
+	else if (eventCodeName != ""){
+		db.collection('events').add({
+			title: eventName,
+			startDate: startDate,
+			startTime: startTime,
+			endDate: endDate,
+			endTime: endTime,
+			description: eventDescription
+		})
+		.then(function(docRef){
+			db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
+				Name:""
+			});
+			var uuid = "";
+			for (var i = 0; i < beaconListIDArray.length; i++){
+				uuid = beaconListIDArray[i];
+				//set uid var
+				db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
+					uid:uuid
+				});
+				db.collection('beacons').doc(uuid).update({
+					event: docRef.id
+				});
+			}
+		});
+	}
 
 	form.reset();
 });
 function addBeacon(){
+	//check if beacon free
 	var selected = document.getElementById('beaconList').value;
 	var selectedID = beaconList[beaconList.selectedIndex].id; 
 	var existing = false;

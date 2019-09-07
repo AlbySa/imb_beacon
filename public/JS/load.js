@@ -29,12 +29,14 @@ function renderEvents(doc){
 	let eDate = document.createElement('input');
 	let description = document.createElement('textarea');
 	let code = document.createElement('input');
+	let codeName = document.createElement('input');
 	let btnShow = document.createElement('input');
 	let btnUpdate = document.createElement('input');
 	let btnEdit = document.createElement('input');
 	let btnRemove = document.createElement('input');
-	let addtoBeacon = document.createElement('input');
+	let addtoBeacon = document.createElement('select');
 	let btnadd = document.createElement('input');
+	let btnremBeacon = document.createElement('input');
 
 	//create type text box
 	name.type = 'text';
@@ -43,12 +45,14 @@ function renderEvents(doc){
 	eTime.type = 'text';
 	eDate.type = 'text';
 	code.type = 'text';
+	codeName.type = 'text';
 	btnShow.type = 'button';
 	btnUpdate.type = 'button';
 	btnEdit.type = 'button';
 	btnRemove.type = 'button';
-	addtoBeacon.type = 'text';
+	//addtoBeacon.type = 'select';
 	btnadd.type = 'button';
+	btnremBeacon.type = 'button';
 
 	//disable elements for editing
 	name.disabled = true;
@@ -57,6 +61,7 @@ function renderEvents(doc){
 	eDate.disabled = true;
 	eTime.disabled = true;
 	code.disabled = true;
+	codeName.disabled = true;
 	description.disabled = true;
 	btnUpdate.disabled = true;
 
@@ -73,12 +78,11 @@ function renderEvents(doc){
 	btnUpdate.value = "Update Entry";
 	btnEdit.value = "Edit Entry";
 	btnRemove.value = "Remove Entry";
-	btnShow.value = "Add Beacon";
+	btnadd.value = "Add Beacon";
+	btnremBeacon.value = "Remove Beacon";
 	//@TODO reroute to reward sub document
-	code.value = doc.data().code;
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
-
 
 	//enable editing
 	btnEdit.addEventListener("click", function(){
@@ -92,40 +96,106 @@ function renderEvents(doc){
 
 	//show current beacons running event
 	btnShow.addEventListener("click", (e) => {
-		console.log("showing events");
+		console.log("showing Beacons");
 		e.stopPropagation();
 	})
 
+	//send updated document to database
 	btnUpdate.addEventListener("click", (e) => {
 		//update data
-		//@TODO add form checks
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
 		let chil = e.target.parentElement.children;
 		db.collection('events').doc(id).update({
 			title: chil[0].value,
 			startDate: chil[1].value,
-			startTime: chill[2].value,
-			endDate: chill[3].value,
-			endTime: chill[4].value,
-			code : chill[5].value,
-			description: chill[6].value
-		});
+			startTime: chil[2].value,
+			endDate: chil[3].value,
+			endTime: chil[4].value,
+			description: chil[6].value
+		})
+		.then((e) =>{ 
+			var rewardID = "";
+			db.collection('events').doc(id).collection('Rewards').get().then(snapshot => {
+				snapshot.forEach(doc => {
+					rewardID = doc.id;
+					db.collection('events').doc(id).collection('Rewards').doc(rewardID).update({
+						Name: chil[5].value
+					})
+				})
+			})	
+		})
+
+		//disable elements for editing
+		name.disabled = true;
+		sTime.disabled = true;
+		sDate.disabled = true;
+		eDate.disabled = true;
+		eTime.disabled = true;
+		code.disabled = true;
+		codeName.disabled = true;
+		description.disabled = true;
+		btnUpdate.disabled = true;
+		
 	});
 
+	//remove event
 	btnRemove.addEventListener("click", (e) => {
-		//@TODO add are you sure
 		//remove LI elements
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
-		if(confirm("Are you sure you want to delete this event?"))
+		var beacID = ""
+		if(confirm("Are you sure you want to delete this event?")){
+			//remove event from beacons
+			db.collection('beacons').get().then((snapshot) => {
+				snapshot.docs.forEach(doc => {
+					if(id == doc.data().event){
+						beacID = doc.id;
+						db.collection('beacons').doc(beacID).update({
+							event:""
+						})
+					}
+				});
+			});
+			//delete event
 			db.collection('events').doc(id).delete();
+		}
 	});
 
 	//add to beacons separated by comma
 	btnadd.addEventListener("click", (e) => {
-
+		//@TODO add beacons to the display list
+		//get event variable
+		//get beacon variable
+		//add beacon document to event
+		//add event x
 	});
+
+	btnremBeacon.addEventListener("click", (e) => {
+		//@TODO remove beacons from the display list
+		//get event variable
+		//get beacon variable
+		//remove beacon doc from event
+		//remove event file from beacon
+	});
+
+	//add reward Subcollection
+	var id = doc.id
+	db.collection('events').doc(id).collection('Rewards').get().then((snapshot) => {
+		snapshot.docs.forEach(doc => {
+			code.value = doc.data().Name;
+		})
+	})
+	var activeBeacons;
+	//add beacons subcollection
+	db.collection('beacons').get().then((snapshot) => {
+		snapshot.docs.forEach(doc => {
+			let opt = document.createElement('option');
+			opt.textContent = doc.data().name;
+			addtoBeacon.appendChild(opt);
+		})
+	})
+
 
 	//attach to list
 	li.appendChild(name);
@@ -141,10 +211,12 @@ function renderEvents(doc){
 	li.appendChild(btnRemove);
 	li.appendChild(addtoBeacon);
 	li.appendChild(btnadd);
+	li.appendChild(btnremBeacon);
 
 	eventsList.appendChild(li);
 }
 
+//limits displayed events to those that meet the search
 function eventSearch(){
 	var searchTerm = document.getElementById('eventsearch').value;
 	searchTerm = searchTerm.toUpperCase();
@@ -196,10 +268,15 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 	})
 })
 
+//=======================================================================================================================
+//												Beacon Render
+//=======================================================================================================================
+
 //load beacon data
 //load beacon selector
 const beaconList = document.querySelector('#beacons')
 
+//displays beacons on screen
 function renderBeacons(doc){
 	//create elements
 	let li = document.createElement('li');
@@ -234,6 +311,7 @@ function renderBeacons(doc){
         }
 	});
 
+	//sends updated event to database
 	btnUpdate.addEventListener("click", (e) => {
 		//@TODO add form checks
 		//update data
@@ -254,14 +332,22 @@ function renderBeacons(doc){
 				event: chil[2].value
 			});
 		}
+
+		//return to disabled state
+		name.disabled = true;
+		bID.disabled = true;
+		event.disabled = true;
+		btnUpdate.disabled = true;
 	})
 
+	//deletes event
 	btnRemove.addEventListener("click", (e) => {
 		//@TODO add are you sure
 		//remove LI elements
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
-		db.collection('beacons').doc(id).delete();
+		if(confirm("Are you sure you want to delete this beacon?"))
+			db.collection('beacons').doc(id).delete();
 	});
 
 	name.disabled = true;

@@ -26,16 +26,32 @@ form.addEventListener('submit', (e) =>{
 	//get values
 	var beaconName = document.getElementById("bName").value;
 	var beaconEvent = document.getElementById("bEvent").value;
-	var beaconID = "test";
+	var beaconID = document.getElementById("bID").value;;
+	var eventExists = false;
 
-	beaconID = document.getElementById("bID").value;
-
-	console.log(beaconName)
-
-	db.collection("beacons").doc(beaconID).set({
-		name: beaconName,
-		event: beaconEvent,
-	});
+	console.log(beaconEvent)
+	if (beaconEvent != ""){
+		//check if event exists if not alert that this is the case
+		db.collection("events").get().then((snapshot) => {
+			snapshot.forEach(doc => {
+				if(doc.id == beaconEvent)
+					eventExists == true
+			})
+		});
+		if (eventExists == false){
+			if(confirm("An event of name " + beaconEvent + " cannot be found are you sure you want to create this beacon?")){
+				db.collection("beacons").doc(beaconID).set({
+					name: beaconName,
+					event: beaconEvent
+				});
+			}
+		}
+	}
+	else{
+		db.collection("beacons").doc(beaconID).set({
+			name: beaconName
+		});
+	}
 
 	form.reset();
 });

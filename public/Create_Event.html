@@ -25,17 +25,16 @@
 				<!--event name-->
 				<div class="form-group">
 				  <label for="eName">Name:</label>
-				  <input type="text" class="form-control" name ="eName" id = "eName">
+				  <input type="text" class="form-control" name ="eName" id = "eName" required = "true">
 				</div>
-				<!--@TODO Beacon Select?-->
 				<!--sDate time-->
-				<p>Start Date: <input type="text" name="startDate" id = "sDate"></p>
-				<p>Start Time: <input type="text" name="startTime" id = "sTime"></p>
+				<p>Start Date: <input type="text" name="startDate" id = "sDate" required = "true"></p>
+				<p>Start Time: <input type="text" name="startTime" id = "sTime" required = "true"></p>
 				<!--end Date-->
-				<p>End Date: <input type="text" name="endDate" id = "eDate"></p>
-				<p>End Time: <input type="text" name="endTime" id = "eTime"></p>
+				<p>End Date: <input type="text" name="endDate" id = "eDate" required = "true"></p>
+				<p>End Time: <input type="text" name="endTime" id = "eTime" required = "true"></p>
 
-				<p>Beacon List either select or write beacon UUID separated by comma: <input type="text" name="beaconListString" id = "blist" disabled = 'true' style = "background-color: white; color:black"> 
+				<p>Beacon List select <input type="text" name="beaconListString" id = "blist" disabled = 'true' style = "background-color: white; color:black" required = "true"> 
 					<select name="beacons" id = 'beaconList' >
 						<option>None</option>
 					</select>
@@ -52,7 +51,7 @@
 				<!--Event Description-->
 				<div class="form-group">
 				  <label for="eventD">Event Description:</label>
-				  <textarea class="form-control" rows="5" name ="eventD" id = "eventD"></textarea>
+				  <textarea class="form-control" rows="5" name ="eventD" id = "eventD" required = "true"></textarea>
 				</div>
 				<input class="btn btn-primary" type="submit" value="Submit">
 			</form>
