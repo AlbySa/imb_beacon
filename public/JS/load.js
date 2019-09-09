@@ -74,7 +74,7 @@ function renderEvents(doc){
 	eTime.value = doc.data().endTime;
 	sTime.value = doc.data().startTime;
 	sDate.value = doc.data().startDate;
-	btnShow.value = "Show Events on Beacon";
+	btnShow.value = "Toggle Beacons Displaying Event";
 	btnUpdate.value = "Update Entry";
 	btnEdit.value = "Edit Entry";
 	btnRemove.value = "Remove Entry";
@@ -97,6 +97,10 @@ function renderEvents(doc){
 	//show current beacons running event
 	btnShow.addEventListener("click", (e) => {
 		e.stopPropagation();
+		if(bul.style.display == 'block')
+			bul.style.display = 'none';
+		else
+			bul.style.display = 'block';
 	});
 
 	//send updated document to database
@@ -232,6 +236,7 @@ function currentDisplayBeacons(beaconList, bul){
 		db.collection('beacons').doc(beaconID).get().then(doc => {
 			bli.textContent = doc.data().name;
 		});
+		bul.style.display = 'none';
 		bul.appendChild(bli);
 	}
 }
