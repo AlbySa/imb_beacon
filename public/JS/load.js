@@ -7,7 +7,7 @@ var firebaseConfig = {
     storageBucket: "pineappleproximity.appspot.com",
     messagingSenderId: "499323749972",
 	appId: "1:499323749972:web:319f7152d512b076"
-}
+};
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -16,7 +16,7 @@ const db = firebase.firestore();
 
 //load event data
 //load events selector
-const eventsList = document.querySelector('#events')
+const eventsList = document.querySelector('#events');
 
 //display to screen
 function renderEvents(doc){
@@ -31,6 +31,7 @@ function renderEvents(doc){
 	let code = document.createElement('input');
 	let codeName = document.createElement('input');
 	let btnShow = document.createElement('input');
+	let bul = document.createElement('ul');
 	let btnUpdate = document.createElement('input');
 	let btnEdit = document.createElement('input');
 	let btnRemove = document.createElement('input');
@@ -50,7 +51,6 @@ function renderEvents(doc){
 	btnUpdate.type = 'button';
 	btnEdit.type = 'button';
 	btnRemove.type = 'button';
-	//addtoBeacon.type = 'select';
 	btnadd.type = 'button';
 	btnremBeacon.type = 'button';
 
@@ -96,9 +96,8 @@ function renderEvents(doc){
 
 	//show current beacons running event
 	btnShow.addEventListener("click", (e) => {
-		console.log("showing Beacons");
 		e.stopPropagation();
-	})
+	});
 
 	//send updated document to database
 	btnUpdate.addEventListener("click", (e) => {
@@ -121,10 +120,10 @@ function renderEvents(doc){
 					rewardID = doc.id;
 					db.collection('events').doc(id).collection('Rewards').doc(rewardID).update({
 						Name: chil[5].value
-					})
-				})
-			})	
-		})
+					});
+				});
+			});	
+		});
 
 		//disable elements for editing
 		name.disabled = true;
@@ -144,7 +143,7 @@ function renderEvents(doc){
 		//remove LI elements
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
-		var beacID = ""
+		var beacID = "";
 		if(confirm("Are you sure you want to delete this event?")){
 			//remove event from beacons
 			db.collection('beacons').get().then((snapshot) => {
@@ -153,7 +152,7 @@ function renderEvents(doc){
 						beacID = doc.id;
 						db.collection('beacons').doc(beacID).update({
 							event:""
-						})
+						});
 					}
 				});
 			});
@@ -168,7 +167,7 @@ function renderEvents(doc){
 		//get event variable
 		//get beacon variable
 		//add beacon document to event
-		//add event x
+		//add event to beacon
 	});
 
 	btnremBeacon.addEventListener("click", (e) => {
@@ -180,12 +179,13 @@ function renderEvents(doc){
 	});
 
 	//add reward Subcollection
-	var id = doc.id
+	var id = doc.id;
 	db.collection('events').doc(id).collection('Rewards').get().then((snapshot) => {
 		snapshot.docs.forEach(doc => {
 			code.value = doc.data().Name;
-		})
-	})
+		});
+	});
+
 	var activeBeacons;
 	//add beacons subcollection
 	db.collection('beacons').get().then((snapshot) => {
@@ -193,9 +193,17 @@ function renderEvents(doc){
 			let opt = document.createElement('option');
 			opt.textContent = doc.data().name;
 			addtoBeacon.appendChild(opt);
-		})
-	})
+		});
+	});
 
+	//render beacons displaying this event
+	var beaconList = [];
+	//get beacon variable
+	db.collection('events').doc(doc.id).collection('activeBeacons').get().then((snapshot) => {
+		snapshot.docs.forEach(doc =>{
+			beaconList.push(doc.id);
+		});
+	}).then(display => currentDisplayBeacons(beaconList, bul));
 
 	//attach to list
 	li.appendChild(name);
@@ -212,8 +220,20 @@ function renderEvents(doc){
 	li.appendChild(addtoBeacon);
 	li.appendChild(btnadd);
 	li.appendChild(btnremBeacon);
+	li.appendChild(bul);
 
 	eventsList.appendChild(li);
+}
+
+function currentDisplayBeacons(beaconList, bul){
+	for (var i = 0; i<beaconList.length; i++){
+		let bli = document.createElement('li');
+		var beaconID = String(beaconList[i]);
+		db.collection('beacons').doc(beaconID).get().then(doc => {
+			bli.textContent = doc.data().name;
+		});
+		bul.appendChild(bli);
+	}
 }
 
 //limits displayed events to those that meet the search
@@ -221,16 +241,16 @@ function eventSearch(){
 	var searchTerm = document.getElementById('eventsearch').value;
 	searchTerm = searchTerm.toUpperCase();
 	var children = document.getElementById("events").childNodes;
-	var child = children[0]
+	var child = children[0];
 	//clear current data
 	for(var i = 0; i < children.length; i++){
 		children[i].style.display = 'block';
 	}
 	//display search
 	var searchValue = "";
-	for(var i = 0; i < children.length; i++){
-		child = children[i].childNodes;
-		searchValue = child[0].value
+	for(var j = 0; j < children.length; j++){
+		child = children[j].childNodes;
+		searchValue = child[0].value;
 		searchValue = searchValue.toUpperCase();
 		//if match
 		if ( searchValue.indexOf( searchTerm ) > -1 ) {
@@ -238,17 +258,17 @@ function eventSearch(){
 		} 
 		//if not match
 		else{
-			children[i].style.display = 'none'
+			children[j].style.display = 'none';
 		}
 	}
 	//if none displayed
 	var count = 0;
-	for(var i = 0; i < children.length; i++){
-		child = children[i].childNodes;
-		if(children[i].style.display == 'none'){
+	for(var k = 0; k < children.length; k++){
+		child = children[k].childNodes;
+		if(children[k].style.display == 'none'){
 			count ++;
 			if (count == children.length-1){
-				console.log("No Results Found")
+				console.log("No Results Found");
 			}
 		}
 	}
@@ -265,8 +285,8 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 			let li = eventsList.querySelector('[data-id = ' + change.doc.id + ']');
 			eventsList.removeChild(li);
 		}
-	})
-})
+	});
+});
 
 //=======================================================================================================================
 //												Beacon Render
@@ -274,7 +294,7 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 
 //load beacon data
 //load beacon selector
-const beaconList = document.querySelector('#beacons')
+const beaconList = document.querySelector('#beacons');
 
 //displays beacons on screen
 function renderBeacons(doc){
@@ -299,8 +319,8 @@ function renderBeacons(doc){
 	btnEdit.type = 'button';
 	btnEdit.id = doc.id;
 	btnEdit.value = "Edit";
-	btnRemove.type = "button"
-	btnRemove.value = "Remove Entry"
+	btnRemove.type = "button";
+	btnRemove.value = "Remove Entry";
 	//enable edit
 	btnEdit.addEventListener("click", function(){
 		var parentID = this.parentNode.id;
@@ -338,7 +358,7 @@ function renderBeacons(doc){
 		bID.disabled = true;
 		event.disabled = true;
 		btnUpdate.disabled = true;
-	})
+	});
 
 	//deletes event
 	btnRemove.addEventListener("click", (e) => {
@@ -370,15 +390,15 @@ function beaconSearch(){
 	var searchTerm = document.getElementById('beaconsearch').value;
 	searchTerm = searchTerm.toUpperCase();
 	var children = document.getElementById("beacons").childNodes;
-	var child = children[0]
+	var child = children[0];
 	//clear current data
-	for(var i = 0; i < children.length; i++){
-		children[i].style.display = 'block';
+	for(var l = 0; l < children.length; l++){
+		children[l].style.display = 'block';
 	}
 	var searchValue = "";
 	for(var i = 0; i < children.length; i++){
 		child = children[i].childNodes;
-		searchValue = child[0].value
+		searchValue = child[0].value;
 		searchValue = searchValue.toUpperCase();
 		//if match
 		if ( searchValue.indexOf( searchTerm ) > -1 ) {
@@ -386,7 +406,7 @@ function beaconSearch(){
 		} 
 		//if not match
 		else{
-			children[i].style.display = 'none'
+			children[i].style.display = 'none';
 		}
 	}
 	//if none displayed
@@ -396,7 +416,7 @@ function beaconSearch(){
 		if(children[i].style.display == 'none'){
 			count ++;
 			if (count == children.length){
-				console.log("No Results Found")
+				console.log("No Results Found");
 			}
 		}
 	}
@@ -413,5 +433,5 @@ db.collection('beacons').orderBy('name').onSnapshot(snapshot => {
 			let li = beaconList.querySelector('[data-id = ' + change.doc.id + ']');
 			beaconList.removeChild(li);
 		}
-	})
-})
+	});
+});
