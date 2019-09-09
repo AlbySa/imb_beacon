@@ -167,7 +167,7 @@ function renderEvents(doc){
 
 	//add to beacons separated by comma
 	btnadd.addEventListener("click", (e) => {
-		//@TODO error checking
+		//@TODO error checking removal from other dics
 		//get event variable
 		var eventID = e.target.parentElement.id;
 		//get beacon variable
@@ -176,7 +176,7 @@ function renderEvents(doc){
 		//add beacon document to event
 		db.collection('beacons').doc(beaconID).update({
 			event: eventID
-		})
+		});
 		//add event to beacon
 		db.collection('events').doc(eventID).collection('activeBeacons').doc(beaconID).set(
 		{
@@ -187,10 +187,17 @@ function renderEvents(doc){
 
 	btnremBeacon.addEventListener("click", (e) => {
 		//@TODO remove beacons from the display list
-		//get event variable
+		//get beacon id
+		var eventID = e.target.parentElement.id;
 		//get beacon variable
-		//remove beacon doc from event
-		//remove event file from beacon
+		var beaconID = addtoBeacon[addtoBeacon.selectedIndex].id;
+		var beaconname = addtoBeacon.value;
+
+		db.collection('beacons').doc(beaconID).update({
+			event: ""
+		});
+
+		db.collection('events').doc(eventID).collection('activeBeacons').doc(beaconID).delete();
 	});
 
 	//add reward Subcollection
