@@ -167,11 +167,22 @@ function renderEvents(doc){
 
 	//add to beacons separated by comma
 	btnadd.addEventListener("click", (e) => {
-		//@TODO add beacons to the display list
+		//@TODO error checking
 		//get event variable
+		var eventID = e.target.parentElement.id;
 		//get beacon variable
+		var beaconID = addtoBeacon[addtoBeacon.selectedIndex].id;
+		var beaconname = addtoBeacon.value;
 		//add beacon document to event
+		db.collection('beacons').doc(beaconID).update({
+			event: eventID
+		})
 		//add event to beacon
+		db.collection('events').doc(eventID).collection('activeBeacons').doc(beaconID).set(
+		{
+			Name: beaconname,
+			UID: beaconID
+		});
 	});
 
 	btnremBeacon.addEventListener("click", (e) => {
@@ -190,12 +201,12 @@ function renderEvents(doc){
 		});
 	});
 
-	var activeBeacons;
 	//add beacons subcollection
 	db.collection('beacons').get().then((snapshot) => {
 		snapshot.docs.forEach(doc => {
 			let opt = document.createElement('option');
 			opt.textContent = doc.data().name;
+			opt.id = doc.id;
 			addtoBeacon.appendChild(opt);
 		});
 	});
