@@ -28,7 +28,7 @@ const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
 var  activeBeacon = null;
 String activeBeaconName = 'not connected';
 DocumentSnapshot activeEvent = null;
-String activeEventName = "event2";
+String activeEventName = "";
 
 //Convert beacon id to eddystone UID
 String byteListToHexString(List<int> bytes) => bytes
@@ -204,7 +204,7 @@ class LoginFormState extends State<LoginForm> {
                                 MaterialPageRoute(
                                     builder: (context) => SignUpForm()));
                           }),
-                      Text('Connected beacon: $activeBeacon'),//Text('Connected beacon: $activeBeaconName'),
+                      Text('Connected beacon: $activeBeaconName'),//Text('Connected beacon: $activeBeaconName'),
                     ],
                   ),
                 ),

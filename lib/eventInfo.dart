@@ -19,16 +19,6 @@ class EventInfo extends StatefulWidget {
 class EventInfoState extends State<EventInfo> {
   String activeEventName;
   EventInfoState(this.activeEventName);
-//  final bgColor = const Color(0xFFF5F5F5);
-//  final barColor = const Color(0xFF02735E);
-
-//  String eventName = "";
-//  String startDate = '';
-//  String endDate = '';
-//  String description = '';
-
-//EventInfoState();
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,35 +28,47 @@ class EventInfoState extends State<EventInfo> {
           title: Text("Event Information"),
           backgroundColor: barColor,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              StreamBuilder<DocumentSnapshot>(
-                stream:Firestore.instance
+        body: Container(
+          child: _eventCheck()
+        )
+    );
+  }
+
+  _eventCheck(){
+
+    if(activeEventName == "" || activeEventName == null){
+      return Padding(
+        padding: const EdgeInsets.only(bottom:12.0),
+        child: _showDialog(),
+      );
+    }
+
+    else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          StreamBuilder<DocumentSnapshot>(
+              stream: Firestore.instance
                   .collection('events')
                   .document(activeEventName)
                   .snapshots(),
-                builder:(BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot){
-                  if (snapshot.hasError || activeEventName == '') {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical:40.0),
-                        child: _showDialog(),
-                      );
-                    }
-                  switch (snapshot.connectionState){
-                    case ConnectionState.waiting:
-                      return Text("Loading...");
-                    default:
-                  
-                  return Column(
-                            children: <Widget>[
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError){
+                  return Container(
+                    child: _showDialog(),
+                  );
+                }
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Text("Loading...");
+                  default:
+                    return Column(
+                        children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(top:8.0),
+                            padding: const EdgeInsets.only(top: 8.0),
                             child: Padding(
-                              padding: const EdgeInsets.only(top:8.0),
+                              padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
                                 //"title",
                                 '${snapshot.data['title']}',
@@ -77,14 +79,17 @@ class EventInfoState extends State<EventInfo> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top:8.0),
+                            padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               //"startDate",
-                              '${snapshot.data['startDate']} ${snapshot.data['startTime']}  to  ${snapshot.data['endDate']} ${snapshot.data['endTime']}',
+                              '${snapshot.data['startDate']} ${snapshot
+                                  .data['startTime']}  to  ${snapshot
+                                  .data['endDate']} ${snapshot
+                                  .data['endTime']}',
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical:60.0),
+                            padding: const EdgeInsets.symmetric(vertical: 60.0),
                             child: Center(
                               child: Text(
                                   ' - Event Image will go here - '
@@ -99,40 +104,39 @@ class EventInfoState extends State<EventInfo> {
                                 fontSize: 20
                             ),
                           ),
-                          ]
-                        );
-                  }
-                }),
-            ],
-          ),
-        )
-    );
+                        ]
+                    );
+                }
+              }),
+        ],
+      );
+    }
   }
 
   AlertDialog _showDialog() {
-          return AlertDialog(
-              title: Text("Could not load Event Info"),
-              content: Text("It appears you are not currently at an event.\nContact your local branch or check 'Upcoming Events' to find out more"),
-              actions: <Widget>[
-                Row(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text(
-                        "Go Back",
-                        style: TextStyle(
-                          color: bgColor,
-                        ),
-                      ),
-                      color: Colors.deepOrange,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ]
-                )
-              ]
-          );
+    return AlertDialog(
+        title: Text("Could not load Event Info"),
+        content: Text("It appears you are not currently at an event.\nContact your local branch or check 'Upcoming Events' to find out more"),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                child: Text(
+                  "Go Back",
+                  style: TextStyle(
+                    color: bgColor,
+                  ),
+                ),
+                color: Colors.deepOrange,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+          )
+        ]
+    );
   }
-
-
 }
+
+
