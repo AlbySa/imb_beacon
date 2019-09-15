@@ -28,10 +28,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
 
 //Global variables for connected beacon/event
-var activeBeacon;
+DocumentSnapshot activeBeacon;
 String activeBeaconName = 'not connected';
 DocumentSnapshot activeEvent;
 String activeEventName = "";
+
+bool beaconFound = false;
 
 //Convert beacon id to eddystone UID
 String byteListToHexString(List<int> bytes) => bytes
@@ -73,7 +75,6 @@ class LoginForm extends StatefulWidget {
 class LoginFormState extends State<LoginForm> {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
 
   // Scanning
   FlutterBlue _flutterBlue = FlutterBlue.instance;
@@ -146,14 +147,14 @@ class LoginFormState extends State<LoginForm> {
 
   //TODO Replace placeholder text with actual good stuff
   //Show the notification
-  showNotification() async{
+  showNotification(DocumentSnapshot event) async{
     var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription');
     var iOS = new IOSNotificationDetails();
     var platform = new NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(0,'Notification text','Flutter local notification',platform);
+    await flutterLocalNotificationsPlugin.show(0,'Welcome to ${event.documentID}','Click here for more information',platform);
   }
 
-  //TODO only creates empty alert at this stage -  gotta add stuff
+  //TODO only creates empty alert at this stage - gotta add stuff
   //What happens when you click the notification
   Future selectNotification(String payload){
     debugPrint("payload : $payload");
@@ -194,7 +195,7 @@ class LoginFormState extends State<LoginForm> {
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
                               borderSide:
-                                  BorderSide(color: errBorder, width: 2.0),
+                              BorderSide(color: errBorder, width: 2.0),
                             ),
                             hintText: 'Email',
                           ),
@@ -216,7 +217,7 @@ class LoginFormState extends State<LoginForm> {
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
                               borderSide:
-                                  BorderSide(color: errBorder, width: 2.0),
+                              BorderSide(color: errBorder, width: 2.0),
                             ),
                             hintText: 'Password',
                             helperText: 'Invalid Email or Password',
@@ -306,48 +307,65 @@ class LoginFormState extends State<LoginForm> {
     }
   }
 
-  Future<void> connectBeacon(String id, name) async {
-    showNotification();
+  Future<void> connectBeacon(DocumentSnapshot beacon, DocumentSnapshot event) async {
+
     setState((){
-      activeBeacon  = id;
-      activeBeaconName = name;
+
+      activeBeacon = beacon;
+      activeBeaconName = beacon.data['name'];
+
+      activeEvent = event;
+      activeEventName = event.documentID;
+
     });
   }
 
   Future<void> findBeacon(String beaconId) async {
 
-    //start checking for beacon
+    //create reference to beacon (look for beacon)
     DocumentReference beaconReference = Firestore.instance.collection("beacons").document(beaconId.toUpperCase());
+    beaconReference.get().then((beaconSnapshot){
 
-    beaconReference.get().then((beaconSnapshot) {
-      if (beaconSnapshot.exists && activeBeacon != beaconId) {
+      //--------------- Check beacons ---------------
+      if(beaconSnapshot.exists) { //if the beacon exists
+        beaconFound = true;
 
-        activeBeacon = beaconSnapshot;
-        connectBeacon(beaconId,beaconSnapshot.data['name']);
-        print('beacon: $activeBeaconName');
+        //create reference to event (look for event)
+        DocumentReference eventReference = Firestore.instance.collection("events").document(beaconSnapshot.data['event']);
+        eventReference.get().then((eventSnapshot) {
 
-        //start searching for event
-        if(beaconSnapshot.data['event']!="null"){
+          //--------------- Check events ---------------
+          if (eventSnapshot.exists) { //if the event exists
 
-          DocumentReference eventReference = Firestore.instance.collection("events").document(beaconSnapshot.data['event']);
-
-          eventReference.get().then((eventSnapshot) {
-            if (eventSnapshot.exists) {
-              activeEvent = eventSnapshot;
-              activeEventName = eventSnapshot.documentID;
-              print('event: $activeEventName');
+            //No active beacon
+            if(activeBeacon == null){
+              connectBeacon(beaconSnapshot, eventSnapshot);
+              showNotification(eventSnapshot);
             }
-          });
-        }
+
+            //New beacon / same event
+            else if(activeBeacon.documentID != beaconSnapshot.documentID && activeEvent.documentID == eventSnapshot.documentID){
+              connectBeacon(beaconSnapshot, eventSnapshot);
+            }
+
+            //New beacon / different event
+            else if(activeBeacon.documentID != beaconSnapshot.documentID && activeEvent.documentID != eventSnapshot.documentID){
+              connectBeacon(beaconSnapshot, eventSnapshot);
+              showNotification(eventSnapshot);
+            }
+
+          }
+        });
       }
     });
   }
 
   //-------------The following is test code to implement short duration scans -----------------------
   _startScan() {
+
     // ignore: cancel_subscriptions
     var scanSubscription = _flutterBlue.scan(
-      timeout: const Duration(seconds: 5),
+      timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
       if (scanResult.device.type == BluetoothDeviceType.le) {
         List<int> rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceId];
@@ -356,8 +374,7 @@ class LoginFormState extends State<LoginForm> {
           findBeacon(beaconId);
         }
       }
-    },
-        onDone: _stopScan);
+    }, onDone: _stopScan);
 
     setState(() {
       isScanning = true;
@@ -365,12 +382,26 @@ class LoginFormState extends State<LoginForm> {
   }
 
   _stopScan() {
-    print("stopping scan");
+    print("stopping scan: ");
     _scanSubscription?.cancel();
     _scanSubscription = null;
     setState(() {
       isScanning = false;
+      if(beaconFound == false){
+        print("did not find a beacon :( ");
+        activeBeacon=null;
+        activeBeaconName = 'not connected';
+        activeEvent=null;
+        activeEventName = "";
+
+      }
+      else{
+        beaconFound = false;
+      }
+
     });
+
+
   }
 
 //  _buildScanningButton() {
@@ -404,5 +435,5 @@ class LoginFormState extends State<LoginForm> {
       _startScan();
     });
   }
-  //-------------------------------------End scan test code-------------------------------------------
+//-------------------------------------End scan test code-------------------------------------------
 }
