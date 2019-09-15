@@ -22,12 +22,15 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'package:flutter_blue/flutter_blue.dart';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
 const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
 
-var  activeBeacon = null;
+//Global variables for connected beacon/event
+var activeBeacon;
 String activeBeaconName = 'not connected';
-DocumentSnapshot activeEvent = null;
+DocumentSnapshot activeEvent;
 String activeEventName = "";
 
 //Convert beacon id to eddystone UID
@@ -37,6 +40,8 @@ String byteListToHexString(List<int> bytes) => bytes
 
 final bgColor = const Color(0xFFF5F5F5); // background colour
 final barColor = const Color(0xFF02735E);// Bar/button colour
+
+
 
 void main() => runApp(MyApp());
 
@@ -66,6 +71,10 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+
   // Scanning
   FlutterBlue _flutterBlue = FlutterBlue.instance;
   StreamSubscription _scanSubscription;
@@ -92,21 +101,62 @@ class LoginFormState extends State<LoginForm> {
   TextEditingController _controller = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
 
+
+
   @override
   void initState() {
     super.initState();
-    // Immediately get the state of FlutterBlue
+
+    print("INITSTATE****************************************************");
+
+    // FlutterBlue Setup -----------------------------------------------
     _flutterBlue.state.then((s) {
       setState(() {
         state = s;
       });
     });
-    // Subscribe to state changes
-    _stateSubscription = _flutterBlue.onStateChanged().listen((s) {
+    _stateSubscription = _flutterBlue.onStateChanged().listen((s){ // Subscribe to state changes
       setState(() {
         state = s;
+        if(state.toString() == "BluetoothState.on"){//bluetooth has just been turned on
+          _periodicScan();
+        }
+        //TODO if bluetooth off - dont scan
       });
     });
+    //end FlutterBlue setup
+
+    //local notification setup ----------------------------------------------
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var androidSettings = new AndroidInitializationSettings('app_icon');
+    var iOSSettings = new IOSInitializationSettings();
+    var initSettings = new InitializationSettings(androidSettings, iOSSettings);
+    flutterLocalNotificationsPlugin.initialize(initSettings,onSelectNotification:selectNotification);
+    //end notification setup
+
+    //Background scanning --------------------------------------------------
+    //TODO figure out how to get this to run when the app hasn't been launched; Is it possible?
+    _periodicScan(); //start periodic scan
+
+  }
+
+  //TODO Replace placeholder text with actual good stuff
+  //Show the notification
+  showNotification() async{
+    var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription');
+    var iOS = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin.show(0,'Notification text','Flutter local notification',platform);
+  }
+
+  //TODO only creates empty alert at this stage -  gotta add stuff
+  //What happens when you click the notification
+  Future selectNotification(String payload){
+    debugPrint("payload : $payload");
+    showDialog(context: context,builder:(_)=> new AlertDialog(
+      title: new Text('Notification'),
+      content: new Text('$payload'),
+    ));
   }
 
   @override
@@ -146,8 +196,10 @@ class LoginFormState extends State<LoginForm> {
                             hintText: 'Email',
                           ),
                           validator: (input) {
-                            if (!input.contains("@") || input.length < 6)
+                            if (!input.contains("@") || input.length < 6) {
                               return 'Please enter a valid Email';
+                            }
+                            else {return null;}
                           },
                           onSaved: (input) => _email = input,
                         ),
@@ -252,12 +304,13 @@ class LoginFormState extends State<LoginForm> {
   }
 
   Future<void> connectBeacon(String id, name) async {
+    showNotification();
     setState((){
       activeBeacon  = id;
       activeBeaconName = name;
     });
   }
-  //TODO This is where Im up to - test code for searching firebase for a matching beacon
+
   Future<void> findBeacon(String beaconId) async {
 
     //start checking for beacon
@@ -291,7 +344,7 @@ class LoginFormState extends State<LoginForm> {
   _startScan() {
     // ignore: cancel_subscriptions
     var scanSubscription = _flutterBlue.scan(
-      timeout: const Duration(seconds: 3),
+      timeout: const Duration(seconds: 5),
     ).listen((scanResult) {
       if (scanResult.device.type == BluetoothDeviceType.le) {
         List<int> rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceId];
@@ -309,6 +362,7 @@ class LoginFormState extends State<LoginForm> {
   }
 
   _stopScan() {
+    print("stopping scan");
     _scanSubscription?.cancel();
     _scanSubscription = null;
     setState(() {
@@ -330,6 +384,22 @@ class LoginFormState extends State<LoginForm> {
       return new FloatingActionButton(
           child: new Icon(Icons.search), onPressed: _startScan);
     }
+  }
+
+  //TODO stop periodic scan
+
+  _periodicScan(){
+    //start first async scan
+    Timer(Duration(seconds: 0), () {
+      print("starting first scan");
+      _startScan();
+    });
+
+    //run another scan every minute
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      print("starting scan");
+      _startScan();
+    });
   }
   //-------------------------------------End scan test code-------------------------------------------
 }

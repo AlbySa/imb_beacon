@@ -22,7 +22,10 @@ class Home extends StatefulWidget {
   String id;
   //String event;
 
+
+
   Home(this.id);//, this.event);
+
 
   HomeState createState() => HomeState(id);//, event);
 }
