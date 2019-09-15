@@ -79,7 +79,8 @@ class LoginFormState extends State<LoginForm> {
   FlutterBlue _flutterBlue = FlutterBlue.instance;
   StreamSubscription _scanSubscription;
   Map<DeviceIdentifier, ScanResult> scanResults = new Map();
-  bool isScanning = false;
+  bool adapterOn = false;
+  bool isScanning= true;
 
   // State
   StreamSubscription _stateSubscription;
@@ -107,8 +108,6 @@ class LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    print("INITSTATE****************************************************");
-
     // FlutterBlue Setup -----------------------------------------------
     _flutterBlue.state.then((s) {
       setState(() {
@@ -118,12 +117,17 @@ class LoginFormState extends State<LoginForm> {
     _stateSubscription = _flutterBlue.onStateChanged().listen((s){ // Subscribe to state changes
       setState(() {
         state = s;
+
         if(state.toString() == "BluetoothState.on"){//bluetooth has just been turned on
+          adapterOn = true;
           _periodicScan();
         }
-        //TODO if bluetooth off - dont scan
+        else{
+          adapterOn = false;
+        }
       });
     });
+
     //end FlutterBlue setup
 
     //local notification setup ----------------------------------------------
@@ -164,7 +168,6 @@ class LoginFormState extends State<LoginForm> {
     // Build a Form widget using the _formKey we created above
 
     return Scaffold(
-      floatingActionButton: _buildScanningButton(),
       body: ModalProgressHUD(
         child: Form(
             key: _formKey,
@@ -370,25 +373,25 @@ class LoginFormState extends State<LoginForm> {
     });
   }
 
-  _buildScanningButton() {
-    if (state != BluetoothState.on) {
-      return null;
-    }
-    if (isScanning) {
-      return new FloatingActionButton(
-        child: new Icon(Icons.stop),
-        onPressed: _stopScan,
-        backgroundColor: Colors.red,
-      );
-    } else {
-      return new FloatingActionButton(
-          child: new Icon(Icons.search), onPressed: _startScan);
-    }
-  }
+//  _buildScanningButton() {
+//    if (state != BluetoothState.on) {
+//      return null;
+//    }
+//    if (isScanning) {
+//      return new FloatingActionButton(
+//        child: new Icon(Icons.stop),
+//        onPressed: _stopScan,
+//        backgroundColor: Colors.red,
+//      );
+//    } else {
+//      return new FloatingActionButton(
+//          child: new Icon(Icons.search), onPressed: _startScan);
+//    }
+//  }
 
-  //TODO stop periodic scan
 
   _periodicScan(){
+
     //start first async scan
     Timer(Duration(seconds: 0), () {
       print("starting first scan");
