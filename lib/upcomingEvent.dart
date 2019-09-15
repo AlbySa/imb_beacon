@@ -31,6 +31,78 @@ class UpcomingEventState extends State<UpcomingEvent> {
           title: Text("Upcoming Events"),
           backgroundColor: barColor,
         ),
-        body: Container());
+        body: Container(
+          child: _eventList()
+        )
+      );
   }
+
+  _eventList() {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('events').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) return new Text("Now Loading...");
+        return ListView.builder(
+          itemCount: snapshot.data.documents.length,
+          itemBuilder: (context, index) {
+            DocumentSnapshot document = snapshot.data.documents[index];
+            return Card(
+              child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: new Text(document['title']),
+              subtitle: new Text(document['description']),
+            ),
+            ButtonTheme.bar(
+              child: ButtonBar(
+                children: <Widget>[
+                  FlatButton(
+                    child: new Text('View Details'),
+                    //onPressed: () => _showDialog(document),
+                    onPressed: () {_showDialog(document);},
+                  ),
+                ],
+              ),
+            )
+          ],
+        )
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showDialog(DocumentSnapshot document) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+        title: Text(document['title']),
+        content: Text("Description:\n" + document['description'] + "\n\nStart Date: " + document['startDate'] + "\n\nEnd Date: " + document['endDate'] + "\n\nStart Time: " + document['startTime'] + "\n\nEnd Time: " + document['endTime']),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                child: Text(
+                  "Go Back",
+                  style: TextStyle(
+                    color: bgColor,
+                  ),
+                ),
+                color: Colors.deepOrange,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+          )
+        ]
+    );
+      }
+    );
+    
+  }
+
 }
