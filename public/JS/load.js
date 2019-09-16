@@ -39,6 +39,11 @@ function renderEvents(doc){
 	let btnadd = document.createElement('input');
 	let btnremBeacon = document.createElement('input');
 
+	sDate.className = "datePicker";
+	eDate.className = "datePicker";
+	sTime.className = "timePicker";
+	eTime.className = "timePicker";
+
 	//create type text box
 	name.type = 'text';
 	sTime.type = 'text';
@@ -360,21 +365,20 @@ function renderBeacons(doc){
 
 	//sends updated event to database
 	btnUpdate.addEventListener("click", (e) => {
-		//@TODO add form checks
 		//update data
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
 		let chil = e.target.parentElement.children;
-		if (chil[2].value == id)
+		console.log(chil[1].value + " " + id)
+		if (chil[1].value == id)
 			db.collection('beacons').doc(id).update({
 				name: chil[0].value,
 				event: chil[2].value
 			});
 		else
 		{
-			alert("triggered");
 			db.collection('beacons').doc(id).delete();
-			db.collection("beacons").doc(chil[1].value).set({
+			db.collection("beacons").doc(chil[1].value).add({
 				name: chil[0].value,
 				event: chil[2].value
 			});
@@ -386,6 +390,15 @@ function renderBeacons(doc){
 		event.disabled = true;
 		btnUpdate.disabled = true;
 	});
+
+	btnEdit.addEventListener("click", (e) => {
+		e.stopPropagation();
+		let chil = e.target.parentElement.children;
+
+		for (var i = 0; i < chil.length; i++) {
+			chil[i].disabled = false;
+        }
+	})
 
 	//deletes event
 	btnRemove.addEventListener("click", (e) => {
@@ -457,8 +470,21 @@ db.collection('beacons').orderBy('name').onSnapshot(snapshot => {
 			renderBeacons(change.doc);
 		}
 		else if(change.type == 'removed'){
-			let li = beaconList.querySelector('[data-id = ' + change.doc.id + ']');
+			let li = beaconList.querySelector(change.doc.id);
 			beaconList.removeChild(li);
 		}
 	});
+});
+
+//=======================================================================================================================
+//												Date & Time Picker
+//=======================================================================================================================
+
+
+$(document).on("focus", ".datePicker", function(){
+	$(this).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
+});
+
+$(document).on("focus", ".timePicker", function(){
+	$(this).timepicker({});
 });
