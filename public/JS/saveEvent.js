@@ -34,85 +34,175 @@ form.addEventListener('submit', (e) =>{
 	var eventCodeName = document.getElementById("dCodeName").value;
 	var eventDescription = document.getElementById("eventD").value;
 
-	if (eventCode && eventCodeName != ""){
-		db.collection('events').add({
-			title: eventName,
-			startDate: startDate,
-			startTime: startTime,
-			endDate: endDate,
-			endTime: endTime,
-			description: eventDescription
-		})
-		.then(function(docRef){
-			db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
-				Name:eventCode
+	db.collection('events').doc(eventName).get().then(doc => {
+	if (!doc.exists){
+		if (eventCode && eventCodeName != ""){
+			db.collection('events').doc(eventName).set({
+				title: eventName,
+				startDate: startDate,
+				startTime: startTime,
+				endDate: endDate,
+				endTime: endTime,
+				description: eventDescription
+			})
+			.then(function(){
+				db.collection('events').doc(eventName).collection('Rewards').doc(eventCodeName).set({
+					Name:eventCode
+				});
+				var uuid = "";
+				for (var i = 0; i < beaconListIDArray.length; i++){
+					uuid = beaconListIDArray[i];
+					//set uid var
+					db.collection('events').doc(eventName).collection('activeBeacons').doc(uuid).set({
+						uid:uuid
+					});
+					db.collection('beacons').doc(uuid).update({
+						event: eventName
+					});
+				}
 			});
-			var uuid = "";
-			for (var i = 0; i < beaconListIDArray.length; i++){
-				uuid = beaconListIDArray[i];
-				//set uid var
-				db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-					uid:uuid
+		}
+		else if(eventCode != ""){
+			db.collection('events').doc(eventName).set({
+				title: eventName,
+				startDate: startDate,
+				startTime: startTime,
+				endDate: endDate,
+				endTime: endTime,
+				description: eventDescription
+			})
+			.then(function(){
+				db.collection('events').doc(eventName).collection('Rewards').doc(eventCodeName).set({
+					Name:eventCode
 				});
-				db.collection('beacons').doc(uuid).update({
-					event: docRef.id
-				});
-			}
-		});
-	}
-	else if(eventCode != ""){
-		db.collection('events').add({
-			title: eventName,
-			startDate: startDate,
-			startTime: startTime,
-			endDate: endDate,
-			endTime: endTime,
-			description: eventDescription
-		})
-		.then(function(docRef){
-			db.collection('events').doc(docRef.id).collection('Rewards').doc().set({
-				Name:eventCode
+				var uuid = "";
+				for (var i = 0; i < beaconListIDArray.length; i++){
+					uuid = beaconListIDArray[i];
+					//set uid var
+					db.collection('events').doc(eventName).collection('activeBeacons').doc(uuid).set({
+						uid:uuid
+					});
+					db.collection('beacons').doc(uuid).update({
+						event: eventName
+					});
+				}
 			});
-			var uuid = "";
-			for (var i = 0; i < beaconListIDArray.length; i++){
-				uuid = beaconListIDArray[i];
-				//set uid var
-				db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-					uid:uuid
-				});
-				db.collection('beacons').doc(uuid).update({
-					event: docRef.id
-				});
-			}
-		});
-	}
-	else if (eventCodeName != ""){
-		db.collection('events').add({
-			title: eventName,
-			startDate: startDate,
-			startTime: startTime,
-			endDate: endDate,
-			endTime: endTime,
-			description: eventDescription
-		})
-		.then(function(docRef){
-			db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
-				Name:""
-			});
-			var uuid = "";
-			for (var i = 0; i < beaconListIDArray.length; i++){
-				uuid = beaconListIDArray[i];
-				//set uid var
-				db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-					uid:uuid
-				});
-				db.collection('beacons').doc(uuid).update({
-					event: docRef.id
-				});
-			}
-		});
-	}
 
+		}
+		else if (eventCodeName != ""){
+			db.collection('events').doc(eventName).set({
+				title: eventName,
+				startDate: startDate,
+				startTime: startTime,
+				endDate: endDate,
+				endTime: endTime,
+				description: eventDescription
+			})
+			.then(function(){
+				db.collection('events').doc(eventName).collection('Rewards').doc(eventCodeName).set({
+					Name:""
+				});
+				var uuid = "";
+				for (var i = 0; i < beaconListIDArray.length; i++){
+					uuid = beaconListIDArray[i];
+					//set uid var
+					db.collection('events').doc(eventName).collection('activeBeacons').doc(uuid).set({
+						uid:uuid
+					});
+					db.collection('beacons').doc(uuid).update({
+						event: eventName
+					});
+				}
+			});
+		}
+	}
+	else{
+		//if event aready exists create override
+		if(confirm("An event of name " + eventName + " Already exists Do you want to Create this Event?")){
+			if (eventCode && eventCodeName != ""){
+				db.collection('events').doc(eventName).set({
+					title: eventName,
+					startDate: startDate,
+					startTime: startTime,
+					endDate: endDate,
+					endTime: endTime,
+					description: eventDescription
+				})
+				.then(function(docRef){
+					db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
+						Name:eventCode
+					});
+					var uuid = "";
+					for (var i = 0; i < beaconListIDArray.length; i++){
+						uuid = beaconListIDArray[i];
+						//set uid var
+						db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
+							uid:uuid
+						});
+						db.collection('beacons').doc(uuid).update({
+							event: docRef.id
+						});
+					}
+				});
+			}
+			else if(eventCode != ""){
+				db.collection('events').doc(eventName).set({
+					title: eventName,
+					startDate: startDate,
+					startTime: startTime,
+					endDate: endDate,
+					endTime: endTime,
+					description: eventDescription
+				})
+				.then(function(docRef){
+					db.collection('events').doc(docRef.id).collection('Rewards').doc().set({
+						Name:eventCode
+					});
+					var uuid = "";
+					for (var i = 0; i < beaconListIDArray.length; i++){
+						uuid = beaconListIDArray[i];
+						//set uid var
+						db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
+							uid:uuid
+						});
+						db.collection('beacons').doc(uuid).update({
+							event: docRef.id
+						});
+					}
+				});
+			}
+			else if (eventCodeName != ""){
+				db.collection('events').doc(eventName).set({
+					title: eventName,
+					startDate: startDate,
+					startTime: startTime,
+					endDate: endDate,
+					endTime: endTime,
+					description: eventDescription
+				})
+				.then(function(docRef){
+					db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
+						Name:""
+					});
+					var uuid = "";
+					for (var i = 0; i < beaconListIDArray.length; i++){
+						uuid = beaconListIDArray[i];
+						//set uid var
+						db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
+							uid:uuid
+						});
+						db.collection('beacons').doc(uuid).update({
+							event: docRef.id
+						});
+					}
+				});
+			}
+		}
+		else{
+			alert("Operation Terminated");
+		}
+	}
+});
 	form.reset();
 });
 function addBeacon(){

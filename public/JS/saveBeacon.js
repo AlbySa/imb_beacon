@@ -20,7 +20,6 @@ const form = document.querySelector('#beaconForm');
 
 //save event data
 form.addEventListener('submit', (e) =>{
-	//@TODO add form checks
 	e.preventDefault();
 
 	//get values
@@ -38,11 +37,35 @@ form.addEventListener('submit', (e) =>{
 					eventExists == true
 			})
 		});
+
 		if (eventExists == false){
-			if(confirm("An event of name " + beaconEvent + " cannot be found are you sure you want to create this beacon?")){
+			if(confirm("An event of name " + beaconEvent + " cannot be found Do you wish to add this event?")){
 				db.collection("beacons").doc(beaconID).set({
 					name: beaconName,
 					event: beaconEvent
+				});
+				db.collection('events').doc(beaconEvent).set({
+					title: beaconEvent,
+					startDate: "",
+					startTime: "",
+					endDate: "",
+					endTime: "",
+					description: ""
+				})
+				.then(function(docRef){
+					db.collection('events').doc(beaconEvent).collection('Rewards').doc().set({
+						Name:""
+					});
+					db.collection('events').doc(beaconEvent).collection('activeBeacons').doc(beaconID).set({
+						Name:beaconName,
+						UID: beaconID
+					});
+				});
+			}
+			else{
+				db.collection("beacons").doc(beaconID).set({
+					name: beaconName,
+					event: ""
 				});
 			}
 		}

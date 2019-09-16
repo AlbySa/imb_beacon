@@ -83,6 +83,7 @@ function renderEvents(doc){
 	//@TODO reroute to reward sub document
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
+	bul.id = 'bul' + doc.id;
 
 	//enable editing
 	btnEdit.addEventListener("click", function(){
@@ -96,7 +97,6 @@ function renderEvents(doc){
 
 	//show current beacons running event
 	btnShow.addEventListener("click", (e) => {
-		e.stopPropagation();
 		if(bul.style.display == 'block')
 			bul.style.display = 'none';
 		else
@@ -167,7 +167,7 @@ function renderEvents(doc){
 
 	//add to beacons separated by comma
 	btnadd.addEventListener("click", (e) => {
-		//@TODO error checking removal from other dics
+		e.stopPropagation();
 		//get event variable
 		var eventID = e.target.parentElement.id;
 		//get beacon variable
@@ -187,11 +187,11 @@ function renderEvents(doc){
 
 	btnremBeacon.addEventListener("click", (e) => {
 		//@TODO remove beacons from the display list
+		e.stopPropagation();
 		//get beacon id
 		var eventID = e.target.parentElement.id;
 		//get beacon variable
 		var beaconID = addtoBeacon[addtoBeacon.selectedIndex].id;
-		var beaconname = addtoBeacon.value;
 
 		db.collection('beacons').doc(beaconID).update({
 			event: ""
@@ -207,6 +207,10 @@ function renderEvents(doc){
 			code.value = doc.data().Name;
 		});
 	});
+
+	let opt = document.createElement('option');
+			opt.textContent = "None";
+			addtoBeacon.appendChild(opt);
 
 	//add beacons subcollection
 	db.collection('beacons').get().then((snapshot) => {
@@ -305,7 +309,7 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 			renderEvents(change.doc);
 		}
 		else if(change.type == 'removed'){
-			let li = eventsList.querySelector('[data-id = ' + change.doc.id + ']');
+			let li = eventsList.querySelector(change.doc.id);
 			eventsList.removeChild(li);
 		}
 	});
