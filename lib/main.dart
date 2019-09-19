@@ -27,13 +27,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
 const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
 
-//Global variables for connected beacon/event
-DocumentSnapshot activeBeacon;
-String activeBeaconName = 'not connected';
 DocumentSnapshot activeEvent;
 String activeEventName = "";
 
 bool beaconFound = false;
+
+bool initialLoad =true;
+
+Timer timer;
 
 //Convert beacon id to eddystone UID
 String byteListToHexString(List<int> bytes) => bytes
@@ -42,8 +43,6 @@ String byteListToHexString(List<int> bytes) => bytes
 
 final bgColor = const Color(0xFFF5F5F5); // background colour
 final barColor = const Color(0xFF02735E);// Bar/button colour
-
-
 
 void main() => runApp(MyApp());
 
@@ -73,6 +72,12 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
+
+  //Global variables for connected beacon/event
+  DocumentSnapshot activeBeacon;
+  String activeBeaconName = 'not connected';
+  DocumentSnapshot activeEvent;
+  String activeEventName = "";
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
@@ -109,22 +114,30 @@ class LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
+    print("--------------------------------------------------------------Init state--------------------------------------------------------------");
+
     // FlutterBlue Setup -----------------------------------------------
     _flutterBlue.state.then((s) {
       setState(() {
         state = s;
       });
+      print("Initial State: $state");
+      if(state == BluetoothState.on && initialLoad){//bluetooth has just been turned on
+        _periodicScan();
+        initialLoad = false;
+      }
     });
     _stateSubscription = _flutterBlue.onStateChanged().listen((s){ // Subscribe to state changes
       setState(() {
         state = s;
 
-        if(state.toString() == "BluetoothState.on"){//bluetooth has just been turned on
-          adapterOn = true;
+        if(state == BluetoothState.on){//bluetooth has just been turned on
           _periodicScan();
         }
-        else{
-          adapterOn = false;
+        if(state == BluetoothState.off) { //bluetooth has just been turned on
+          _stopScan();
+          //_stopPeriodicScan();
+          resetConnection();
         }
       });
     });
@@ -139,13 +152,9 @@ class LoginFormState extends State<LoginForm> {
     flutterLocalNotificationsPlugin.initialize(initSettings,onSelectNotification:selectNotification);
     //end notification setup
 
-    //Background scanning --------------------------------------------------
-    //TODO figure out how to get this to run when the app hasn't been launched; Is it possible?
-    _periodicScan(); //start periodic scan
 
   }
 
-  //TODO Replace placeholder text with actual good stuff
   //Show the notification
   showNotification(DocumentSnapshot event) async{
     var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription');
@@ -154,7 +163,6 @@ class LoginFormState extends State<LoginForm> {
     await flutterLocalNotificationsPlugin.show(0,'Welcome to ${event.documentID}','Click here for more information',platform);
   }
 
-  //TODO only creates empty alert at this stage - gotta add stuff
   //What happens when you click the notification
   Future selectNotification(String payload){
     debugPrint("payload : $payload");
@@ -318,6 +326,8 @@ class LoginFormState extends State<LoginForm> {
       activeEventName = event.documentID;
 
     });
+
+    print("Connecting to beacon: $activeBeaconName");
   }
 
   Future<void> findBeacon(String beaconId) async {
@@ -328,7 +338,6 @@ class LoginFormState extends State<LoginForm> {
 
       //--------------- Check beacons ---------------
       if(beaconSnapshot.exists) { //if the beacon exists
-        beaconFound = true;
 
         //create reference to event (look for event)
         DocumentReference eventReference = Firestore.instance.collection("events").document(beaconSnapshot.data['event']);
@@ -364,12 +373,14 @@ class LoginFormState extends State<LoginForm> {
   _startScan() {
 
     // ignore: cancel_subscriptions
+
     var scanSubscription = _flutterBlue.scan(
       timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
       if (scanResult.device.type == BluetoothDeviceType.le) {
         List<int> rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceId];
         if (rawBytes != null) {
+          print("found:${scanResult.device.name}");
           String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
           findBeacon(beaconId);
         }
@@ -382,46 +393,17 @@ class LoginFormState extends State<LoginForm> {
   }
 
   _stopScan() {
-    print("stopping scan: ");
+    print("stopping scan...");
+
     _scanSubscription?.cancel();
     _scanSubscription = null;
+
     setState(() {
       isScanning = false;
-      if(beaconFound == false){
-        print("did not find a beacon :( ");
-        activeBeacon=null;
-        activeBeaconName = 'not connected';
-        activeEvent=null;
-        activeEventName = "";
-
-      }
-      else{
-        beaconFound = false;
-      }
-
     });
-
-
   }
 
-//  _buildScanningButton() {
-//    if (state != BluetoothState.on) {
-//      return null;
-//    }
-//    if (isScanning) {
-//      return new FloatingActionButton(
-//        child: new Icon(Icons.stop),
-//        onPressed: _stopScan,
-//        backgroundColor: Colors.red,
-//      );
-//    } else {
-//      return new FloatingActionButton(
-//          child: new Icon(Icons.search), onPressed: _startScan);
-//    }
-//  }
-
-
-  _periodicScan(){
+  void _periodicScan(){
 
     //start first async scan
     Timer(Duration(seconds: 0), () {
@@ -430,10 +412,23 @@ class LoginFormState extends State<LoginForm> {
     });
 
     //run another scan every minute
-    Timer.periodic(Duration(minutes: 1), (timer) {
-      print("starting scan");
+    timer = Timer.periodic(Duration(seconds: 10), (timer) {
+      print("starting Periodic scan");
       _startScan();
     });
+  }
+
+  void resetConnection(){
+    setState(() {
+      activeBeacon = null;
+      activeBeaconName = 'not connected';
+      activeEvent = null;
+      activeEventName = "";
+    });
+  }
+
+  void _stopPeriodicScan(){
+    timer.cancel();
   }
 //-------------------------------------End scan test code-------------------------------------------
 }
