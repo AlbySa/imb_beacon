@@ -27,6 +27,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
 const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
 
+//Global variables for connected beacon/event
+DocumentSnapshot activeBeacon;
+String activeBeaconName = 'not connected';
 DocumentSnapshot activeEvent;
 String activeEventName = "";
 
@@ -73,12 +76,6 @@ class LoginForm extends StatefulWidget {
 
 class LoginFormState extends State<LoginForm> {
 
-  //Global variables for connected beacon/event
-  DocumentSnapshot activeBeacon;
-  String activeBeaconName = 'not connected';
-  DocumentSnapshot activeEvent;
-  String activeEventName = "";
-
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   // Scanning
@@ -113,8 +110,6 @@ class LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-
-    print("--------------------------------------------------------------Init state--------------------------------------------------------------");
 
     // FlutterBlue Setup -----------------------------------------------
     _flutterBlue.state.then((s) {
@@ -299,7 +294,6 @@ class LoginFormState extends State<LoginForm> {
           .signInWithEmailAndPassword(email: _email, password: _password);
 
       emptyText();
-      String event = "testbruh";
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Home(user.user.uid)));//, activeEventName)));
       setState(() {
@@ -325,9 +319,8 @@ class LoginFormState extends State<LoginForm> {
       activeEvent = event;
       activeEventName = event.documentID;
 
-    });
 
-    print("Connecting to beacon: $activeBeaconName");
+    });
   }
 
   Future<void> findBeacon(String beaconId) async {
@@ -412,7 +405,7 @@ class LoginFormState extends State<LoginForm> {
     });
 
     //run another scan every minute
-    timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(Duration(minutes: 1), (timer) {
       print("starting Periodic scan");
       _startScan();
     });

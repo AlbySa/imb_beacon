@@ -241,8 +241,6 @@ class SignUpFormState extends State<SignUpForm> {
                   child: Text('Log In.'),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyApp()));
                   },
                 ),
               ],
