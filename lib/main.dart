@@ -370,13 +370,10 @@ class LoginFormState extends State<LoginForm> {
     var scanSubscription = _flutterBlue.scan(
       timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
-      if (scanResult.device.type == BluetoothDeviceType.le) {
-        List<int> rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceId];
-        if (rawBytes != null) {
-          print("found:${scanResult.device.name}");
-          String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
-          findBeacon(beaconId);
-        }
+      if (scanResult.device.name == "BC Beacon") {
+        print("found:${scanResult.device.name}");
+        findBeacon(scanResult.device.id.toString());//Originally of type "DeviceIdentifier"
+        //}
       }
     }, onDone: _stopScan);
 
@@ -384,6 +381,7 @@ class LoginFormState extends State<LoginForm> {
       isScanning = true;
     });
   }
+//var test = BluetoothDeviceType.
 
   _stopScan() {
     print("stopping scan...");
