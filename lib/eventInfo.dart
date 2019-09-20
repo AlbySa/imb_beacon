@@ -10,6 +10,8 @@ Done:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:imb_beacon/main.dart';
+import 'package:firebase_storage_image/firebase_storage_image.dart';
+
 
 class EventInfo extends StatefulWidget {
   @override
@@ -19,6 +21,7 @@ class EventInfo extends StatefulWidget {
 class EventInfoState extends State<EventInfo> {
   String activeEventName;
   EventInfoState(this.activeEventName);
+  String photoPath = "gs://pineappleproximity.appspot.com/";
 
 
   @override
@@ -90,19 +93,22 @@ class EventInfoState extends State<EventInfo> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 60.0),
+                            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                             child: Center(
-                              child: Text(
-                                  ' - Event Image will go here - '
-                              ),
+//                              child: Text(
+//                                  ' - Event Image will go here - '
+                                child: fetchImage(),
                             ),
                           ),
-                          Text(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
 //                'Event Description - This is where the description of the event will go...',
-                            //"description",
-                            '${snapshot.data['description']}',
-                            style: TextStyle(
-                                fontSize: 20
+                              //"description",
+                              '${snapshot.data['description']}',
+                              style: TextStyle(
+                                  fontSize: 20
+                              ),
                             ),
                           ),
                         ]
@@ -137,6 +143,15 @@ class EventInfoState extends State<EventInfo> {
           )
         ]
     );
+  }
+
+  Image fetchImage(){
+
+    String photoPath = "gs://pineappleproximity.appspot.com/$activeEventName.png";
+
+      Image image = Image(image: FirebaseStorageImage(photoPath));
+      return image;
+
   }
 }
 

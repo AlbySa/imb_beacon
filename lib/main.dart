@@ -366,7 +366,6 @@ class LoginFormState extends State<LoginForm> {
   _startScan() {
 
     // ignore: cancel_subscriptions
-
     var scanSubscription = _flutterBlue.scan(
       timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
