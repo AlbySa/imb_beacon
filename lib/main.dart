@@ -372,8 +372,9 @@ class LoginFormState extends State<LoginForm> {
     ).listen((scanResult) {
       if (scanResult.device.name == "BC Beacon") {
         print("found:${scanResult.device.name}");
-        findBeacon(scanResult.device.id.toString());//Originally of type "DeviceIdentifier"
-        //}
+        print(scanResult.device.id.toString()); //Originally of type "DeviceIdentifier"
+        //Remember to grab that ID as is ^
+        findBeacon(scanResult.device.id.toString());
       }
     }, onDone: _stopScan);
 
@@ -381,7 +382,6 @@ class LoginFormState extends State<LoginForm> {
       isScanning = true;
     });
   }
-//var test = BluetoothDeviceType.
 
   _stopScan() {
     print("stopping scan...");
