@@ -11,7 +11,7 @@ Done:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:imb_beacon/main.dart';
-
+import 'package:qr_flutter/qr_flutter.dart';
 
 class Rewards extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class RewardsState extends State<Rewards> {
       );
   }
 
-  _rewardList() {
+  _rewardList(){
     return StreamBuilder(
       stream: Firestore.instance.collection('events').document('event2').collection('Rewards').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -46,32 +46,35 @@ class RewardsState extends State<Rewards> {
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data.documents[index];
             return Card(
-              child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              title: new Text(document['name']),
-              //subtitle: new Text(document['description']),
-            ),
-            ButtonTheme.bar(
-              child: ButtonBar(
-                children: <Widget>[
-                  FlatButton(
-                    child: new Text('View Details'),
-                    //onPressed: () => _showDialog(document),
-                    onPressed: () {_showDialog(document);},
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      title: new Text(document['name']),
+                      //subtitle: new Text(document['description']),
+                    ),
+                    ButtonTheme.bar(
+                      child: ButtonBar(
+                        children: <Widget>[
+                          FlatButton(
+                            child: new Text('View Details'),
+                            //onPressed: () => _showDialog(document),
+                            onPressed: () {
+                              _showDialog(document);
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
             );
           },
         );
-      },
+      }
     );
   }
+
 
   void _showDialog(DocumentSnapshot document) {
     showDialog(
@@ -79,7 +82,19 @@ class RewardsState extends State<Rewards> {
       builder: (BuildContext context) {
         return AlertDialog(
         title: Text(document['name']),
-        content: Text("Placeholder Reward Informatioin"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+
+            SizedBox(
+              height: 200.0,
+              width: 200.0,
+              child: QrImage(data: "test"),
+            ),
+            Text(""),
+            Text("Placeholder Reward Information"),
+          ],
+        ),
         //content: Text("Description:\n" + document['description'] + "\n\nStart Date: " + document['startDate'] + "\n\nEnd Date: " + document['endDate'] + "\n\nStart Time: " + document['startTime'] + "\n\nEnd Time: " + document['endTime']),
         actions: <Widget>[
           Row(

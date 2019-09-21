@@ -20,6 +20,8 @@ import 'package:imb_beacon/home.dart';
 import 'package:imb_beacon/signUp.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import 'package:qr_flutter/qr_flutter.dart';
+
 import 'package:flutter_blue/flutter_blue.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -369,11 +371,13 @@ class LoginFormState extends State<LoginForm> {
     var scanSubscription = _flutterBlue.scan(
       timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
-      if (scanResult.device.name == "BC Beacon") {
-        print("found:${scanResult.device.name}");
-        print(scanResult.device.id.toString()); //Originally of type "DeviceIdentifier"
-        //Remember to grab that ID as is ^
-        findBeacon(scanResult.device.id.toString());
+      if (scanResult.device.type == BluetoothDeviceType.le) {
+        List<int> rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceId];
+        if (rawBytes != null) {
+          print("found:${scanResult.device.name}");
+          String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
+          findBeacon(beaconId);
+        }
       }
     }, onDone: _stopScan);
 
@@ -420,5 +424,39 @@ class LoginFormState extends State<LoginForm> {
   void _stopPeriodicScan(){
     timer.cancel();
   }
+
+  Material qrTest(){
+    return Material(
+      color: Colors.white,
+      child: SafeArea(
+        top: true,
+        bottom: true,
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Center(
+                  child: Container(
+                    width: 280,
+                    child: QrImage(
+                      data: "test",
+                      foregroundColor: Color(0xff03291c),
+                      embeddedImage: AssetImage('assets/images/logo_yakka.png'),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)
+                    .copyWith(bottom: 40),
+                child: Text("test"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 //-------------------------------------End scan test code-------------------------------------------
 }
