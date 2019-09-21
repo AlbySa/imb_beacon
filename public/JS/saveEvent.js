@@ -26,9 +26,9 @@ form.addEventListener('submit', (e) =>{
 
 	//get values
 	var eventName = document.getElementById("eName").value;
-	var startDate = document.getElementById("sDate").value;
+	var startDate = document.getElementById("sdatepicker").value;
 	var startTime = document.getElementById("sTime").value;
-	var endDate = document.getElementById("eDate").value;
+	var endDate = document.getElementById("edatepicker").value;
 	var endTime = document.getElementById("eTime").value;
 	var eventCode = document.getElementById("dCode").value;
 	var eventCodeName = document.getElementById("dCodeName").value;
@@ -52,10 +52,6 @@ form.addEventListener('submit', (e) =>{
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
 					uuid = beaconListIDArray[i];
-					//set uid var
-					db.collection('events').doc(eventName).collection('activeBeacons').doc(uuid).set({
-						uid:uuid
-					});
 					db.collection('beacons').doc(uuid).update({
 						event: eventName
 					});
@@ -78,10 +74,6 @@ form.addEventListener('submit', (e) =>{
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
 					uuid = beaconListIDArray[i];
-					//set uid var
-					db.collection('events').doc(eventName).collection('activeBeacons').doc(uuid).set({
-						uid:uuid
-					});
 					db.collection('beacons').doc(uuid).update({
 						event: eventName
 					});
@@ -105,10 +97,6 @@ form.addEventListener('submit', (e) =>{
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
 					uuid = beaconListIDArray[i];
-					//set uid var
-					db.collection('events').doc(eventName).collection('activeBeacons').doc(uuid).set({
-						uid:uuid
-					});
 					db.collection('beacons').doc(uuid).update({
 						event: eventName
 					});
@@ -135,10 +123,6 @@ form.addEventListener('submit', (e) =>{
 					var uuid = "";
 					for (var i = 0; i < beaconListIDArray.length; i++){
 						uuid = beaconListIDArray[i];
-						//set uid var
-						db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-							uid:uuid
-						});
 						db.collection('beacons').doc(uuid).update({
 							event: docRef.id
 						});
@@ -161,10 +145,6 @@ form.addEventListener('submit', (e) =>{
 					var uuid = "";
 					for (var i = 0; i < beaconListIDArray.length; i++){
 						uuid = beaconListIDArray[i];
-						//set uid var
-						db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-							uid:uuid
-						});
 						db.collection('beacons').doc(uuid).update({
 							event: docRef.id
 						});
@@ -187,10 +167,6 @@ form.addEventListener('submit', (e) =>{
 					var uuid = "";
 					for (var i = 0; i < beaconListIDArray.length; i++){
 						uuid = beaconListIDArray[i];
-						//set uid var
-						db.collection('events').doc(docRef.id).collection('activeBeacons').doc(uuid).set({
-							uid:uuid
-						});
 						db.collection('beacons').doc(uuid).update({
 							event: docRef.id
 						});
@@ -231,11 +207,12 @@ function addBeacon(){
 	document.getElementById('blist').value = beaconListArray;
 }
 
+//fill in select menu
 db.collection('beacons').get().then((snapshot => {
 	snapshot.forEach(doc => {
 		let opt = document.createElement('option');
 		opt.textContent = doc.data().name;
 		opt.id = doc.id;
 		beaconList.appendChild(opt);
-	})
+	});
 }));

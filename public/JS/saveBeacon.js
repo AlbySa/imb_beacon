@@ -56,10 +56,6 @@ form.addEventListener('submit', (e) =>{
 					db.collection('events').doc(beaconEvent).collection('Rewards').doc().set({
 						Name:""
 					});
-					db.collection('events').doc(beaconEvent).collection('activeBeacons').doc(beaconID).set({
-						Name:beaconName,
-						UID: beaconID
-					});
 				});
 			}
 			else{

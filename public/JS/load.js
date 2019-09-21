@@ -22,13 +22,21 @@ const eventsList = document.querySelector('#events');
 function renderEvents(doc){
 	//create elements
 	let li = document.createElement('li');
+	let nameLabel = document.createElement('p');
 	let name = document.createElement('input');
+	let stimeLabel = document.createElement('p');
 	let sTime = document.createElement('input');
+	let sdateLabel = document.createElement('p');
 	let sDate = document.createElement('input');
+	let etimeLabel = document.createElement('p');
 	let eTime = document.createElement('input');
+	let edateLabel = document.createElement('p');
 	let eDate = document.createElement('input');
+	let descriptionLabel = document.createElement('p');
 	let description = document.createElement('textarea');
+	let codeLabel = document.createElement('p');
 	let code = document.createElement('input');
+	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
 	let btnShow = document.createElement('input');
 	let bul = document.createElement('ul');
@@ -75,17 +83,32 @@ function renderEvents(doc){
 	li.setAttribute('data-id', doc.id);
 	li.id= doc.id;
 	name.value = doc.data().title;
+	name.placeholder = "Event Name";
+	nameLabel.textContent = "Event Title:";
 	eDate.value = doc.data().endDate;
+	edateLabel.textContent = "End Date:";
+	eDate.placeholder = "End Date"
 	eTime.value = doc.data().endTime;
+	etimeLabel.textContent = "End Date:";
+	eTime.placeholder = "End Date"
 	sTime.value = doc.data().startTime;
+	stimeLabel.textContent = "End Date:";
+	sTime.placeholder = "End Date"
 	sDate.value = doc.data().startDate;
+	sdateLabel.textContent = "End Date:";
+	sDate.placeholder = "End Date"
 	btnShow.value = "Toggle Beacons Displaying Event";
 	btnUpdate.value = "Update Entry";
 	btnEdit.value = "Edit Entry";
 	btnRemove.value = "Remove Entry";
 	btnadd.value = "Add Beacon";
 	btnremBeacon.value = "Remove Beacon";
-	//@TODO reroute to reward sub document
+	descriptionLabel.textContent = "Description:";
+	description.placeholder = "Event Description";
+	codeTitleLabel.textContent = "Discount Title:";
+	codeLabel.textContent = "Discount Code:";
+	code.placeholder = "Discount Code";
+	codeName.placeholder = "Discount Name";
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
 	bul.id = 'bul' + doc.id;
@@ -182,12 +205,6 @@ function renderEvents(doc){
 		db.collection('beacons').doc(beaconID).update({
 			event: eventID
 		});
-		//add event to beacon
-		db.collection('events').doc(eventID).collection('activeBeacons').doc(beaconID).set(
-		{
-			Name: beaconname,
-			UID: beaconID
-		});
 	});
 
 	btnremBeacon.addEventListener("click", (e) => {
@@ -201,8 +218,6 @@ function renderEvents(doc){
 		db.collection('beacons').doc(beaconID).update({
 			event: ""
 		});
-
-		db.collection('events').doc(eventID).collection('activeBeacons').doc(beaconID).delete();
 	});
 
 	//add reward Subcollection
@@ -229,28 +244,40 @@ function renderEvents(doc){
 
 	//render beacons displaying this event
 	var beaconList = [];
-	//get beacon variable
-	db.collection('events').doc(doc.id).collection('activeBeacons').get().then((snapshot) => {
+	//get beacon variable @TODO change to search all beacons
+	db.collection('beacons').get().then((snapshot) => {
 		snapshot.docs.forEach(doc =>{
-			beaconList.push(doc.id);
+			//if current event
+			if(doc.data().event == id){
+				beaconList.push(doc.data().name);
+			}
 		});
 	}).then(display => currentDisplayBeacons(beaconList, bul));
 
 	//attach to list
+	li.appendChild(nameLabel);
 	li.appendChild(name);
+	li.appendChild(sdateLabel);
 	li.appendChild(sDate);
+	li.appendChild(stimeLabel);
 	li.appendChild(sTime);
+	li.appendChild(edateLabel);
 	li.appendChild(eDate);
+	li.appendChild(etimeLabel);
 	li.appendChild(eTime);
+	li.appendChild(codeLabel);
 	li.appendChild(code);
+	li.appendChild(descriptionLabel);
 	li.appendChild(description);
+	li.appendChild(document.createElement('br'));
+	li.appendChild(addtoBeacon);
+	li.appendChild(btnadd);
+	li.appendChild(btnremBeacon);
+	li.appendChild(document.createElement('br'));
 	li.appendChild(btnShow);
 	li.appendChild(btnUpdate);
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
-	li.appendChild(addtoBeacon);
-	li.appendChild(btnadd);
-	li.appendChild(btnremBeacon);
 	li.appendChild(bul);
 
 	eventsList.appendChild(li);
@@ -259,10 +286,7 @@ function renderEvents(doc){
 function currentDisplayBeacons(beaconList, bul){
 	for (var i = 0; i<beaconList.length; i++){
 		let bli = document.createElement('li');
-		var beaconID = String(beaconList[i]);
-		db.collection('beacons').doc(beaconID).get().then(doc => {
-			bli.textContent = doc.data().name;
-		});
+		bli.textContent = beaconList[i];
 		bul.style.display = 'none';
 		bul.appendChild(bli);
 	}
@@ -333,8 +357,11 @@ function renderBeacons(doc){
 	//create elements
 	let li = document.createElement('li');
 	li.id= doc.id;
+	let bIDLabel = document.createElement('p');
 	let bID = document.createElement('input');
+	let eventLabel = document.createElement('p')
 	let event = document.createElement('input');
+	let nameLabel = document.createElement('p')
 	let name = document.createElement('input');
 	let btnUpdate = document.createElement('input');
 	let btnEdit = document.createElement('input');
@@ -342,8 +369,11 @@ function renderBeacons(doc){
 
 	//populate elements
 	li.setAttribute('data-id', doc.id);
+	nameLabel.textContent = 'Beacon Name:'
 	name.value = doc.data().name;
+	bIDLabel.textContent = 'Beacon ID:'
 	bID.value = doc.id;
+	eventLabel.textContent = 'Event Name:'
 	event.value = doc.data().event;
 	btnUpdate.type = 'button';
 	btnUpdate.id = doc.id;
@@ -402,7 +432,6 @@ function renderBeacons(doc){
 
 	//deletes event
 	btnRemove.addEventListener("click", (e) => {
-		//@TODO add are you sure
 		//remove LI elements
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
@@ -416,9 +445,13 @@ function renderBeacons(doc){
 	btnUpdate.disabled = true;
 
 	//attach to list
+	li.appendChild(nameLabel)
 	li.appendChild(name);
+	li.appendChild(bIDLabel);
 	li.appendChild(bID);
+	li.appendChild(eventLabel);
 	li.appendChild(event);
+	li.appendChild(document.createElement('br'));
 	li.appendChild(btnUpdate);
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
