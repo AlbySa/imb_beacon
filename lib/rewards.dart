@@ -38,7 +38,7 @@ class RewardsState extends State<Rewards> {
 
   _rewardList(){
     return StreamBuilder(
-      stream: Firestore.instance.collection('events').document('event2').collection('Rewards').snapshots(),
+      stream: Firestore.instance.collection('events').document(activeEventName).collection('rewards').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return new Text("Now Loading...");
         return ListView.builder(
@@ -46,28 +46,24 @@ class RewardsState extends State<Rewards> {
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data.documents[index];
             return Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      title: new Text(document['name']),
-                      //subtitle: new Text(document['description']),
-                    ),
-                    ButtonTheme.bar(
-                      child: ButtonBar(
-                        children: <Widget>[
-                          FlatButton(
-                            child: new Text('View Details'),
-                            //onPressed: () => _showDialog(document),
-                            onPressed: () {
-                              _showDialog(document);
-                            },
-                          ),
-                        ],
+              elevation: 5,
+              child: new InkWell(
+                onTap:() => showCoupon(document),
+                child:Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: Image.asset('assets/logo.png'),
+                        title: Text("${document.data['name']}\n\nClick Me!"),
+
+                        //subtitle: new Text(document['description']),
                       ),
-                    )
-                  ],
-                )
+                    ],
+                  ),
+                ),
+              ),
             );
           },
         );
@@ -75,49 +71,37 @@ class RewardsState extends State<Rewards> {
     );
   }
 
-
-  void _showDialog(DocumentSnapshot document) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-        title: Text(document['name']),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-
-            SizedBox(
-              height: 200.0,
-              width: 200.0,
+  void showCoupon(DocumentSnapshot document){
+    var alert = new AlertDialog(
+      title: Text(document.data['name']),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            height: 200.0,
+            width: 200.0,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom:20),
               child: QrImage(data: "test"),
             ),
-            Text(""),
-            Text("Placeholder Reward Information"),
-          ],
-        ),
-        //content: Text("Description:\n" + document['description'] + "\n\nStart Date: " + document['startDate'] + "\n\nEnd Date: " + document['endDate'] + "\n\nStart Time: " + document['startTime'] + "\n\nEnd Time: " + document['endTime']),
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-              RaisedButton(
-                child: Text(
-                  "Go Back",
-                  style: TextStyle(
-                    color: bgColor,
-                  ),
-                ),
-                color: Colors.deepOrange,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]
+          ),
+          Text(
+            document.data['description'],
+            textAlign: TextAlign.center,
           )
-        ]
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          child: new Text('OK'),
+          onPressed: () { Navigator.pop(context); },
+        )
+      ],
     );
-      }
-    );
-    
+
+    showDialog(context: context, builder: (context) => alert);
   }
+
+
 
 }
