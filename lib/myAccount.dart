@@ -187,7 +187,7 @@ class MyAccountState extends State<MyAccount> {
                                   Padding(
                                     padding: const EdgeInsets.all(50.0),
                                     child: Container(
-                                      child: Text("Events attended shown here"),
+                                      child: Text("Events attended shown here\n(Coming Soon)"),
                                     ),
                                   ),
                                 ],

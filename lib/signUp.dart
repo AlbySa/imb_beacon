@@ -323,6 +323,7 @@ class SignUpFormState extends State<SignUpForm> {
   }
 
   void _pushData(String id) {
+
     Firestore.instance.collection('users').document(id).setData({
       "email": _email,
       "fname": _fname,

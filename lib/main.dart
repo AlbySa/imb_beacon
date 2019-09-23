@@ -19,11 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:imb_beacon/home.dart';
 import 'package:imb_beacon/signUp.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
-import 'package:qr_flutter/qr_flutter.dart';
-
 import 'package:flutter_blue/flutter_blue.dart';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
@@ -40,6 +36,13 @@ bool beaconFound = false;
 bool initialLoad =true;
 
 Timer timer;
+
+FlutterBlue _flutterBlue = FlutterBlue.instance;
+StreamSubscription _scanSubscription;
+StreamSubscription _stateSubscription;
+
+// State
+BluetoothState state = BluetoothState.unknown;
 
 //Convert beacon id to eddystone UID
 String byteListToHexString(List<int> bytes) => bytes
@@ -81,15 +84,11 @@ class LoginFormState extends State<LoginForm> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   // Scanning
-  FlutterBlue _flutterBlue = FlutterBlue.instance;
-  StreamSubscription _scanSubscription;
   Map<DeviceIdentifier, ScanResult> scanResults = new Map();
   bool adapterOn = false;
   bool isScanning= true;
 
-  // State
-  StreamSubscription _stateSubscription;
-  BluetoothState state = BluetoothState.unknown;
+
 
   //loading circle
   bool _saving = false;
@@ -106,8 +105,6 @@ class LoginFormState extends State<LoginForm> {
   //text field controllers
   TextEditingController _controller = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
-
-
 
   @override
   void initState() {
@@ -265,7 +262,7 @@ class LoginFormState extends State<LoginForm> {
                                 MaterialPageRoute(
                                     builder: (context) => SignUpForm()));
                           }),
-                      Text('Connected beacon: $activeBeaconName'),//Text('Connected beacon: $activeBeaconName'),
+                      Text('(Testing)Connected beacon: $activeBeaconName'),//Text('Connected beacon: $activeBeaconName'),
                     ],
                   ),
                 ),
@@ -321,7 +318,7 @@ class LoginFormState extends State<LoginForm> {
       activeEvent = event;
       activeEventName = event.documentID;
 
-
+      _setRewardInfo();
     });
   }
 
@@ -426,4 +423,30 @@ class LoginFormState extends State<LoginForm> {
   }
 
 //-------------------------------------End scan test code-------------------------------------------
+
+  void _setRewardInfo() {
+
+    //iterate through each reward
+    Firestore.instance.collection('events').document(activeEventName).collection('rewards').getDocuments().then((querySnapshot) {
+      querySnapshot.documents.forEach((doc){
+
+        var attr = doc.data['name'];
+
+        DocumentReference document = Firestore.instance.collection('users').document('0txZEXGNAzSPoE2I2BPKsVFyAz82').collection('pastEvents').document(activeEventName);
+        document.get().then((documentSnapshot){
+
+          //if the reward hasnt already been claimed
+          if(!(documentSnapshot.data[attr])){
+
+            //add each reward as 'false' in users/pastEvents
+            Firestore.instance.collection('users').document('0txZEXGNAzSPoE2I2BPKsVFyAz82').collection('pastEvents').document(activeEventName).setData({
+              "${doc.data['name']}": false,
+            });
+          }
+        });
+      });
+    });
+  }
 }
+
+

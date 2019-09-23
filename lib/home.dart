@@ -8,33 +8,33 @@ Done:
   Logout button creates logout dialog alert
 */
 
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:imb_beacon/myAccount.dart';
 import 'package:imb_beacon/rewards.dart';
 import 'package:imb_beacon/upcomingEvent.dart';
 import 'package:imb_beacon/eventInfo.dart';
 import 'package:imb_beacon/main.dart';
 
+import 'dart:async';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+FlutterBlue _flutterBlue = FlutterBlue.instance;
+StreamSubscription _scanSubscription;
+StreamSubscription _stateSubscription;
+
 class Home extends StatefulWidget {
   @override
   String id;
-  //String event;
-
-
 
   Home(this.id);//, this.event);
-
 
   HomeState createState() => HomeState(id);//, event);
 }
 
 class HomeState extends State<Home> {
-  HomeState(this.id);//, this.event);
+  HomeState(this.id);
 
-//  final bgColor = const Color(0xFFF5F5F5);
-//  final barColor = const Color(0xFF02735E);
   final buttonShadow = const Color(0xFF014034);
 
   String id;
@@ -129,7 +129,7 @@ class HomeState extends State<Home> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Rewards()));
+                                            builder: (context) => Rewards(id)));
                                   },
                                 ),
                               ),
@@ -240,10 +240,11 @@ class HomeState extends State<Home> {
                                   ),
                                   onPressed: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyAccount(id)));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyAccount(id)
+                                      )
+                                    );
                                   },
                                 ),
                               ),
@@ -258,45 +259,45 @@ class HomeState extends State<Home> {
 
   void _showDialog() {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              title: Text("Logout"),
-              content: Text("Are you sure you wish to logout?"),
-              actions: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: RaisedButton(
-                        child: Text(
-                          "Logout",
-                          style: TextStyle(
-                            color: bgColor,
-                          ),
-                        ),
-                        color: barColor,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Logout"),
+          content: Text("Are you sure you wish to logout?"),
+          actions: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: RaisedButton(
+                    child: Text(
+                      "Logout",
+                      style: TextStyle(
+                        color: bgColor,
                       ),
                     ),
-                    RaisedButton(
-                      child: Text(
-                        "Close",
-                        style: TextStyle(
-                          color: bgColor,
-                        ),
-                      ),
-                      color: Colors.deepOrange,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                    color: barColor,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                RaisedButton(
+                  child: Text(
+                    "Close",
+                    style: TextStyle(
+                      color: bgColor,
                     ),
-                  ],
-                )
-              ]);
-        });
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            )
+          ]);
+    });
   }
 }
