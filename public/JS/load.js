@@ -22,6 +22,7 @@ const eventsList = document.querySelector('#events');
 function renderEvents(doc){
 	//create elements
 	let li = document.createElement('li');
+
 	let nameLabel = document.createElement('p');
 	let name = document.createElement('input');
   name.className += "form-control";
@@ -350,8 +351,8 @@ function renderEvents(doc){
 	li.appendChild(btnRemove);
 	li.appendChild(bul);
 
-	eventsList.appendChild(li); 
-
+	eventsList.appendChild(li);
+s
 }
 
 function currentDisplayBeacons(beaconList, bul){
@@ -554,7 +555,7 @@ function renderBeacons(doc){
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
 
-	beaconList.appendChild(li); 
+	beaconList.appendChild(li);
 }
 
 function beaconSearch(){
