@@ -1,42 +1,67 @@
 <html lang="en">
-    <head>
         <!--Written By Luke Sturgiss
 		ToDo
 		pull all registered Beacons
 		push data
-		pull any data with same name for reuse of events
-		-->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" type="text/css" href = "style.css">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		<!--Jquery stuffs-->
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  		pull any data with same name for reuse of events
+  		-->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href = "style.css">
+  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  	<!--Jquery stuffs-->
+  	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		<link rel="stylesheet" href="jquery-ui-themes-1.12.1/jquery-ui.min.css">
-		<!--Time Picker-->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-		<!--Firebase import-->
-		<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+  	<link rel="stylesheet" href="jquery-ui-themes-1.12.1/jquery-ui.min.css">
+  	<!--Time Picker-->
+  	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+  	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+  	<!--Firebase import-->
+  	<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
+  	<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
 
-		<!--Date & Time Picker-->
-		<script>
-			$(document).ready(function(){
-				$( "#sdatepicker" ).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy'});
-				$( "#edatepicker" ).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
-				$('#sTime').timepicker({});
-				$('#eTime').timepicker({});
-			} );
-		</script>
-		
-		<title>Home</title>
-    </head>
-    <body>
-		<a href = "index.html">Home</a>
-		<a href = "Create_Event.html">Create Event</a>
+  	<!--Date & Time Picker-->
+  	<script>
+  		$(document).ready(function(){
+  			$( "#sdatepicker" ).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy'});
+  			$( "#edatepicker" ).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
+  			$('#sTime').timepicker({});
+  			$('#eTime').timepicker({});
+  		} );
+  	</script>
+  	<title>Create Event</title>
+    <link rel="icon" href="logo2.png">
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <img class="d-inline-block align-top ml-0 mr-1" src="logo2.png" alt="logo" height="25" width="30">Pineapple Proximity
+        </span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="Create_Event.html">Create Event</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="Create_Beacon.html">Create Beacon</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
 		<div style="width: 50vw; margin-left: 5vw;">
 			<form id = "eventForm" autocomplete="off">
 				<!--event name-->
@@ -51,7 +76,7 @@
 				<p>End Date: <input type="text" name="endDate" id = "edatepicker" required = "true"></p>
 				<p>End Time: <input type="text" name="endTime" id = "eTime" required = "true"></p>
 
-				<p>Beacon List select <input type="text" name="beaconListString" id = "blist" disabled = 'true' style = "background-color: white; color:black" required = "true"> 
+				<p>Beacon List select <input type="text" name="beaconListString" id = "blist" disabled = 'true' style = "background-color: white; color:black" required = "true">
 					<select name="beacons" id = 'beaconList' >
 						<option>None</option>
 					</select>
@@ -73,8 +98,31 @@
 				<input class="btn btn-primary" type="submit" value="Submit">
 			</form>
 		</div>
-		<!--database script-->		
-		<script src = "JS/saveEvent.js"></script>
-	</body>
 
+    <div class="container-fluid align-items-end">
+      <hr>
+    </div>
+    <div class="container">
+      <footer class="footer">
+        <div class="row">
+          <div class="col">
+            <a href="index.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="Create_Event.html">Create Event</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="Create_Beacon.html">Create Beacon</a>
+            <br><br>
+            <p>&copy; 2019 - Pineapple Proximity</p>
+          </div>
+          <div class="text-right col">
+            <img class="mb-3" src="logo.png" alt="logo" height="70" width="40%">
+          </div>
+        </div>
+      </footer>
+    </div>
+		<!--database script-->
+		<script src = "JS/saveEvent.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	</body>
 </html>
