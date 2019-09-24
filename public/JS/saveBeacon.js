@@ -53,7 +53,7 @@ form.addEventListener('submit', (e) =>{
 					description: ""
 				})
 				.then(function(docRef){
-					db.collection('events').doc(beaconEvent).collection('Rewards').doc().set({
+					db.collection('events').doc(beaconEvent).collection('rewards').doc().set({
 						Name:""
 					});
 				});
