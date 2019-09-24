@@ -68,8 +68,8 @@ function renderEvents(doc){
 	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
   codeName.className += "form-control";
-  document.getElementById('col13').appendChild(codeTitleLabel);
-  document.getElementById('col14').appendChild(codeName);
+  //document.getElementById('col13').appendChild(codeTitleLabel);
+  //document.getElementById('col14').appendChild(codeName);
 
 	let btnShow = document.createElement('input');
   btnShow.className += "btn btn-sm";
@@ -325,7 +325,6 @@ function renderEvents(doc){
 
 
   //attach to elements
-/*
 	li.appendChild(nameLabel);
 	li.appendChild(name);
 	li.appendChild(sdateLabel);
@@ -351,7 +350,7 @@ function renderEvents(doc){
 	li.appendChild(btnRemove);
 	li.appendChild(bul);
 
-	eventsList.appendChild(li); */
+	eventsList.appendChild(li); 
 
 }
 
@@ -544,7 +543,7 @@ function renderBeacons(doc){
 	btnUpdate.disabled = true;
 
 	//attach to list
-/*	li.appendChild(nameLabel)
+	li.appendChild(nameLabel)
 	li.appendChild(name);
 	li.appendChild(bIDLabel);
 	li.appendChild(bID);
@@ -555,10 +554,11 @@ function renderBeacons(doc){
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
 
-	beaconList.appendChild(li); */
+	beaconList.appendChild(li); 
 }
 
 function beaconSearch(){
+	stopPropagation();
 	var searchTerm = document.getElementById('beaconsearch').value;
 	searchTerm = searchTerm.toUpperCase();
 	var children = document.getElementById("beacons").childNodes;
