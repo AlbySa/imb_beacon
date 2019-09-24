@@ -46,7 +46,7 @@ form.addEventListener('submit', (e) =>{
 				description: eventDescription
 			})
 			.then(function(){
-				db.collection('events').doc(eventName).collection('Rewards').doc(eventCodeName).set({
+				db.collection('events').doc(eventName).collection('rewards').doc(eventCodeName).set({
 					Name:eventCode
 				});
 				var uuid = "";
@@ -68,7 +68,7 @@ form.addEventListener('submit', (e) =>{
 				description: eventDescription
 			})
 			.then(function(){
-				db.collection('events').doc(eventName).collection('Rewards').doc(eventCodeName).set({
+				db.collection('events').doc(eventName).collection('rewards').doc(eventCodeName).set({
 					Name:eventCode
 				});
 				var uuid = "";
@@ -91,7 +91,7 @@ form.addEventListener('submit', (e) =>{
 				description: eventDescription
 			})
 			.then(function(){
-				db.collection('events').doc(eventName).collection('Rewards').doc(eventCodeName).set({
+				db.collection('events').doc(eventName).collection('rewards').doc(eventCodeName).set({
 					Name:""
 				});
 				var uuid = "";
@@ -117,7 +117,7 @@ form.addEventListener('submit', (e) =>{
 					description: eventDescription
 				})
 				.then(function(docRef){
-					db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
+					db.collection('events').doc(docRef.id).collection('rewards').doc(eventCodeName).set({
 						Name:eventCode
 					});
 					var uuid = "";
@@ -139,7 +139,7 @@ form.addEventListener('submit', (e) =>{
 					description: eventDescription
 				})
 				.then(function(docRef){
-					db.collection('events').doc(docRef.id).collection('Rewards').doc().set({
+					db.collection('events').doc(docRef.id).collection('rewards').doc().set({
 						Name:eventCode
 					});
 					var uuid = "";
@@ -161,7 +161,7 @@ form.addEventListener('submit', (e) =>{
 					description: eventDescription
 				})
 				.then(function(docRef){
-					db.collection('events').doc(docRef.id).collection('Rewards').doc(eventCodeName).set({
+					db.collection('events').doc(docRef.id).collection('rewards').doc(eventCodeName).set({
 						Name:""
 					});
 					var uuid = "";
