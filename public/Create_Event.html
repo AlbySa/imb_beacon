@@ -61,26 +61,64 @@
       </div>
     </nav>
 
-
-		<div style="width: 50vw; margin-left: 5vw;">
-			<form id = "eventForm" autocomplete="off">
+    <br>
+    <div class="container">
+      <h1>Create an Event</h1>
+    </div>
+    <br>
+		<div class="container" style="width: 50vw; margin-left: 5vw;">
+			<form id="eventForm" autocomplete="off">
 				<!--event name-->
 				<div class="form-group">
 				  <label for="eName">Name:</label>
 				  <input type="text" class="form-control" name ="eName" id = "eName" required = "true">
 				</div>
 				<!--sDate time-->
-				<p>Start Date: <input type="text" name="startDate" id = "sdatepicker" required = "true"></p>
-				<p>Start Time: <input type="text" name="startTime" id = "sTime" required = "true"></p>
-				<!--end Date-->
-				<p>End Date: <input type="text" name="endDate" id = "edatepicker" required = "true"></p>
-				<p>End Time: <input type="text" name="endTime" id = "eTime" required = "true"></p>
 
-				<p>Beacon List select <input type="text" name="beaconListString" id = "blist" disabled = 'true' style = "background-color: white; color:black" required = "true">
-					<select name="beacons" id = 'beaconList' >
-						<option>None</option>
-					</select>
-				<button type = 'button' id = 'addDisplayingBeacon' onClick = 'addBeacon()'>Add Beacon</button></p>
+        <div class="form-group row">
+          <div class="col">
+            Start Date:
+            <input class="form-control" type="text" name="startDate" id = "sdatepicker" required = "true">
+          </div>
+          <div class="col">
+              Start Time:
+              <input class="form-control" type="text" name="startTime" id = "sTime" required = "true">
+          </div>
+        </div>
+        <div class="form-group row">
+  				<!--end Date-->
+          <div class="col">
+            End Date: <input class="form-control" type="text" name="endDate" id = "edatepicker" required = "true">
+          </div>
+          <div class="col">
+            End Time: <input class="form-control" type="text" name="endTime" id = "eTime" required = "true">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col">
+            Select your beacon:
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col">
+            <select class="form-control" name="beacons" id ='beaconList' >
+              <option>None</option>
+            </select>
+          </div>
+          <div class="col">
+            <button class="btn" style="background-color:#007f6a; color:white;" type='button' id ='addDisplayingBeacon' onClick='addBeacon()'>Add Beacon</button></p>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col">
+            Chosen beacons will be displayed here:
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="beaconListString" id ="blist" disabled='true' style = "background-color: white; color:black" required="true">
+          </div>
+        </div>
+
 				<!--discount Code-->
 				<div class="form-group">
 					<label for="dCode">Discount Name:</label>
@@ -95,7 +133,7 @@
 				  <label for="eventD">Event Description:</label>
 				  <textarea class="form-control" rows="5" name ="eventD" id = "eventD" required = "true"></textarea>
 				</div>
-				<input class="btn btn-primary" type="submit" value="Submit">
+				<input style="background-color:#007f6a; color:white;" class="btn" type="submit" value="Submit">
 			</form>
 		</div>
 
