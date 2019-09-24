@@ -24,33 +24,102 @@ function renderEvents(doc){
 	let li = document.createElement('li');
 	let nameLabel = document.createElement('p');
 	let name = document.createElement('input');
+  name.className += "form-control";
+  document.getElementById('colName').appendChild(nameLabel);
+  document.getElementById('colName2').appendChild(name);
+
+
 	let stimeLabel = document.createElement('p');
 	let sTime = document.createElement('input');
+  sTime.className += "form-control";
+  document.getElementById('myCol').appendChild(stimeLabel);
+  document.getElementById('myCol2').appendChild(sTime);
+
 	let sdateLabel = document.createElement('p');
 	let sDate = document.createElement('input');
+  sDate.className += "form-control";
+  document.getElementById('col3').appendChild(sdateLabel);
+  document.getElementById('col4').appendChild(sDate);
+
 	let etimeLabel = document.createElement('p');
 	let eTime = document.createElement('input');
+  eTime.className += "form-control";
+  document.getElementById('col5').appendChild(etimeLabel);
+  document.getElementById('col6').appendChild(eTime);
+
 	let edateLabel = document.createElement('p');
 	let eDate = document.createElement('input');
+  eDate.className += "form-control";
+  document.getElementById('col7').appendChild(edateLabel);
+  document.getElementById('col8').appendChild(eDate);
+
 	let descriptionLabel = document.createElement('p');
 	let description = document.createElement('textarea');
+  description.className += "form-control"
+  document.getElementById('col9').appendChild(descriptionLabel);
+  document.getElementById('col10').appendChild(description);
+
 	let codeLabel = document.createElement('p');
 	let code = document.createElement('input');
+  code.className += "form-control";
+  document.getElementById('col11').appendChild(codeLabel);
+  document.getElementById('col12').appendChild(code);
+
 	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
+  codeName.className += "form-control";
+  document.getElementById('col13').appendChild(codeTitleLabel);
+  document.getElementById('col14').appendChild(codeName);
+
 	let btnShow = document.createElement('input');
+  btnShow.className += "btn btn-sm";
+  btnShow.style.backgroundColor = "#007f6a";
+  btnShow.style.color = 'white';
+  document.getElementById('bt1').appendChild(btnShow);
+
+
 	let bul = document.createElement('ul');
 	let btnUpdate = document.createElement('input');
-	let btnEdit = document.createElement('input');
-	let btnRemove = document.createElement('input');
-	let addtoBeacon = document.createElement('select');
-	let btnadd = document.createElement('input');
-	let btnremBeacon = document.createElement('input');
+  btnUpdate.className += "btn btn-sm";
+  btnUpdate.style.backgroundColor = "#007f6a";
+  btnUpdate.style.color = 'white';
+  document.getElementById('bt2').appendChild(btnUpdate);
 
-	sDate.className = "datePicker";
-	eDate.className = "datePicker";
-	sTime.className = "timePicker";
-	eTime.className = "timePicker";
+
+	let btnEdit = document.createElement('input');
+  btnEdit.className += "btn btn-sm";
+  btnEdit.style.backgroundColor = "#007f6a";
+  btnEdit.style.color = 'white';
+  document.getElementById('bt3').appendChild(btnEdit);
+
+	let btnRemove = document.createElement('input');
+  btnRemove.className += "btn btn-sm";
+  btnRemove.style.backgroundColor = "#007f6a";
+  btnRemove.style.color = 'white';
+  document.getElementById('bt4').appendChild(btnRemove);
+
+//br
+	let addtoBeacon = document.createElement('select');
+  addtoBeacon.className += 'form-control'
+  document.getElementById('selThing').appendChild(addtoBeacon);
+
+
+	let btnadd = document.createElement('input');
+  btnadd.className += "btn btn-sm";
+  btnadd.style.backgroundColor = "#007f6a";
+  btnadd.style.color = 'white';
+  document.getElementById('bt5').appendChild(btnadd);
+
+	let btnremBeacon = document.createElement('input');
+  btnremBeacon.className += "btn btn-sm";
+  btnremBeacon.style.backgroundColor = "#007f6a";
+  btnremBeacon.style.color = 'white';
+  document.getElementById('bt6').appendChild(btnremBeacon);
+
+	sDate.className += " datePicker";
+	eDate.className += " datePicker";
+	sTime.className += " timePicker";
+	eTime.className += " timePicker";
 
 	//create type text box
 	name.type = 'text';
@@ -145,7 +214,7 @@ function renderEvents(doc){
 			endTime: chil[4].value,
 			description: chil[6].value
 		})
-		.then((e) =>{ 
+		.then((e) =>{
 			var rewardID = "";
 			db.collection('events').doc(id).collection('Rewards').get().then(snapshot => {
 				snapshot.forEach(doc => {
@@ -154,7 +223,7 @@ function renderEvents(doc){
 						Name: chil[5].value
 					});
 				});
-			});	
+			});
 		});
 
 		//disable elements for editing
@@ -167,7 +236,7 @@ function renderEvents(doc){
 		codeName.disabled = true;
 		description.disabled = true;
 		btnUpdate.disabled = true;
-		
+
 	});
 
 	//remove event
@@ -254,7 +323,9 @@ function renderEvents(doc){
 		});
 	}).then(display => currentDisplayBeacons(beaconList, bul));
 
-	//attach to list
+
+  //attach to elements
+/*
 	li.appendChild(nameLabel);
 	li.appendChild(name);
 	li.appendChild(sdateLabel);
@@ -280,7 +351,8 @@ function renderEvents(doc){
 	li.appendChild(btnRemove);
 	li.appendChild(bul);
 
-	eventsList.appendChild(li);
+	eventsList.appendChild(li); */
+
 }
 
 function currentDisplayBeacons(beaconList, bul){
@@ -311,7 +383,7 @@ function eventSearch(){
 		//if match
 		if ( searchValue.indexOf( searchTerm ) > -1 ) {
 			console.log(searchValue + ":" + searchTerm);
-		} 
+		}
 		//if not match
 		else{
 			children[j].style.display = 'none';
@@ -357,6 +429,7 @@ function renderBeacons(doc){
 	//create elements
 	let li = document.createElement('li');
 	li.id= doc.id;
+
 	let bIDLabel = document.createElement('p');
 	let bID = document.createElement('input');
 	let eventLabel = document.createElement('p')
@@ -445,7 +518,7 @@ function renderBeacons(doc){
 	btnUpdate.disabled = true;
 
 	//attach to list
-	li.appendChild(nameLabel)
+/*	li.appendChild(nameLabel)
 	li.appendChild(name);
 	li.appendChild(bIDLabel);
 	li.appendChild(bID);
@@ -456,7 +529,7 @@ function renderBeacons(doc){
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
 
-	beaconList.appendChild(li);
+	beaconList.appendChild(li); */
 }
 
 function beaconSearch(){
@@ -476,7 +549,7 @@ function beaconSearch(){
 		//if match
 		if ( searchValue.indexOf( searchTerm ) > -1 ) {
 			console.log(searchValue + ":" + searchTerm);
-		} 
+		}
 		//if not match
 		else{
 			children[i].style.display = 'none';

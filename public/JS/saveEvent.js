@@ -184,7 +184,7 @@ form.addEventListener('submit', (e) =>{
 function addBeacon(){
 	//check if beacon free
 	var selected = document.getElementById('beaconList').value;
-	var selectedID = beaconList[beaconList.selectedIndex].id; 
+	var selectedID = beaconList[beaconList.selectedIndex].id;
 	var existing = false;
 	if (selected != "None"){
 		if(beaconListArray.length != 0){
