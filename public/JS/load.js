@@ -429,7 +429,6 @@ function renderBeacons(doc){
 	//create elements
 	let li = document.createElement('li');
 	li.id= doc.id;
-
 	let bIDLabel = document.createElement('p');
 	let bID = document.createElement('input');
 	let eventLabel = document.createElement('p')
