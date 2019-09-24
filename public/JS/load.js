@@ -69,8 +69,8 @@ function renderEvents(doc){
 	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
   codeName.className += "form-control";
-  //document.getElementById('col13').appendChild(codeTitleLabel);
-  //document.getElementById('col14').appendChild(codeName);
+  document.getElementById('col13').appendChild(codeTitleLabel);
+  document.getElementById('col14').appendChild(codeName);
 
 	let btnShow = document.createElement('input');
   btnShow.className += "btn btn-sm";
@@ -326,7 +326,7 @@ function renderEvents(doc){
 
 
   //attach to elements
-	li.appendChild(nameLabel);
+/*	li.appendChild(nameLabel);
 	li.appendChild(name);
 	li.appendChild(sdateLabel);
 	li.appendChild(sDate);
@@ -351,8 +351,8 @@ function renderEvents(doc){
 	li.appendChild(btnRemove);
 	li.appendChild(bul);
 
-	eventsList.appendChild(li);
-s
+	eventsList.appendChild(li); */
+
 }
 
 function currentDisplayBeacons(beaconList, bul){
