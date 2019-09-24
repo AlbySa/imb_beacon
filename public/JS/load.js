@@ -429,15 +429,42 @@ function renderBeacons(doc){
 	//create elements
 	let li = document.createElement('li');
 	li.id= doc.id;
+
 	let bIDLabel = document.createElement('p');
+  document.getElementById('nameText').appendChild(bIDLabel);
 	let bID = document.createElement('input');
+  bID.className = "form-control";
+  document.getElementById('nameInput').appendChild(bID);
+
 	let eventLabel = document.createElement('p')
+  document.getElementById('idText').appendChild(eventLabel);
 	let event = document.createElement('input');
+  event.className = "form-control";
+  document.getElementById('idInput').appendChild(event);
+
 	let nameLabel = document.createElement('p')
+  document.getElementById('eNameL').appendChild(nameLabel);
 	let name = document.createElement('input');
+  name.className = "form-control";
+  document.getElementById('eNameI').appendChild(name);
+
 	let btnUpdate = document.createElement('input');
+  btnUpdate.className = "btn btn-sm";
+  btnUpdate.style.backgroundColor = "#007f6a";
+  btnUpdate.style.color = 'white';
+  document.getElementById('ebtn1').appendChild(btnUpdate);
+
 	let btnEdit = document.createElement('input');
+  btnEdit.className = "btn btn-sm";
+  btnEdit.style.backgroundColor = "#007f6a";
+  btnEdit.style.color = 'white';
+  document.getElementById('ebtn2').appendChild(btnEdit);
+
 	let btnRemove = document.createElement('input');
+  btnRemove.className = "btn btn-sm";
+  btnRemove.style.backgroundColor = "#007f6a";
+  btnRemove.style.color = 'white';
+  document.getElementById('ebtn3').appendChild(btnRemove);
 
 	//populate elements
 	li.setAttribute('data-id', doc.id);
