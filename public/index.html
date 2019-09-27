@@ -61,16 +61,11 @@
             <div class="col">
               <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch()">Search</button>
             </div>
-        <div class=" row">
-          <div class="col">
-            <input class="form-control" type="text" id="eventsearch"/>
-          </div>
-          <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch(e)">Search</button>
           </div>
         </form>
+      </div>
 
-
+<!--
         <ul id="events" class="events">
           <div class=" row">
             <div id="colName" class="col">
@@ -175,68 +170,26 @@
           </div>
         </ul>
     </div>
+-->
 
     <div class="container" style="width: 50vw; margin-left: 5vw;" id="EventDisplayWindow">
       <h1>View and Search Beacons</h1><br>
-        <h5>Beacons</h5>
+      <h5>Beacons</h5>
+      <form id="beaconSearchForm" action="Action???Or is there a listener???" method="post">
         <div class="row ">
           <div class="col">
             <input class="form-control" type = "text" id = "beaconsearch"/>
           </div>
-          <div class="">
+          <div class="col">
             <button class="btn" style="background-color:#007f6a; color:white;" id="beaconSearchButton" onclick="beaconSearch(e)">Search</button>
           </div>
         </div>
-        <ul id="beacons">
-          <div class="row">
-            <div id="nameText" class="col">
+      </form>
+      <br>
+      <ul id="beacons">
 
-            </div>
-            <div id="nameInput" class="col">
-
-          </div>
-          <div id="nameInput" class="col">
-
-          </div>
-        </div>
-        <div class="row">
-          <div id="idText" class="col">
-
-          </div>
-          <div id="idInput" class="col">
-
-          </div>
-        </div>
-        <div class="row">
-          <div id="eName" class="col">
-
-          </div>
-          <br>
-          <div class="row">
-
-            <div id="ebtn1" class="col-7">
-
-            </div>
-            <div id="ebtn2" class="col-3">
-
-            </div>
-            <div id="ebtn3" class="col-3">
-        </div>
-        <div class="row">
-          <div id="ebtn1" class="col">
-
-          </div>
-          <div id="ebtn2" class="col">
-
-          </div>
-          <div id="ebtn2" class="col">
-
-          </div>
-        </ul>
+      </ul>
     </div>
-
-
-
 
 
     <div class="container-fluid align-items-end">
