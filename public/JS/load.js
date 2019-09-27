@@ -17,7 +17,7 @@ const db = firebase.firestore();
 //load event data
 //load events selector
 const eventsList = document.querySelector('#events');
-/*
+
 //display to screen
 function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//create elements
@@ -25,97 +25,29 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	let nameLabel = document.createElement('p');
 	let name = document.createElement('input');
-  name.className += "form-control";
-  document.getElementById('colName').appendChild(nameLabel);
-  document.getElementById('colName2').appendChild(name);
-
-
 	let stimeLabel = document.createElement('p');
 	let sTime = document.createElement('input');
-  sTime.className += "form-control";
-  document.getElementById('myCol').appendChild(stimeLabel);
-  document.getElementById('myCol2').appendChild(sTime);
-
 	let sdateLabel = document.createElement('p');
 	let sDate = document.createElement('input');
-  sDate.className += "form-control";
-  document.getElementById('col3').appendChild(sdateLabel);
-  document.getElementById('col4').appendChild(sDate);
-
 	let etimeLabel = document.createElement('p');
 	let eTime = document.createElement('input');
-  eTime.className += "form-control";
-  document.getElementById('col5').appendChild(etimeLabel);
-  document.getElementById('col6').appendChild(eTime);
-
 	let edateLabel = document.createElement('p');
 	let eDate = document.createElement('input');
-  eDate.className += "form-control";
-  document.getElementById('col7').appendChild(edateLabel);
-  document.getElementById('col8').appendChild(eDate);
-
 	let descriptionLabel = document.createElement('p');
 	let description = document.createElement('textarea');
-  description.className += "form-control"
-  document.getElementById('col9').appendChild(descriptionLabel);
-  document.getElementById('col10').appendChild(description);
-
 	let codeLabel = document.createElement('p');
 	let code = document.createElement('input');
-  code.className += "form-control";
-  document.getElementById('col11').appendChild(codeLabel);
-  document.getElementById('col12').appendChild(code);
-
 	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
-  codeName.className += "form-control";
-  document.getElementById('col13').appendChild(codeTitleLabel);
-  document.getElementById('col14').appendChild(codeName);
-
 	let btnShow = document.createElement('input');
-  btnShow.className += "btn btn-sm";
-  btnShow.style.backgroundColor = "#007f6a";
-  btnShow.style.color = 'white';
-  document.getElementById('bt1').appendChild(btnShow);
-
-
 	let bul = document.createElement('ul');
+  let btnremBeacon = document.createElement('input');
 	let btnUpdate = document.createElement('input');
-  btnUpdate.className += "btn btn-sm";
-  btnUpdate.style.backgroundColor = "#007f6a";
-  btnUpdate.style.color = 'white';
-  document.getElementById('bt2').appendChild(btnUpdate);
-
-
 	let btnEdit = document.createElement('input');
-  btnEdit.className += "btn btn-sm";
-  btnEdit.style.backgroundColor = "#007f6a";
-  btnEdit.style.color = 'white';
-  document.getElementById('bt3').appendChild(btnEdit);
-
 	let btnRemove = document.createElement('input');
-  btnRemove.className += "btn btn-sm";
-  btnRemove.style.backgroundColor = "#007f6a";
-  btnRemove.style.color = 'white';
-  document.getElementById('bt4').appendChild(btnRemove);
-
-//br
 	let addtoBeacon = document.createElement('select');
-  addtoBeacon.className += 'form-control'
-  document.getElementById('selThing').appendChild(addtoBeacon);
-
-
 	let btnadd = document.createElement('input');
-  btnadd.className += "btn btn-sm";
-  btnadd.style.backgroundColor = "#007f6a";
-  btnadd.style.color = 'white';
-  document.getElementById('bt5').appendChild(btnadd);
-
-	let btnremBeacon = document.createElement('input');
-  btnremBeacon.className += "btn btn-sm";
-  btnremBeacon.style.backgroundColor = "#007f6a";
-  btnremBeacon.style.color = 'white';
-  document.getElementById('bt6').appendChild(btnremBeacon);
+  //lost thingo that lists beacons as you add them?
 
 	sDate.className += " datePicker";
 	eDate.className += " datePicker";
@@ -182,6 +114,37 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
 	bul.id = 'bul' + doc.id;
+
+  //styling
+  name.className += "form-control";
+  sTime.className += "form-control";
+  sDate.className += "form-control";
+  eTime.className += "form-control";
+  eDate.className += "form-control";
+  description.className += "form-control";
+  code.className += "form-control";
+  codeName.className += "form-control";
+  btnShow.className += "btn btn-sm";
+  btnShow.style.backgroundColor = "#007f6a";
+  btnShow.style.color = 'white';
+  btnUpdate.className += "btn btn-sm";
+  btnUpdate.style.backgroundColor = "#007f6a";
+  btnUpdate.style.color = 'white';
+  btnEdit.className += "btn btn-sm";
+  btnEdit.style.backgroundColor = "#007f6a";
+  btnEdit.style.color = 'white';
+  btnRemove.className += "btn btn-sm";
+  btnRemove.style.backgroundColor = "#007f6a";
+  btnRemove.style.color = 'white';
+  addtoBeacon.className += 'form-control'
+  btnadd.className += "btn btn-sm";
+  btnadd.style.backgroundColor = "#007f6a";
+  btnadd.style.color = 'white';
+  btnremBeacon.className += "btn btn-sm";
+  btnremBeacon.style.backgroundColor = "#007f6a";
+  btnremBeacon.style.color = 'white';
+
+
 
 	//enable editing
 	btnEdit.addEventListener("click", function(){
@@ -336,6 +299,8 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(eDate);
 	li.appendChild(etimeLabel);
 	li.appendChild(eTime);
+  li.appendChild(codeTitleLabel);
+  li.appendChild(codeName);
 	li.appendChild(codeLabel);
 	li.appendChild(code);
 	li.appendChild(descriptionLabel);
@@ -345,15 +310,17 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(btnadd);
 	li.appendChild(btnremBeacon);
 	li.appendChild(document.createElement('br'));
+  li.appendChild(document.createElement('br'));
 	li.appendChild(btnShow);
 	li.appendChild(btnUpdate);
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
 	li.appendChild(bul);
-	eventsList.appendChild(li);
+  li.appendChild(document.createElement('br'));
 
+	eventsList.appendChild(li);
 }
-*/
+
 
 //-----------------------------------------------------------
 function currentDisplayBeacons(beaconList, bul){
@@ -445,6 +412,7 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	//populate elements
 	li.setAttribute('data-id', doc.id);
+  li.setAttribute("id", "beaconListSteph")
 	nameLabel.textContent = 'Beacon Name:'
 	name.value = doc.data().name;
 	bIDLabel.textContent = 'Beacon ID:'
@@ -465,7 +433,6 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   event.className += "form-control";
   name.className += "form-control";
 
-
   btnUpdate.className += "btn btn-sm";
   btnUpdate.style.backgroundColor = "#007f6a";
   btnUpdate.style.color = 'white';
@@ -477,9 +444,6 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   btnRemove.className += "btn btn-sm";
   btnRemove.style.backgroundColor = "#007f6a";
   btnRemove.style.color = 'white';
-  //document.getElementById('bt1').appendChild(btnShow);
-  //document.getElementById('col13').appendChild(codeTitleLabel);
-  //document.getElementById('col14').appendChild(codeName);
 
 	//enable edit
 	btnEdit.addEventListener("click", function(){
@@ -492,7 +456,7 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	});
 
 	//sends updated event to database
-	btnUpdate.addEventListener("click", (e) => {
+	btnUpdate.addEventListener("click", (e) => { //THIS ISN"T WORKING???
 		//update data
 		e.stopPropagation();
 		let id = e.target.parentElement.getAttribute('data-id');
@@ -554,24 +518,32 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
 
-	beaconList.appendChild(li);
+	document.getElementById('beacons').appendChild(li);
+
 }
 
 function beaconSearch(e){
-	e.stopPropagation();
+//	e.stopPropagation();
 	var searchTerm = document.getElementById('beaconsearch').value;
-	searchTerm = searchTerm.toUpperCase();
+  //alert(searchTerm); //this works so shouldn't be null for .toUpperCase?
+  if(searchTerm != "")
+  {
+    searchTerm = searchTerm.toUpperCase(); //Cannot read property 'toUpperCase' of undefined
+  }
 	var children = document.getElementById("beacons").childNodes;
 	var child = children[0];
 	//clear current data
 	for(var l = 0; l < children.length; l++){
-		children[l].style.display = 'block';
+		children[l].style.display = 'block'; //an issue of Cannot set property 'display' of undefined
 	}
 	var searchValue = "";
 	for(var i = 0; i < children.length; i++){
 		child = children[i].childNodes;
 		searchValue = child[0].value;
-		searchValue = searchValue.toUpperCase();
+    if (searchValue != "")
+    {
+      searchValue = searchValue.toUpperCase(); //same error as above
+    }
 		//if match
 		if ( searchValue.indexOf( searchTerm ) > -1 ) {
 			console.log(searchValue + ":" + searchTerm);

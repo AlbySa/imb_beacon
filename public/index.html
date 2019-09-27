@@ -48,143 +48,39 @@
     <div class="container">
       <br>
       <h1>View and Search Events</h1>
-      <br>
     </div>
 
 		<div class="container" style="width: 50vw; margin-left: 5vw;" id ="beaconDisplayWindow">
-        <h5>Events</h5>
-        <form class="" action="index.html" method="post">
-          <div class="row">
-            <div class="col">
-              <input class="form-control" type="text" id="eventsearch"/>
-            </div>
-            <div class="col">
-              <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch()">Search</button>
-            </div>
+      <h5>Events</h5>
+      <form class=""  method="post"> <!-- action="index.html" SHOULD THIS BE IN THE FORM-->
+        <div class="row">
+          <div class="col">
+            <input class="form-control" type="text" id="eventsearch"/>
           </div>
-        </form>
-      </div>
-
-<!--
-        <ul id="events" class="events">
-          <div class=" row">
-            <div id="colName" class="col">
-
+          <div class="col">
+            <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch()">Search</button>
           </div>
-          <div id="colName2" class="col">
-
-          </div>
-          <br>
-          <div id='myRow' class=" row">
-            <div id="myCol" class="col">
-
-          </div>
-          <div id="myCol2" class="col">
-
-          </div>
-          <br>
-          <div class="row">
         </div>
+      </form>
+      <ul id="events" class="events">
 
-          <div class=" row">
-            <div id="col3" class="col">
-
-          </div>
-          <div id="col4" class="col">
-
-          </div>
-          <br>
-          <div class=" row">
-            <div id="col5" class="col">
-
-          </div>
-          <div id="col6" class="col">
-
-          </div>
-          <br>
-          <div class=" row">
-            <div id="col7" class="col">
-
-          </div>
-          <div id="col8" class="col">
-
-          </div>
-          <br>
-          <div class=" row">
-            <div id="col9" class="col">
-
-          </div>
-          <div id="col10" class="col">
-
-          </div>
-          <br>
-          <div class="row">
-            <div id="col11" class="col">
-
-          </div>
-          <div id="col12" class="col">
-
-          </div>
-          <br>
-          <div class="row">
-            <div id="col13" class="col">
-
-          </div>
-          <div id="col14" class="col">
-
-          </div>
-          <br>
-          <div class="row">
-            <div id="bt1" class="col-5">
-        </div>
-
-          <div class=" row">
-            <div id="bt1" class="col">
-
-            </div>
-            <div id="bt2" class="col-3">
-
-            </div>
-            <div id="bt3" class="col-2">
-
-            </div>
-            <div id="bt4" class="col-2">
-
-          </div>
-          <br><br>
-          <div class=" row">
-            <div id="selThing" class="col-6">
-
-            </div>
-            <div id="bt5" class="col-2">
-
-            </div>
-            <div id="bt6" class="col-2">
-          </div>
-          <div class=" row">
-            <div id="bt5" class="col">
-
-          </div>
-          <div id="bt6" class="col">
-
-          </div>
-        </ul>
+      </ul>
     </div>
--->
+
+    <br>
 
     <div class="container" style="width: 50vw; margin-left: 5vw;" id="EventDisplayWindow">
-      <h1>View and Search Beacons</h1><br>
+      <h1>View and Search Beacons</h1>
       <h5>Beacons</h5>
-      <form id="beaconSearchForm" action="Action???Or is there a listener???" method="post">
+    <!--  <form id="beaconSearchForm" method="post">    SHOULD SEARCH BE IN A FORM?   </form> -->
         <div class="row ">
           <div class="col">
             <input class="form-control" type = "text" id = "beaconsearch"/>
           </div>
           <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" id="beaconSearchButton" onclick="beaconSearch(e)">Search</button>
+            <button class="btn" style="background-color:#007f6a; color:white;" id="beaconSearchButton" onclick="beaconSearch()">Search</button> <!-- removed 'e' from beaconSearch()-->
           </div>
         </div>
-      </form>
       <br>
       <ul id="beacons">
 
