@@ -30,10 +30,9 @@ DocumentSnapshot activeBeacon;
 String activeBeaconName = 'not connected';
 DocumentSnapshot activeEvent;
 String activeEventName = "";
-
+bool signedIn = false;
 bool beaconFound = false;
-
-bool initialLoad =true;
+bool initialLoad = true;
 
 Timer timer;
 
@@ -52,8 +51,13 @@ String byteListToHexString(List<int> bytes) => bytes
 final bgColor = const Color(0xFFF5F5F5); // background colour
 final barColor = const Color(0xFF02735E);// Bar/button colour
 
-void main() => runApp(MyApp());
-
+void main() {
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp,DeviceOrientation.portraitDown])
+      .then((_) {
+    runApp(MyApp());
+  });
+}
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -86,8 +90,8 @@ class LoginFormState extends State<LoginForm> {
   // Scanning
   Map<DeviceIdentifier, ScanResult> scanResults = new Map();
   bool adapterOn = false;
-  bool isScanning= true;
-
+  bool isScanning = true;
+  AuthResult user;
 
 
   //loading circle
@@ -289,10 +293,11 @@ class LoginFormState extends State<LoginForm> {
     formState.save();
 
     try {
-      AuthResult user = await FirebaseAuth.instance
+      user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email, password: _password);
 
       emptyText();
+      signedIn=true;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Home(user.user.uid)));//, activeEventName)));
       setState(() {
@@ -318,7 +323,9 @@ class LoginFormState extends State<LoginForm> {
       activeEvent = event;
       activeEventName = event.documentID;
 
-      _setRewardInfo();
+      if(signedIn){
+        _setRewardInfo();
+      }
     });
   }
 
@@ -430,19 +437,20 @@ class LoginFormState extends State<LoginForm> {
     Firestore.instance.collection('events').document(activeEventName).collection('rewards').getDocuments().then((querySnapshot) {
       querySnapshot.documents.forEach((doc){
 
-        var attr = doc.data['name'];
+        var attr = doc.documentID;
 
-        DocumentReference document = Firestore.instance.collection('users').document('0txZEXGNAzSPoE2I2BPKsVFyAz82').collection('pastEvents').document(activeEventName);
+        DocumentReference document = Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName);
         document.get().then((documentSnapshot){
 
+          //TODO this
           //if the reward hasnt already been claimed
-          if(!(documentSnapshot.data[attr])){
+          //if(!(documentSnapshot.data[attr])){
 
             //add each reward as 'false' in users/pastEvents
-            Firestore.instance.collection('users').document('0txZEXGNAzSPoE2I2BPKsVFyAz82').collection('pastEvents').document(activeEventName).setData({
+            Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
               "${doc.data['name']}": false,
             });
-          }
+          //}
         });
       });
     });

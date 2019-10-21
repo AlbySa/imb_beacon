@@ -41,7 +41,9 @@ class HomeState extends State<Home> {
   String event;
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return WillPopScope(
+      onWillPop: _showDialog,
+      child:Scaffold(
         backgroundColor: bgColor,
         appBar: AppBar(
           leading: Container(),
@@ -254,10 +256,10 @@ class HomeState extends State<Home> {
                   ),
                 ]),
           )
-        ]));
+        ])));
   }
 
-  void _showDialog() {
+  Future<bool> _showDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -278,6 +280,7 @@ class HomeState extends State<Home> {
                     ),
                     color: barColor,
                     onPressed: () {
+                      signedIn = false;
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },

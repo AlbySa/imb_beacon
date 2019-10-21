@@ -148,6 +148,7 @@ class EventInfoState extends State<EventInfo> {
   Image fetchImage(){
 
     String photoPath = "gs://pineappleproximity.appspot.com/$activeEventName.png";
+    print("IMAGE IS HERE: $photoPath");
 
       Image image = Image(image: FirebaseStorageImage(photoPath));
       return image;
