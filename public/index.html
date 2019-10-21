@@ -50,42 +50,21 @@
       <h1>View and Search Events</h1>
     </div>
 
-		<div class="container" style="width: 50vw; margin-left: 5vw;" id ="beaconDisplayWindow">
+
+
+    <div class="container" style="width: 50vw; margin-left: 5vw;" id = "beaconDisplayWindow">
       <h5>Events</h5>
-      <form class=""  method="post"> <!-- action="index.html" SHOULD THIS BE IN THE FORM-->
-        <div class="row">
-          <div class="col">
-            <input class="form-control" type="text" id="eventsearch"/>
-          </div>
-          <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch()">Search</button>
-          </div>
-        </div>
-      </form>
-      <ul id="events" class="events">
-
-      </ul>
+      <input type = "text" id = "eventsearch"/>
+      <button id = "eventSearchButton" onclick="eventSearch()">Search...</button>
+      <ul id="events"></ul>
     </div>
-
-    <br>
-
-    <div class="container" style="width: 50vw; margin-left: 5vw;" id="EventDisplayWindow">
-      <h1>View and Search Beacons</h1>
+    <div style="width: 50vw; margin-left: 5vw;" class="container" id = "EventDisplayWindow">
       <h5>Beacons</h5>
-    <!--  <form id="beaconSearchForm" method="post">    SHOULD SEARCH BE IN A FORM?   </form> -->
-        <div class="row ">
-          <div class="col">
-            <input class="form-control" type = "text" id = "beaconsearch"/>
-          </div>
-          <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" id="beaconSearchButton" onclick="beaconSearch()">Search</button> <!-- removed 'e' from beaconSearch()-->
-          </div>
-        </div>
-      <br>
-      <ul id="beacons">
-
-      </ul>
+      <input type = "text" id = "beaconsearch"/>
+      <button id = "beaconSearchButton" onclick="beaconSearch()">Search...</button>
+      <ul id="beacons"></ul>
     </div>
+
 
 
     <div class="container-fluid align-items-end">

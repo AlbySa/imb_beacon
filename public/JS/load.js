@@ -190,6 +190,8 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			});
 		});
 
+    console.log(name);
+
 		//disable elements for editing
 		name.disabled = true;
 		sTime.disabled = true;
