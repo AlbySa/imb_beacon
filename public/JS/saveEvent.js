@@ -34,10 +34,14 @@ form.addEventListener('submit', (e) =>{
 	var eventCodeName = document.getElementById("dCodeName").value;
 	var eventDescription = document.getElementById("eventD").value;
 
-	db.collection('events').doc(eventName).get().then(doc => {
+	//remove space
+	var eNameNo = eventName.replace(/ /g,"_");
+
+
+	db.collection('events').doc(eNameNo).get().then(doc => {
 	if (!doc.exists){
 		if (eventCode && eventCodeName != ""){
-			db.collection('events').doc(eventName).set({
+			db.collection('events').doc(eNameNo).set({
 				title: eventName,
 				startDate: startDate,
 				startTime: startTime,
@@ -46,20 +50,20 @@ form.addEventListener('submit', (e) =>{
 				description: eventDescription
 			})
 			.then(function(){
-				db.collection('events').doc(eventName).collection('rewards').doc(eventCodeName).set({
+				db.collection('events').doc(eNameNo).collection('rewards').doc(eventCodeName).set({
 					Name:eventCode
 				});
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
 					uuid = beaconListIDArray[i];
 					db.collection('beacons').doc(uuid).update({
-						event: eventName
+						event: eNameNo
 					});
 				}
 			});
 		}
 		else if(eventCode != ""){
-			db.collection('events').doc(eventName).set({
+			db.collection('events').doc(eNameNo).set({
 				title: eventName,
 				startDate: startDate,
 				startTime: startTime,
@@ -68,21 +72,21 @@ form.addEventListener('submit', (e) =>{
 				description: eventDescription
 			})
 			.then(function(){
-				db.collection('events').doc(eventName).collection('rewards').doc(eventCodeName).set({
+				db.collection('events').doc(eNameNo).collection('rewards').doc(eventCodeName).set({
 					Name:eventCode
 				});
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
 					uuid = beaconListIDArray[i];
 					db.collection('beacons').doc(uuid).update({
-						event: eventName
+						event: eNameNo
 					});
 				}
 			});
 
 		}
 		else if (eventCodeName != ""){
-			db.collection('events').doc(eventName).set({
+			db.collection('events').doc(eNameNo).set({
 				title: eventName,
 				startDate: startDate,
 				startTime: startTime,
@@ -91,14 +95,14 @@ form.addEventListener('submit', (e) =>{
 				description: eventDescription
 			})
 			.then(function(){
-				db.collection('events').doc(eventName).collection('rewards').doc(eventCodeName).set({
+				db.collection('events').doc(eNameNo).collection('rewards').doc(eventCodeName).set({
 					Name:""
 				});
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
 					uuid = beaconListIDArray[i];
 					db.collection('beacons').doc(uuid).update({
-						event: eventName
+						event: eNameNo
 					});
 				}
 			});
@@ -108,7 +112,7 @@ form.addEventListener('submit', (e) =>{
 		//if event aready exists create override
 		if(confirm("An event of name " + eventName + " Already exists Do you want to Create this Event?")){
 			if (eventCode && eventCodeName != ""){
-				db.collection('events').doc(eventName).set({
+				db.collection('events').doc(eNameNo).set({
 					title: eventName,
 					startDate: startDate,
 					startTime: startTime,
@@ -130,7 +134,7 @@ form.addEventListener('submit', (e) =>{
 				});
 			}
 			else if(eventCode != ""){
-				db.collection('events').doc(eventName).set({
+				db.collection('events').doc(eNameNo).set({
 					title: eventName,
 					startDate: startDate,
 					startTime: startTime,
@@ -152,7 +156,7 @@ form.addEventListener('submit', (e) =>{
 				});
 			}
 			else if (eventCodeName != ""){
-				db.collection('events').doc(eventName).set({
+				db.collection('events').doc(eNameNo).set({
 					title: eventName,
 					startDate: startDate,
 					startTime: startTime,
@@ -181,6 +185,11 @@ form.addEventListener('submit', (e) =>{
 });
 	form.reset();
 });
+
+function addImage(){
+	alert(document.getElementById("ImageUpload").files[0].val);
+}
+
 function addBeacon(){
 	//check if beacon free
 	var selected = document.getElementById('beaconList').value;
@@ -217,10 +226,14 @@ db.collection('beacons').get().then((snapshot => {
 	});
 }));
 
+function uploadImage(){
+
+}
+
 //Redirect if user is not signed in
 firebase.auth().onAuthStateChanged(function(user){
 	if (!user){
-		window.location.assign('./login.html');
+		window.location.assign('./index.html');
 	}
 })
 

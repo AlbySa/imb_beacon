@@ -25,6 +25,7 @@ form.addEventListener('submit', (e) =>{
 	//get values
 	var beaconName = document.getElementById("bName").value;
 	var beaconEvent = document.getElementById("bEvent").value;
+	beaconEvent = beaconEvent.replace(/ /g,"_");
 	var beaconID = document.getElementById("bID").value;;
 	var eventExists = false;
 
@@ -78,7 +79,7 @@ form.addEventListener('submit', (e) =>{
 //Redirect if user is not signed in
 firebase.auth().onAuthStateChanged(function(user){
 	if (!user){
-		window.location.assign('./login.html');
+		window.location.assign('./index.html');
 	}
 })
 

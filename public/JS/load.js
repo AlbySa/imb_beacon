@@ -39,15 +39,14 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	let code = document.createElement('input');
 	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
-	let btnShow = document.createElement('input');
-	let bul = document.createElement('ul');
-  let btnremBeacon = document.createElement('input');
+  	let btnremBeacon = document.createElement('input');
 	let btnUpdate = document.createElement('input');
 	let btnEdit = document.createElement('input');
 	let btnRemove = document.createElement('input');
 	let addtoBeacon = document.createElement('select');
 	let btnadd = document.createElement('input');
-  //lost thingo that lists beacons as you add them?
+	let imgUp = document.createElement('input');
+	let imgSend = document.createElement('input')
 
 	sDate.className += " datePicker";
 	eDate.className += " datePicker";
@@ -62,12 +61,13 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	eDate.type = 'text';
 	code.type = 'text';
 	codeName.type = 'text';
-	btnShow.type = 'button';
 	btnUpdate.type = 'button';
 	btnEdit.type = 'button';
 	btnRemove.type = 'button';
 	btnadd.type = 'button';
 	btnremBeacon.type = 'button';
+	imgSend.type = 'button';
+	imgUp.setAttribute("type", "file");
 
 	//disable elements for editing
 	name.disabled = true;
@@ -79,6 +79,8 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	codeName.disabled = true;
 	description.disabled = true;
 	btnUpdate.disabled = true;
+	imgUp.disabled = true;
+	imgSend.disabled = true;
 
 	//populate elements
 	var documentID = doc.id;
@@ -99,7 +101,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	sDate.value = doc.data().startDate;
 	sdateLabel.textContent = "Start Date:";
 	sDate.placeholder = "Start Date"
-	btnShow.value = "Toggle Beacons Displaying Event";
 	btnUpdate.value = "Update Entry";
 	btnEdit.value = "Edit Entry";
 	btnRemove.value = "Remove Entry";
@@ -113,7 +114,8 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	codeName.placeholder = "Discount Name";
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
-	bul.id = 'bul' + doc.id;
+	imgSend.value = 'Upload';
+	imgSend.id = "send";
 
   //styling
   name.className += "form-control";
@@ -124,9 +126,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   description.className += "form-control";
   code.className += "form-control";
   codeName.className += "form-control";
-  btnShow.className += "btn btn-sm";
-  btnShow.style.backgroundColor = "#007f6a";
-  btnShow.style.color = 'white';
   btnUpdate.className += "btn btn-sm";
   btnUpdate.style.backgroundColor = "#007f6a";
   btnUpdate.style.color = 'white';
@@ -143,6 +142,7 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   btnremBeacon.className += "btn btn-sm";
   btnremBeacon.style.backgroundColor = "#007f6a";
   btnremBeacon.style.color = 'white';
+  imgSend.className += "btn btn-sm";
 
 
 
@@ -156,12 +156,10 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 	});
 
-	//show current beacons running event
-	btnShow.addEventListener("click", (e) => {
-		if(bul.style.display == 'block')
-			bul.style.display = 'none';
-		else
-			bul.style.display = 'block';
+	//upload image
+	imgSend.addEventListener("click", (e) => {
+		e.stopPropagation();
+		
 	});
 
 	//send updated document to database
@@ -275,19 +273,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		});
 	});
 
-	//render beacons displaying this event
-	var beaconList = [];
-	//get beacon variable @TODO change to search all beacons
-	db.collection('beacons').get().then((snapshot) => {
-		snapshot.docs.forEach(doc =>{
-			//if current event
-			if(doc.data().event == id){
-				beaconList.push(doc.data().name);
-			}
-		});
-	}).then(display => currentDisplayBeacons(beaconList, bul));
-
-
   //attach to elements
 	li.appendChild(nameLabel);
 	li.appendChild(name);
@@ -299,8 +284,8 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(eDate);
 	li.appendChild(etimeLabel);
 	li.appendChild(eTime);
-  li.appendChild(codeTitleLabel);
-  li.appendChild(codeName);
+  	li.appendChild(codeTitleLabel);
+  	li.appendChild(codeName);
 	li.appendChild(codeLabel);
 	li.appendChild(code);
 	li.appendChild(descriptionLabel);
@@ -310,13 +295,15 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(btnadd);
 	li.appendChild(btnremBeacon);
 	li.appendChild(document.createElement('br'));
-  li.appendChild(document.createElement('br'));
-	li.appendChild(btnShow);
+	li.appendChild(document.createElement('br'));
+	li.appendChild(imgUp);
+	li.appendChild(imgSend);
+	li.appendChild(document.createElement('br'));
+	li.appendChild(document.createElement('br'));  
 	li.appendChild(btnUpdate);
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
-	li.appendChild(bul);
-  li.appendChild(document.createElement('br'));
+  	li.appendChild(document.createElement('br'));
 
 	eventsList.appendChild(li);
 }
