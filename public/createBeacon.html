@@ -1,0 +1,92 @@
+<html lang="en">
+  <head>
+        <!--Written By Luke Sturgiss-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href = "style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  	<!--Jquery stuffs-->
+  	<link rel="stylesheet" href="jquery-ui-themes-1.12.1/jquery-ui.min.css">
+  	<!--Firebase import-->
+  	<script src="https://www.gstatic.com/firebasejs/6.4.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.4.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-auth.js"></script>
+
+  	<title>Create Beacon</title>
+    <link rel="icon" href="logo2.png">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <img class="d-inline-block align-top ml-0 mr-1" src="logo2.png" alt="logo" height="30">Pineapple Proximity
+        </span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="createEvent.html">Create Event</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="createBeacon.html">Create Beacon</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <br>
+    <div class="container">
+      <h1>Create a Beacon</h1>
+    </div>
+    <br>
+		<div class="container" style="width: 50vw; margin-left: 5vw;">
+			<form id = "beaconForm">
+				<!--Event Name-->
+				<div class="form-group">
+				  <label for="bName">Name:</label>
+				  <input type="text" class="form-control" id="bName" required = "true">
+				</div>
+				<div class="form-group">
+					<label for="bEvent">Event:</label>
+					<input type="text" class="form-control" id="bEvent">
+				</div>
+				<div class="form-group">
+					<label for="bID">UUID:</label>
+					<input type="text" class="form-control" id="bID" required = "true">
+				</div>
+				<input style="background-color:#007f6a; color:white;" class="btn " type="submit" value="Submit">
+			</form>
+		</div>
+
+    <div class="container-fluid align-items-end">
+      <hr>
+    </div>
+    <div class="container">
+      <footer class="footer">
+        <div class="row">
+          <div class="col">
+            <a href="index.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="Create_Event.html">Create Event</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="Create_Beacon.html">Create Beacon</a>
+            <br><br>
+            <p>&copy; 2019 - Pineapple Proximity</p>
+          </div>
+          <div class="text-right col">
+            <img class="mb-3" src="logo.png" alt="logo" width="40%">
+          </div>
+        </div>
+      </footer>
+    </div>
+		<script src = "./JS/saveBeacon.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	</body>
+</html>
