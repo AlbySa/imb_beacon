@@ -5,13 +5,11 @@ SignUp Screen
   - return to login
   - email verification
 
-Done:
-  limited data validation
-  Account creation
-  Link back to login
-
   //TODO further input validation
   //TODO email verification
+
+  Author: Adam May amay787@uowmail.edu.au
+  last revised 23/10/2019
 */
 
 // ----------------------- Sign-up Page -----------------------

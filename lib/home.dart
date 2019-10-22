@@ -3,9 +3,8 @@ User home screen
   - Access to Rewards, myAccount, eventInfo, upcomingEvent, Logout
   - Logout button in appbar -> logout dialogue
 
-Done:
-  All 4 menu buttons lead to placeholder pages
-  Logout button creates logout dialog alert
+Author: Adam May amay787@uowmail.edu.au
+last revised 23/10/2019
 */
 
 import 'package:imb_beacon/myAccount.dart';
@@ -26,7 +25,6 @@ StreamSubscription _stateSubscription;
 class Home extends StatefulWidget {
   @override
   String id;
-
   Home(this.id);//, this.event);
 
   HomeState createState() => HomeState(id);//, event);
@@ -39,6 +37,9 @@ class HomeState extends State<Home> {
 
   String id;
   String event;
+  String title = "Welcome to our app!";
+
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -83,15 +84,13 @@ class HomeState extends State<Home> {
                           style: TextStyle(color: barColor, fontSize: 30),
                         );
                     }
+
                   }),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 21.0, top: 10.0),
-            child: Text(
-              "Welcome to our app!\n",
-              style: TextStyle(color: barColor, fontSize: 20),
-            ),
+            child: _returnTitle(),
           ),
           Center(
             child: Column(
@@ -302,5 +301,20 @@ class HomeState extends State<Home> {
             )
           ]);
     });
+  }
+
+  Text _returnTitle(){
+    if(activeEventName == ""){
+      return Text(
+        "Welcome to our app!",
+        style: TextStyle(color: barColor, fontSize: 20),
+      );
+    }
+    else{
+      return Text(
+        "Welcome to ${activeEvent.data['title']}",
+        style: TextStyle(color: barColor, fontSize: 20),
+      );
+    }
   }
 }

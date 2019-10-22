@@ -3,10 +3,9 @@ Upcoming Events
   - display cards with upcoming IMB events
   - Selecting card to display additional info.
 
-Done:
-  Blank placeholder page
+Author: Blake Coman bfc568@uowmail.edu.au
+last revised 23/10/2019
 
-  //TODO Upcoming Events page
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';

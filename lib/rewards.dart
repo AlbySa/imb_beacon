@@ -3,9 +3,8 @@ Event Info
   - Display Cards with currently available rewards
   - Claim rewards by providing a popup/screen with reward details, barcode etc
 
-Done:
-  Blank placeholder page
-  //TODO Rewards page
+Author: Blake Coman bfc568@uowmail.edu.au
+last revised 23/10/2019
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -85,6 +84,10 @@ class RewardsState extends State<Rewards> {
   }
 
   void showCoupon(DocumentSnapshot document){
+
+
+    print("${id}::${activeEventName}::${document.data['name']}");
+
     var alert = new AlertDialog(
       title: Text(document.data['name']),
       content: Column(
@@ -95,7 +98,7 @@ class RewardsState extends State<Rewards> {
             width: 250.0,
             child: Padding(
               padding: const EdgeInsets.only(bottom:20),
-              child: QrImage(data:"$id$activeEventName${document.data['name']}"),
+              child: QrImage(data:"${id}::${activeEventName}::${document.documentID}"),
             ),
           ),
           Text(

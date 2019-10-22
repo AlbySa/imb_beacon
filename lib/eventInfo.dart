@@ -2,9 +2,8 @@
 Event Info
   - Display information related to the event the user is currently at
 
-Done:
-  Blank placeholder page
-  //TODO Event info page
+Author: Adam May amay787@uowmail.edu.au
+last revised 23/10/2019
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -3,14 +3,8 @@ My Account Screen
   - Users Can view/edit their details
   - Summary of past events attended
 
-Done:
-  Display user data from database
-  displays update icons to update info
-  Update dialogue for name, email, phone
-
-  //TODO update email in user accounts in firebase
-  //TODO dialogue to change DOB
-  //TODO Display past events on cards
+Author: Blake Coman bfc568@uowmail.edu.au
+last revised 23/10/2019
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';

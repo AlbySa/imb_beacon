@@ -1,14 +1,15 @@
 /*
 Main runner
 Login Screen
+Async Scanning function -> beacon connection
 
-Done:
-  Links to sign-up
-  User auth with firebase
-  Cool loading circle
+Author: Adam May amay787@uowmail.edu.au
+last revised 23/10/2019
 
-  Test code for bluetooth listening and Beacon UID validation
-  //TODO finish playing with test code - implement/remove it
+Android testing and implementation: Adam May amay787@uowmail.edu.au
+iOS testing and implementation: Blake Coman bfc568@uowmail.edu.au
+
+
 */
 
 import 'dart:async';
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:imb_beacon/home.dart';
+import 'package:imb_beacon/eventInfo.dart';
 import 'package:imb_beacon/signUp.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -35,9 +37,11 @@ String activeEventName = "";
 bool signedIn = false;
 bool beaconFound = false;
 bool initialLoad = true;
+AuthResult user;
 
 Timer timer;
 
+//Variables for bluetooth scanning
 FlutterBlue _flutterBlue = FlutterBlue.instance;
 StreamSubscription _scanSubscription;
 StreamSubscription _stateSubscription;
@@ -50,9 +54,11 @@ String byteListToHexString(List<int> bytes) => bytes
     .map((i) => i.toRadixString(16).padLeft(2, '0'))
     .reduce((a, b) => (a + b));
 
+//colours
 final bgColor = const Color(0xFFF5F5F5); // background colour
 final barColor = const Color(0xFF02735E);// Bar/button colour
 
+//build app
 void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp,DeviceOrientation.portraitDown])
@@ -89,11 +95,10 @@ class LoginFormState extends State<LoginForm> {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  // Scanning
+  // Scanning states
   Map<DeviceIdentifier, ScanResult> scanResults = new Map();
   bool adapterOn = false;
   bool isScanning = true;
-  AuthResult user;
 
 
   //loading circle
@@ -165,11 +170,17 @@ class LoginFormState extends State<LoginForm> {
 
   //What happens when you click the notification
   Future selectNotification(String payload){
-    debugPrint("payload : $payload");
-    showDialog(context: context,builder:(_)=> new AlertDialog(
-      title: new Text('Notification'),
-      content: new Text('$payload'),
-    ));
+    if(signedIn){
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EventInfo()));
+    }
+    else{
+      debugPrint("payload : $payload");
+      showDialog(context: context,builder:(_)=> new AlertDialog(
+        title: new Text('Notification'),
+        content: new Text('$payload'),
+      ));
+    }
   }
 
   @override
@@ -299,9 +310,10 @@ class LoginFormState extends State<LoginForm> {
           .signInWithEmailAndPassword(email: _email, password: _password);
 
       emptyText();
+      _setRewardInfo();
       signedIn=true;
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Home(user.user.uid)));//, activeEventName)));
+          context, MaterialPageRoute(builder: (context) => Home(user.user.uid)));
       setState(() {
         _saving = false;
       });
@@ -382,7 +394,7 @@ class LoginFormState extends State<LoginForm> {
         if (Platform.isIOS) {
           rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdIOS];
         }
-        else if (Platform.isAndroid) {
+        else {
           rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdAndroid];
         }
         if (rawBytes != null) {
@@ -450,22 +462,16 @@ class LoginFormState extends State<LoginForm> {
         DocumentReference document = Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName);
         document.get().then((documentSnapshot){
 
-          //TODO this
-          //if the reward hasnt already been claimed
-          //if(!(documentSnapshot.data[attr])){
+          //if the reward hasn't already been claimed
 
-//          print("*********************");
-//          print(doc.documentID);
-
-          //add each reward as 'false' in users/pastEvents
-          Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
-            "${doc.data['name']}": false,
+          if(documentSnapshot.data[doc.data['name']]!=true){
+            //add each reward as 'false' in users/pastEvents
+            Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
+              "${doc.documentID}": false,
           });
-          //}
+          }
         });
       });
     });
   }
 }
-
-
