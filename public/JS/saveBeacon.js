@@ -84,11 +84,11 @@ firebase.auth().onAuthStateChanged(function(user){
 })
 
 //Logout function
-/*var logoutListener = document.querySelector("#logout");
+var logoutListener = document.querySelector("#logout");
 logoutListener.addEventListener('click',(e) =>{
 	firebase.auth().signOut().then(function(){
-		window.location.assign('/login.html');
+		window.location.assign('/index.html');
 	}).catch(function(error){
 		console.log(error);
 	})
-})*/
+})

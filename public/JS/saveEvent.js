@@ -19,6 +19,7 @@ const db = firebase.firestore();
 const form = document.querySelector('#eventForm');
 var beaconListArray = [];
 var beaconListIDArray = [];
+var eNameNo = "Unknown";
 
 //save event data
 form.addEventListener('submit', (e) =>{
@@ -35,7 +36,7 @@ form.addEventListener('submit', (e) =>{
 	var eventDescription = document.getElementById("eventD").value;
 
 	//remove space
-	var eNameNo = eventName.replace(/ /g,"_");
+	eNameNo = eventName.replace(/ /g,"_");
 
 
 	db.collection('events').doc(eNameNo).get().then(doc => {
@@ -60,6 +61,7 @@ form.addEventListener('submit', (e) =>{
 						event: eNameNo
 					});
 				}
+				addImage();
 			});
 		}
 		else if(eventCode != ""){
@@ -82,6 +84,7 @@ form.addEventListener('submit', (e) =>{
 						event: eNameNo
 					});
 				}
+				addImage();
 			});
 
 		}
@@ -105,6 +108,7 @@ form.addEventListener('submit', (e) =>{
 						event: eNameNo
 					});
 				}
+				addImage();
 			});
 		}
 	}
@@ -131,6 +135,7 @@ form.addEventListener('submit', (e) =>{
 							event: docRef.id
 						});
 					}
+					addImage();
 				});
 			}
 			else if(eventCode != ""){
@@ -153,6 +158,7 @@ form.addEventListener('submit', (e) =>{
 							event: docRef.id
 						});
 					}
+					addImage();
 				});
 			}
 			else if (eventCodeName != ""){
@@ -175,6 +181,7 @@ form.addEventListener('submit', (e) =>{
 							event: docRef.id
 						});
 					}
+					addImage();
 				});
 			}
 		}
@@ -187,7 +194,14 @@ form.addEventListener('submit', (e) =>{
 });
 
 function addImage(){
-	alert(document.getElementById("ImageUpload").files[0].val);
+	const ref = firebase.storage().ref();
+	const file = document.getElementById("ImageUpload").files[0];
+	const name = (eNameNo);
+	const metadata = { name:  "eNameNo"};
+	const task = ref.child(name).put(file, metadata);
+	task
+		.then(snapshot => snapshot.ref.getDownloadURL())
+		.then(url => console.log(url))
 }
 
 function addBeacon(){
@@ -226,10 +240,6 @@ db.collection('beacons').get().then((snapshot => {
 	});
 }));
 
-function uploadImage(){
-
-}
-
 //Redirect if user is not signed in
 firebase.auth().onAuthStateChanged(function(user){
 	if (!user){
@@ -238,14 +248,14 @@ firebase.auth().onAuthStateChanged(function(user){
 })
 
 //Logout function
-/*var logoutListener = document.querySelector("#logout");
+var logoutListener = document.querySelector("#logout");
 logoutListener.addEventListener('click',(e) =>{
 	firebase.auth().signOut().then(function(){
-		window.location.assign('/login.html');
+		window.location.assign('/index.html');
 	}).catch(function(error){
 		console.log(error);
 	})
-})*/
+})
 
 
 
