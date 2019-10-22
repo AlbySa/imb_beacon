@@ -299,6 +299,7 @@ class LoginFormState extends State<LoginForm> {
           .signInWithEmailAndPassword(email: _email, password: _password);
 
       emptyText();
+      _setRewardInfo();
       signedIn=true;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Home(user.user.uid)));//, activeEventName)));
@@ -382,7 +383,7 @@ class LoginFormState extends State<LoginForm> {
         if (Platform.isIOS) {
           rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdIOS];
         }
-        else if (Platform.isAndroid) {
+        else {
           rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdAndroid];
         }
         if (rawBytes != null) {
@@ -450,22 +451,16 @@ class LoginFormState extends State<LoginForm> {
         DocumentReference document = Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName);
         document.get().then((documentSnapshot){
 
-          //TODO this
           //if the reward hasnt already been claimed
-          //if(!(documentSnapshot.data[attr])){
 
-//          print("*********************");
-//          print(doc.documentID);
-
-          //add each reward as 'false' in users/pastEvents
-          Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
-            "${doc.data['name']}": false,
+          if(documentSnapshot.data[doc.data['name']]!=true){
+            //add each reward as 'false' in users/pastEvents
+            Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
+              "${doc.data['name']}": false,
           });
-          //}
+          }
         });
       });
     });
   }
 }
-
-
