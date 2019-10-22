@@ -21,9 +21,11 @@ import 'package:imb_beacon/signUp.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:io' show Platform;
 
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
-const EddystoneServiceId = "0000feaa-0000-1000-8000-00805f9b34fb";
+const EddystoneServiceIdAndroid = "0000feaa-0000-1000-8000-00805f9b34fb";
+const EddystoneServiceIdIOS = "FEAA";
 
 //Global variables for connected beacon/event
 DocumentSnapshot activeBeacon;
@@ -376,7 +378,13 @@ class LoginFormState extends State<LoginForm> {
       timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
       if (scanResult.device.type == BluetoothDeviceType.le) {
-        List<int> rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceId];
+        List<int> rawBytes;
+        if (Platform.isIOS) {
+          rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdIOS];
+        }
+        else if (Platform.isAndroid) {
+          rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdAndroid];
+        }
         if (rawBytes != null) {
           print("found:${scanResult.device.name}");
           String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
@@ -446,10 +454,13 @@ class LoginFormState extends State<LoginForm> {
           //if the reward hasnt already been claimed
           //if(!(documentSnapshot.data[attr])){
 
-            //add each reward as 'false' in users/pastEvents
-            Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
-              "${doc.data['name']}": false,
-            });
+//          print("*********************");
+//          print(doc.documentID);
+
+          //add each reward as 'false' in users/pastEvents
+          Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
+            "${doc.data['name']}": false,
+          });
           //}
         });
       });
