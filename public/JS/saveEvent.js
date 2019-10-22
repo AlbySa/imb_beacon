@@ -61,7 +61,6 @@ form.addEventListener('submit', (e) =>{
 						event: eNameNo
 					});
 				}
-				addImage();
 			});
 		}
 		else if(eventCode != ""){
@@ -84,7 +83,6 @@ form.addEventListener('submit', (e) =>{
 						event: eNameNo
 					});
 				}
-				addImage();
 			});
 
 		}
@@ -108,7 +106,6 @@ form.addEventListener('submit', (e) =>{
 						event: eNameNo
 					});
 				}
-				addImage();
 			});
 		}
 	}
@@ -135,7 +132,6 @@ form.addEventListener('submit', (e) =>{
 							event: docRef.id
 						});
 					}
-					addImage();
 				});
 			}
 			else if(eventCode != ""){
@@ -158,7 +154,6 @@ form.addEventListener('submit', (e) =>{
 							event: docRef.id
 						});
 					}
-					addImage();
 				});
 			}
 			else if (eventCodeName != ""){
@@ -181,7 +176,6 @@ form.addEventListener('submit', (e) =>{
 							event: docRef.id
 						});
 					}
-					addImage();
 				});
 			}
 		}
@@ -205,7 +199,7 @@ function addImage(){
 }
 
 function addBeacon(){
-	//check if beacon free
+
 	var selected = document.getElementById('beaconList').value;
 	var selectedID = beaconList[beaconList.selectedIndex].id;
 	var existing = false;
