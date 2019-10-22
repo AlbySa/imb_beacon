@@ -15,14 +15,17 @@ firebase.initializeApp(firebaseConfig);
 //database connection
 const db = firebase.firestore();
 
-//User login 
+//User login
 const loginForm = document.querySelector("#userLogin");
 loginForm.addEventListener("submit", (e) =>{
     e.preventDefault();
     const email = loginForm['email'].value;
     const password = loginForm['password'].value;
     var errorCode = '';
-    var errorMessage = ''; 
+    var errorMessage = '';
+    //const email = "new.admin@gmail.com"
+    //const password = "ChangeMe"
+
     //Sign in with username and password credentials
     var userInfo = db.collection('users').where('email','==', email)
     .get()

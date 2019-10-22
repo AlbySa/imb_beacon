@@ -1,20 +1,71 @@
 <html>
     <head>
-        <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-auth.js"></script>
-        <title>IMBeacon Login</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+      <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-auth.js"></script>
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+      <title>Login</title>
+      <link rel="icon" href="logo2.png">
     </head>
+
     <body>
-        <p>IMB beacon management Login</p>
+      <nav class="navbar navbar-default navbar-fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <span class="navbar-brand">
+            <img class="d-inline-block align-top ml-0 mr-1" src="logo2.png" alt="logo" height="30">Pineapple Proximity
+          </span>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <span class="navbar-text">
+              Login to get Started!
+            </span>
+          </div>
+        </div>
+      </nav>
+
+      <br>
+
+      <div class="container-fluid" style="width: 50vw; margin-left: 5vw;">
+        <h1>Enter your login details:</h1>
+      </div>
+      <br>
+      <div class="container" style="width: 50vw; margin-left: 5vw;">
         <form id = "userLogin" method = "POST">
-            <p><label for = "email">email: </label></p>
-            <input type = "text" id = "email" name = "email">
-            <p><label for = "password">Password: </label></p>
-            <input type = "password" id ="password" name = "password">
-            <input type = "submit" value = "login">
-            <p><span id = "errorMessage"></span></p>
+          <div class="form-group">
+            <label for = "email">Email:</label>
+            <input class="form-control" type = "text" id = "email" name = "email">
+          </div>
+          <div class="form-group">
+            <label for = "password">Password:</label>
+            <input class="form-control" type = "password" id ="password" name = "password">
+          </div>
+          <input style="background-color:#007f6a; color:white;" class="btn" type = "submit" value = "Login">
+          <span id = "errorMessage"></span>
         </form>
+      </div>
+
+      <div class="container-fluid ">
+        <hr>
+      </div>
+      <div class="container-fluid" style="margin-left: 5vw; width: 91vw;">
+        <footer class="footer">
+          <div class="row">
+            <div class="col">
+              <br>
+              <p>&copy; 2019 - Pineapple Proximity</p>
+            </div>
+            <div class="text-right col">
+              <img class="mb-3" src="logo.png" alt="logo" width="30%">
+            </div>
+          </div>
+        </footer>
+      </div>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script src="./JS/login.js"></script>
     </body>
-    <script src="./JS/login.js"></script>
 </html>

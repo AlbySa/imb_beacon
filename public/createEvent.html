@@ -13,7 +13,7 @@
   	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   	<!--Jquery stuffs-->
   	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   	<link rel="stylesheet" href="/jquery-ui-themes-1.12.1/jquery-ui.min.css">
   	<!--Time Picker-->
   	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
@@ -49,7 +49,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item ">
               <a class="nav-link" href="createEvent.html">Create Event</a>
@@ -58,6 +58,13 @@
               <a class="nav-link" href="createBeacon.html">Create Beacon</a>
             </li>
           </ul>
+          <span class="nav-item ml-auto">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" id = "logout">Logout</a>
+              </li>
+            </ul>
+          </span>
         </div>
       </div>
     </nav>
@@ -110,7 +117,7 @@
               <input style="background-color:#007f6a; color:white;" class="btn" type="button" value="Upload" onclick="addImage()">
           </div>
         </div>
-        
+
         <!--Beacon Select-->
         <div class="form-group row">
           <div class="col">
@@ -161,14 +168,15 @@
       <footer class="footer">
         <div class="row">
           <div class="col">
-            <a href="index.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="Create_Event.html">Create Event</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="Create_Beacon.html">Create Beacon</a>
+            <a href="home.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="createEvent.html">Create Event</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="createBeacon.html">Create Beacon</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="createUser.html">User Management</a>
             <br><br>
             <p>&copy; 2019 - Pineapple Proximity</p>
           </div>
           <div class="text-right col">
-            <img class="mb-3" src="logo.png" alt="logo" width="40%">
+            <img class="mb-3" src="logo.png" alt="logo" width="30%">
           </div>
         </div>
       </footer>

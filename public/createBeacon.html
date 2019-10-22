@@ -29,7 +29,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item ">
               <a class="nav-link" href="createEvent.html">Create Event</a>
@@ -38,6 +38,13 @@
               <a class="nav-link" href="createBeacon.html">Create Beacon</a>
             </li>
           </ul>
+          <span class="nav-item ml-auto">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" id = "logout">Logout</a>
+              </li>
+            </ul>
+          </span>
         </div>
       </div>
     </nav>
@@ -62,7 +69,7 @@
 					<label for="bID">UUID:</label>
 					<input type="text" class="form-control" id="bID" required = "true">
 				</div>
-				<input style="background-color:#007f6a; color:white;" class="btn " type="submit" value="Submit">
+				<input style="background-color:#007f6a; color:white;" class="btn" type="submit" value="Submit">
 			</form>
 		</div>
 
@@ -73,14 +80,15 @@
       <footer class="footer">
         <div class="row">
           <div class="col">
-            <a href="index.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="Create_Event.html">Create Event</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="Create_Beacon.html">Create Beacon</a>
+            <a href="home.html">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="createEvent.html">Create Event</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="createBeacon.html">Create Beacon</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="createUser.html">User Management</a>
             <br><br>
             <p>&copy; 2019 - Pineapple Proximity</p>
           </div>
           <div class="text-right col">
-            <img class="mb-3" src="logo.png" alt="logo" width="40%">
+            <img class="mb-3" src="logo.png" alt="logo" width="30%">
           </div>
         </div>
       </footer>
