@@ -155,7 +155,15 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	btnUpdate.addEventListener("click", (e) => {
 		//update data
 		e.stopPropagation();
+		var parent = e.target.parentNode.id;
+		var disabledElements = document.getElementById(parent).children;
+
+		for (var i = 0; i < disabledElements.length-3; i++) {
+			disabledElements[i].disabled = true;
+        }
+
 		let id = e.target.parentElement.getAttribute('data-id');
+		console.log(id);
 		let chil = e.target.parentElement.children;
 		db.collection('events').doc(id).update({
 			title: chil[0].value,
@@ -176,18 +184,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				});
 			});
 		});
-
-		//disable elements for editing
-		name.disabled = true;
-		sTime.disabled = true;
-		sDate.disabled = true;
-		eDate.disabled = true;
-		eTime.disabled = true;
-		code.disabled = true;
-		codeName.disabled = true;
-		description.disabled = true;
-		btnUpdate.disabled = true;
-
 	});
 
 	//remove event
@@ -332,7 +328,6 @@ function eventSearch(){
 
 //get documents
 db.collection('events').orderBy('title').onSnapshot(snapshot => {
-	console.log("HI");
 	let changes = snapshot.docChanges();
 	changes.forEach(change => {
 		if(change.type == 'added' ){
