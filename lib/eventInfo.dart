@@ -33,6 +33,7 @@ class EventInfoState extends State<EventInfo> {
         ),
         body: Container(
           child: _eventCheck()
+          //If thee is no current event an error dialog shows, otherwise function as normal
         )
     );
   }
@@ -45,7 +46,7 @@ class EventInfoState extends State<EventInfo> {
         child: _showDialog(),
       );
     }
-
+    //Gets the event data, including relevent images and info, and displays it to the user
     else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,16 +95,12 @@ class EventInfoState extends State<EventInfo> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                             child: Center(
-//                              child: Text(
-//                                  ' - Event Image will go here - '
                                 child: fetchImage(),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: Text(
-//                'Event Description - This is where the description of the event will go...',
-                              //"description",
                               '${snapshot.data['description']}',
                               style: TextStyle(
                                   fontSize: 20
@@ -119,6 +116,7 @@ class EventInfoState extends State<EventInfo> {
     }
   }
 
+  //Error if no event or otherwise
   AlertDialog _showDialog() {
     return AlertDialog(
         title: Text("Could not load Event Info"),
@@ -144,6 +142,7 @@ class EventInfoState extends State<EventInfo> {
     );
   }
 
+  //Grabbing the image from Firebase
   Image fetchImage(){
 
     String photoPath = "gs://pineappleproximity.appspot.com/$activeEventName.png";

@@ -5,9 +5,6 @@ SignUp Screen
   - return to login
   - email verification
 
-  //TODO further input validation
-  //TODO email verification
-
   Author: Adam May amay787@uowmail.edu.au
   last revised 23/10/2019
 */
@@ -28,6 +25,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class SignUpFormState extends State<SignUpForm> {
+  //Variables to store a new users details
   final _formKey = GlobalKey<FormState>();
   String _email, _password, _fname, _lname, _phnumber;
   String _day, _month, _year;
@@ -42,6 +40,7 @@ class SignUpFormState extends State<SignUpForm> {
 
   double dateBorderSize = 2;
 
+  //Building the page content (such as input fields, etc)
   @override
   Widget build(BuildContext context) {
     _year = _date.substring(0, 4);
@@ -58,7 +57,6 @@ class SignUpFormState extends State<SignUpForm> {
       body: Form(
         key: _formKey,
         child: Container(
-          //padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal:40.0),
           padding: const EdgeInsets.only(top: 25.0, left: 40.0, right: 40.0),
 
           child: SingleChildScrollView(
@@ -249,6 +247,7 @@ class SignUpFormState extends State<SignUpForm> {
     );
   }
 
+  //Date validation
   bool dateValid() {
     if (_date == "YYYY-MM-DD") {
       //Is not valid
@@ -270,6 +269,7 @@ class SignUpFormState extends State<SignUpForm> {
     }
   }
 
+  //Send the sign up data to the database to be put into the system
   void signUp() async {
     bool test = dateValid();
 
@@ -287,13 +287,11 @@ class SignUpFormState extends State<SignUpForm> {
             .createUserWithEmailAndPassword(email: _email, password: _password);
         _pushData(user.user.uid);
 
-        //TODO Email Verification
-        //user.sendEmailVerification(); //Email Verification
-
       } catch (e) {}
     }
   }
 
+  //Date picker
   Future<void> _selectDate(BuildContext context) async {
     int currentYear = int.parse((DateTime.now().toString()).substring(0, 4));
     int currentMonth = int.parse((DateTime.now().toString()).substring(5, 7));
@@ -320,6 +318,7 @@ class SignUpFormState extends State<SignUpForm> {
     });
   }
 
+  //Final push to the database
   void _pushData(String id) {
 
     Firestore.instance.collection('users').document(id).setData({

@@ -36,6 +36,7 @@ class UpcomingEventState extends State<UpcomingEvent> {
       );
   }
 
+  //Lists all events possible to attend
   _eventList() {
     return StreamBuilder(
       stream: Firestore.instance.collection('events').snapshots(),
@@ -53,12 +54,12 @@ class UpcomingEventState extends State<UpcomingEvent> {
               title: new Text(document['title']),
               subtitle: new Text(document['description']),
             ),
+            //If this button is pressed, the user is presented with more event details
             ButtonTheme.bar(
               child: ButtonBar(
                 children: <Widget>[
                   FlatButton(
                     child: new Text('View Details'),
-                    //onPressed: () => _showDialog(document),
                     onPressed: () {_showDialog(document);},
                   ),
                 ],
@@ -72,7 +73,7 @@ class UpcomingEventState extends State<UpcomingEvent> {
       },
     );
   }
-
+  //Popup with more info
   void _showDialog(DocumentSnapshot document) {
     showDialog(
       context: context,

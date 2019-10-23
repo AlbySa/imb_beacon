@@ -472,7 +472,7 @@ class LoginFormState extends State<LoginForm> {
             //add each reward as 'false' in users/pastEvents
             Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
               "${doc.documentID}": false,
-            });
+          });
           }
         });
       });

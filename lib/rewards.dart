@@ -38,11 +38,13 @@ class RewardsState extends State<Rewards> {
           backgroundColor: barColor,
         ),
         body: Container(
+          //Depending on what event is current, different objects are created
           child: _eventCheck()
         )
       );
   }
 
+  //If an event is in place, then the rewards are listed
   _rewardList(){
     return StreamBuilder(
       stream: Firestore.instance.collection('events').document(activeEventName).collection('rewards').snapshots(),
@@ -83,6 +85,7 @@ class RewardsState extends State<Rewards> {
     );
   }
 
+  //A popup showing the coupon provided by a reward
   void showCoupon(DocumentSnapshot document){
 
 
@@ -132,6 +135,7 @@ class RewardsState extends State<Rewards> {
     }
   }
 
+  //Lack of event, or other error dialog
   AlertDialog _showDialog() {
     return AlertDialog(
         title: Text("Could not load rewards"),

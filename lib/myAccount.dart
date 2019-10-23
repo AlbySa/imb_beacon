@@ -22,13 +22,8 @@ class MyAccount extends StatefulWidget {
 
 class MyAccountState extends State<MyAccount> {
   MyAccountState(this._id);
-
-
-//  final bgColor = const Color(0xFFF5F5F5);
-//  final barColor = const Color(0xFF02735E);
-
   String _id;
-
+  //Streams all of the users data, and allows them to edit them
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -119,6 +114,7 @@ class MyAccountState extends State<MyAccount> {
                                                         fontSize: 19)),
                                               ]),
                                         ),
+                                        //Buttons to edit data
                                         Expanded(
                                           child: Container(
                                             child: Column(
@@ -137,7 +133,6 @@ class MyAccountState extends State<MyAccount> {
                                                     color: Colors.black38,
                                                     onPressed: () {
                                                       editEmail();
-                                                      //TODO verify mail
                                                     },
                                                   ),
                                                   IconButton(
@@ -151,8 +146,6 @@ class MyAccountState extends State<MyAccount> {
                                                     icon: Icon(Icons.edit),
                                                     color: Colors.black38,
                                                     onPressed: () {
-                                                      //TODO Fix edit DOB
-                                                      //editDOB();
                                                     },
                                                   ),
                                                 ]),
@@ -161,31 +154,6 @@ class MyAccountState extends State<MyAccount> {
                                       ],
                                     )
                                   ]))),
-
-                      //TODO event history ???
-                      Card(
-                          elevation: 8.0,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 6.0),
-                          child: Padding(
-                              padding: const EdgeInsets.all(18.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: <Widget>[
-                                  Text("Past Events",
-                                      style: TextStyle(
-                                        color: barColor,
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  Padding(
-                                    padding: const EdgeInsets.all(50.0),
-                                    child: Container(
-                                      child: Text("Events attended shown here\n(Coming Soon)"),
-                                    ),
-                                  ),
-                                ],
-                              ))),
                     ],
                   ),
                 );
@@ -193,7 +161,7 @@ class MyAccountState extends State<MyAccount> {
           }),
     );
   }
-
+  //All of the edit functions for each field
   void editName() async {
     final _formKey = GlobalKey<FormState>();
     String _fname, _lname;

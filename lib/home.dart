@@ -39,7 +39,7 @@ class HomeState extends State<Home> {
   String event;
   String title = "Welcome to our app!";
 
-
+  //Building the page content
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -65,6 +65,7 @@ class HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(left: 21.0, top: 10.0),
             child: Container(
+              //Stream builder connects to firebase and constently streams the data. Live updates occur in real time
               child: StreamBuilder<DocumentSnapshot>(
                   stream: Firestore.instance
                       .collection('users')
@@ -258,6 +259,7 @@ class HomeState extends State<Home> {
         ])));
   }
 
+  //Logout popup
   Future<bool> _showDialog() {
     showDialog(
       context: context,
@@ -303,6 +305,7 @@ class HomeState extends State<Home> {
     });
   }
 
+  //Updating the title at the top of the page
   Text _returnTitle(){
     if(activeEventName == ""){
       return Text(
