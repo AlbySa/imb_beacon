@@ -49,8 +49,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	let btnRemove = document.createElement('input');
 	let addtoBeacon = document.createElement('select');
 	let btnadd = document.createElement('input');
-	let imgUp = document.createElement('input');
-	let imgSend = document.createElement('input')
 
 	sDate.className += " datePicker";
 	eDate.className += " datePicker";
@@ -70,8 +68,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	btnRemove.type = 'button';
 	btnadd.type = 'button';
 	btnremBeacon.type = 'button';
-	imgSend.type = 'button';
-	imgUp.setAttribute("type", "file");
 
 	//disable elements for editing
 	name.disabled = true;
@@ -83,8 +79,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	codeName.disabled = true;
 	description.disabled = true;
 	btnUpdate.disabled = true;
-	imgUp.disabled = true;
-	imgSend.disabled = true;
 
 	//populate elements
 	var documentID = doc.id;
@@ -118,8 +112,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	codeName.placeholder = "Discount Name";
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
-	imgSend.value = 'Upload';
-	imgSend.id = "send";
 
   //styling
   name.className += "form-control";
@@ -146,7 +138,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   btnremBeacon.className += "btn btn-sm";
   btnremBeacon.style.backgroundColor = "#007f6a";
   btnremBeacon.style.color = 'white';
-  imgSend.className += "btn btn-sm";
 
 
 
@@ -158,12 +149,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		for (var i = 0; i < enabledElements.length; i++) {
 			enabledElements[i].disabled = false;
         }
-	});
-
-	//upload image
-	imgSend.addEventListener("click", (e) => {
-		e.stopPropagation();
-
 	});
 
 	//send updated document to database
@@ -300,8 +285,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(btnremBeacon);
 	li.appendChild(document.createElement('br'));
 	li.appendChild(document.createElement('br'));
-	li.appendChild(imgUp);
-	li.appendChild(imgSend);
 	li.appendChild(document.createElement('br'));
 	li.appendChild(document.createElement('br'));
 	li.appendChild(btnUpdate);

@@ -25,6 +25,7 @@ var eNameNo = "Unknown";
 //save event data
 form.addEventListener('submit', (e) =>{
 	e.preventDefault();
+	imagesent = false;
 
 	//get values
 	var eventName = document.getElementById("eName").value;
@@ -188,11 +189,28 @@ form.addEventListener('submit', (e) =>{
 	form.reset();
 });
 
+var imagesent = false;
+
+function CheckFileName(){
+	if(imagesent ==false)
+	{
+		document.getElementById("ImageUpload").disabled = false;
+		eNameNo = document.getElementById("eName").value;
+		eNameNo = eNameNo.replace(/ /g,"_");
+	}
+	else
+	{
+		alert("An image has already been sent under the name " + eNameNo + " Changing this will require you to reupload the image")
+	}
+}
+
 function addImage(){
+	imagesent = true;
 	const ref = firebase.storage().ref();
 	const file = document.getElementById("ImageUpload").files[0];
+	eNameNo = eNameNo + ".png";
 	const name = (eNameNo);
-	const metadata = { name:  "eNameNo"};
+	const metadata = { name:  eNameNo};
 	const task = ref.child(name).put(file, metadata);
 	task
 		.then(snapshot => snapshot.ref.getDownloadURL())

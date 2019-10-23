@@ -77,7 +77,7 @@
 				<!--event name-->
 				<div class="form-group">
 				  <label for="eName">Name:</label>
-				  <input type="text" class="form-control" name ="eName" id = "eName" required = "true">
+				  <input type="text" class="form-control" name ="eName" id = "eName" required = "true" onchange="CheckFileName()">
 				</div>
 				<!--sDate time-->
 
@@ -110,7 +110,7 @@
           <div class="col">
             <br>
             <label class="btn" style="background-color:#007f6a; color:white;">
-              Click to Select File<input type="file" name="myFile" id = "ImageUpload" accept="image/png, image/jpeg" style="display: none;">
+              Click to Select File<input type="file" name="myFile" id = "ImageUpload" accept="image/png" style="display: none;" onchange="addImage()"; disabled = "true">
             </label>
           </div>
         </div>
