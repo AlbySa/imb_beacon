@@ -13,6 +13,7 @@ iOS testing and implementation: Blake Coman bfc568@uowmail.edu.au
 */
 
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +24,6 @@ import 'package:imb_beacon/signUp.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:io' show Platform;
 
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
 const EddystoneServiceIdAndroid = "0000feaa-0000-1000-8000-00805f9b34fb";
@@ -37,6 +37,7 @@ String activeEventName = "";
 bool signedIn = false;
 bool beaconFound = false;
 bool initialLoad = true;
+// A variable to store the Firebase user
 AuthResult user;
 
 Timer timer;
@@ -54,11 +55,11 @@ String byteListToHexString(List<int> bytes) => bytes
     .map((i) => i.toRadixString(16).padLeft(2, '0'))
     .reduce((a, b) => (a + b));
 
-//colours
+//Colours
 final bgColor = const Color(0xFFF5F5F5); // background colour
 final barColor = const Color(0xFF02735E);// Bar/button colour
 
-//build app
+//Build app
 void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp,DeviceOrientation.portraitDown])
@@ -101,19 +102,19 @@ class LoginFormState extends State<LoginForm> {
   bool isScanning = true;
 
 
-  //loading circle
+  //Loading circle
   bool _saving = false;
 
-  //form
+  //Form
   final _formKey = GlobalKey<FormState>();
   String _email, _password;
 
-  //text field colours
+  //Text field colours
   var errColor = Color(0x00F44336);
   var errBorder = barColor;
   var borderColor = Colors.black;
 
-  //text field controllers
+  //Text field controllers
   TextEditingController _controller = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
 
@@ -127,7 +128,7 @@ class LoginFormState extends State<LoginForm> {
         state = s;
       });
       print("Initial State: $state");
-      if(state == BluetoothState.on && initialLoad){//bluetooth has just been turned on
+      if(state == BluetoothState.on && initialLoad){//Bluetooth is on at startup
         _periodicScan();
         initialLoad = false;
       }
@@ -136,10 +137,10 @@ class LoginFormState extends State<LoginForm> {
       setState(() {
         state = s;
 
-        if(state == BluetoothState.on){//bluetooth has just been turned on
+        if(state == BluetoothState.on){//Bluetooth has just been turned on
           _periodicScan();
         }
-        if(state == BluetoothState.off) { //bluetooth has just been turned on
+        if(state == BluetoothState.off) { //Bluetooth has just been turned off
           _stopScan();
           //_stopPeriodicScan();
           resetConnection();
@@ -147,15 +148,15 @@ class LoginFormState extends State<LoginForm> {
       });
     });
 
-    //end FlutterBlue setup
+    //End FlutterBlue setup
 
-    //local notification setup ----------------------------------------------
+    //Local notification setup ----------------------------------------------
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var androidSettings = new AndroidInitializationSettings('app_icon');
     var iOSSettings = new IOSInitializationSettings();
     var initSettings = new InitializationSettings(androidSettings, iOSSettings);
     flutterLocalNotificationsPlugin.initialize(initSettings,onSelectNotification:selectNotification);
-    //end notification setup
+    //End notification setup
 
 
   }
@@ -183,10 +184,10 @@ class LoginFormState extends State<LoginForm> {
     }
   }
 
+  //Building the content of the page
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey we created above
-
     return Scaffold(
       body: ModalProgressHUD(
         child: Form(
@@ -274,12 +275,12 @@ class LoginFormState extends State<LoginForm> {
                           child: Text('Sign up.'),
                           onPressed: () {
                             emptyText();
+                            //Moves app to a different page, by calling another widget builder
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SignUpForm()));
                           }),
-                      Text('(Testing)Connected beacon: $activeBeaconName'),//Text('Connected beacon: $activeBeaconName'),
                     ],
                   ),
                 ),
@@ -290,13 +291,13 @@ class LoginFormState extends State<LoginForm> {
     );
   }
 
-  //empties text fields when screen changed
+  //Empties text fields when screen changed
   void emptyText() {
     _controller.clear();
     _controller2.clear();
   }
 
-  //sign in authentication
+  //Sign in authentication
   Future<void> signIn() async {
     setState(() {
       _saving = true;
@@ -327,6 +328,7 @@ class LoginFormState extends State<LoginForm> {
     }
   }
 
+  //Copy the beacon data to the variables used by the app and flutter blue
   Future<void> connectBeacon(DocumentSnapshot beacon, DocumentSnapshot event) async {
 
     setState((){
@@ -343,6 +345,7 @@ class LoginFormState extends State<LoginForm> {
     });
   }
 
+  //Searching for a found beacon on firebase
   Future<void> findBeacon(String beaconId) async {
 
     //create reference to beacon (look for beacon)
@@ -382,7 +385,7 @@ class LoginFormState extends State<LoginForm> {
     });
   }
 
-  //-------------The following is test code to implement short duration scans -----------------------
+  //-------------The following is code to implement short duration scans -----------------------
   _startScan() {
 
     // ignore: cancel_subscriptions
@@ -397,6 +400,7 @@ class LoginFormState extends State<LoginForm> {
         else {
           rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdAndroid];
         }
+        //Once a beacon has been found, it is then checked against the database
         if (rawBytes != null) {
           print("found:${scanResult.device.name}");
           String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
@@ -449,7 +453,7 @@ class LoginFormState extends State<LoginForm> {
     timer.cancel();
   }
 
-//-------------------------------------End scan test code-------------------------------------------
+//-------------------------------------End scan code-------------------------------------------
 
   void _setRewardInfo() {
 
@@ -468,7 +472,7 @@ class LoginFormState extends State<LoginForm> {
             //add each reward as 'false' in users/pastEvents
             Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
               "${doc.documentID}": false,
-          });
+            });
           }
         });
       });
