@@ -14,6 +14,9 @@ firebase.initializeApp(firebaseConfig);
 //database connection
 const db = firebase.firestore();
 
+
+//------------------------------------------------------------------------------------------------------------------------
+
 //load event data
 //load events selector
 const eventsList = document.querySelector('#events');
@@ -39,7 +42,7 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	let code = document.createElement('input');
 	let codeTitleLabel = document.createElement('p');
 	let codeName = document.createElement('input');
-  	let btnremBeacon = document.createElement('input');
+  let btnremBeacon = document.createElement('input');
 	let btnUpdate = document.createElement('input');
 	let btnEdit = document.createElement('input');
 	let btnRemove = document.createElement('input');
@@ -159,7 +162,7 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//upload image
 	imgSend.addEventListener("click", (e) => {
 		e.stopPropagation();
-		
+
 	});
 
 	//send updated document to database
@@ -299,7 +302,7 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(imgUp);
 	li.appendChild(imgSend);
 	li.appendChild(document.createElement('br'));
-	li.appendChild(document.createElement('br'));  
+	li.appendChild(document.createElement('br'));
 	li.appendChild(btnUpdate);
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
