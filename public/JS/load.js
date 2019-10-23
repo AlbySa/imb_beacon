@@ -23,7 +23,7 @@ const db = firebase.firestore();
 const eventsList = document.querySelector('#events');
 
 //display to screen
-function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function renderEvents(doc){
 	//create elements
 	let li = document.createElement('li');
 
@@ -165,7 +165,6 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
 		let id = e.target.parentElement.getAttribute('data-id');
-		console.log(id);
 		let chil = e.target.parentElement.children;
 		db.collection('events').doc(id).update({
 			title: chil[0].value,
@@ -301,7 +300,6 @@ function getVisits(documentID)
 
 
 	// Get reference to all of the documents
-	console.log("Retrieving list of documents in collection");
 	let documents = db.collection("users").get()
 	  .then(snapshot => {
 		snapshot.forEach(doc => {
@@ -315,13 +313,11 @@ function getVisits(documentID)
 				  }
 			  })
 			}).catch(err => {
-			  console.log("Error getting sub-collection documents", err);
+			  
 			})
 		});
 	  }).catch(err => {
-	  console.log("Error getting documents", err);
 	}).then(function(){
-	console.log(visits);
 	if (visits > 0)
 		return documentID  + " has been visited " + visits + " times";
 	else
@@ -448,32 +444,59 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 	});
 
-	//sends updated event to database
-	btnUpdate.addEventListener("click", (e) => { //THIS ISN"T WORKING???
+	btnUpdate.addEventListener("click", (e) => {
 		//update data
 		e.stopPropagation();
-		let id = e.target.parentElement.getAttribute('data-id');
-		let chil = e.target.parentElement.children;
-		console.log(chil[1].value + " " + id)
-		if (chil[1].value == id)
-			db.collection('beacons').doc(id).update({
-				name: chil[0].value,
-				event: chil[2].value
-			});
-		else
-		{
-			db.collection('beacons').doc(id).delete();
-			db.collection("beacons").doc(chil[1].value).add({
-				name: chil[0].value,
-				event: chil[2].value
-			});
-		}
+		var parent = e.target.parentNode.id;
+		var disabledElements = document.getElementById(parent).children;
 
-		//return to disabled state
-		name.disabled = true;
-		bID.disabled = true;
-		event.disabled = true;
-		btnUpdate.disabled = true;
+		for (var i = 0; i < disabledElements.length-3; i++) {
+			disabledElements[i].disabled = true;
+        }
+
+		let id = e.target.parentElement.getAttribute('data-id');
+		console.log(id);
+		let chil = e.target.parentElement.children;
+		db.collection('events').doc(id).update({
+			title: chil[0].value,
+			startDate: chil[1].value,
+			startTime: chil[2].value,
+			endDate: chil[3].value,
+			endTime: chil[4].value,
+			description: chil[6].value
+		})
+		.then((e) =>{
+			var rewardID = "";
+			db.collection('events').doc(id).collection('rewards').get().then(snapshot => {
+				snapshot.forEach(doc => {
+					rewardID = doc.id;
+					db.collection('events').doc(id).collection('rewards').doc(rewardID).update({
+						Name: chil[5].value
+					});
+				});
+			});
+		});
+	});
+
+
+	//sends updated beacon to database
+	btnUpdate.addEventListener("click", (e) => { 
+		//update data
+		e.stopPropagation();
+		var parent = e.target.parentNode.id;
+		var disabledElements = document.getElementById(parent).children;
+		let chil = e.target.parentElement.children;
+		var id = chil[3].value;
+		console.log(disabledElements);
+
+		for (var i = 0; i < disabledElements.length-2; i++) {
+			disabledElements[i].disabled = true;
+        }
+
+			/*db.collection('beacons').doc(id).update({
+				name: chil[1].value,
+				event: chil[5].value
+			});*/
 	});
 
 	btnEdit.addEventListener("click", (e) => {
@@ -533,7 +556,6 @@ function beaconSearch(){
 			} 
 			//repopulate the dom	
 			snapshot.forEach(doc => {
-				console.log(doc.id, '=>', doc.data());
 				renderBeacons(doc);
 			  });
 		})
