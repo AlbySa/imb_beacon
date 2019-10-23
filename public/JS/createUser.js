@@ -1,3 +1,4 @@
+//Written By Max Huber
 // Firebase Configuration
 var firebaseConfig = {
     apiKey: "AIzaSyBWmDzF9QNXx40-IClE-NOnR7C10Dur7HQ",

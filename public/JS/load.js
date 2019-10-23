@@ -1,3 +1,4 @@
+//Written By Luke Sturgiss, Max Huber and Stephanie Hirshman
 // Firebase Configuration
 var firebaseConfig = {
     apiKey: "AIzaSyBWmDzF9QNXx40-IClE-NOnR7C10Dur7HQ",
