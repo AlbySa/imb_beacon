@@ -49,6 +49,7 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	let btnRemove = document.createElement('input');
 	let addtoBeacon = document.createElement('select');
 	let btnadd = document.createElement('input');
+	let TimesVisited = document.createElement('p');
 
 	sDate.className += " datePicker";
 	eDate.className += " datePicker";
@@ -112,6 +113,7 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	codeName.placeholder = "Discount Name";
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
+	TimesVisited.textContent = getVisits(name.value);
 
   //styling
   name.className += "form-control";
@@ -281,14 +283,50 @@ function renderEvents(doc){ //loop thingo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	li.appendChild(btnremBeacon);
 	li.appendChild(document.createElement('br'));
 	li.appendChild(document.createElement('br'));
+	li.appendChild(TimesVisited);
 	li.appendChild(document.createElement('br'));
 	li.appendChild(document.createElement('br'));
 	li.appendChild(btnUpdate);
 	li.appendChild(btnEdit);
 	li.appendChild(btnRemove);
-  	li.appendChild(document.createElement('br'));
+	li.appendChild(document.createElement('br'));
 
 	eventsList.appendChild(li);
+}
+
+//counts how many times the event has been visited
+function getVisits(documentID)
+{
+	var visits = 0
+
+
+	// Get reference to all of the documents
+	console.log("Retrieving list of documents in collection");
+	let documents = db.collection("users").get()
+	  .then(snapshot => {
+		snapshot.forEach(doc => {
+  
+		  let subCollectionDocs = db.collection("users").doc(doc.id).collection("pastEvents").get()
+			.then(snapshot => {
+				visits ++;
+			  snapshot.forEach(doc => {
+				  if(doc.id == documentIDe.replace(/ /g,"_")){
+					  visits ++;
+				  }
+			  })
+			}).catch(err => {
+			  console.log("Error getting sub-collection documents", err);
+			})
+		});
+	  }).catch(err => {
+	  console.log("Error getting documents", err);
+	}).then(function(){
+	console.log(visits);
+	if (visits > 0)
+		return documentID  + " has been visited " + visits + " times";
+	else
+		return documentID + "has not yet been attended yet";
+	});
 }
 
 
