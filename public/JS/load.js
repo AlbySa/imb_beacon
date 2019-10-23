@@ -320,46 +320,32 @@ function currentDisplayBeacons(beaconList, bul){
 }
 
 //limits displayed events to those that meet the search
-function eventSearch(e){
-	e.stopPropagation();
+function eventSearch(){
 	var searchTerm = document.getElementById('eventsearch').value;
-	searchTerm = searchTerm.toUpperCase();
-	var children = document.getElementById("events").childNodes;
-	var child = children[0];
-	//clear current data
-	for(var i = 0; i < children.length; i++){
-		children[i].style.display = 'block';
+
+	//clear the dom
+	var parent = document.getElementById("events");
+	while(parent.firstChild){
+		parent.removeChild(parent.firstChild);
 	}
-	//display search
-	var searchValue = "";
-	for(var j = 0; j < children.length; j++){
-		child = children[j].childNodes;
-		searchValue = child[0].value;
-		searchValue = searchValue.toUpperCase();
-		//if match
-		if ( searchValue.indexOf( searchTerm ) > -1 ) {
-			console.log(searchValue + ":" + searchTerm);
-		}
-		//if not match
-		else{
-			children[j].style.display = 'none';
-		}
-	}
-	//if none displayed
-	var count = 0;
-	for(var k = 0; k < children.length; k++){
-		child = children[k].childNodes;
-		if(children[k].style.display == 'none'){
-			count ++;
-			if (count == children.length-1){
-				console.log("No Results Found");
-			}
-		}
-	}
+
+	//create query
+	db.collection('events').where('title', '==', searchTerm).get()
+		.then(snapshot => {
+			if (snapshot.empty) {
+				console.log('No matching documents.');
+				return;
+			} 
+			//repopulate the dom	
+			snapshot.forEach(doc => {
+				renderEvents(doc);
+			  });
+		})
 }
 
 //get documents
 db.collection('events').orderBy('title').onSnapshot(snapshot => {
+	console.log("HI");
 	let changes = snapshot.docChanges();
 	changes.forEach(change => {
 		if(change.type == 'added' ){
@@ -509,48 +495,28 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 }
 
-function beaconSearch(e){
-//	e.stopPropagation();
+function beaconSearch(){
 	var searchTerm = document.getElementById('beaconsearch').value;
-  //alert(searchTerm); //this works so shouldn't be null for .toUpperCase?
-  if(searchTerm != "")
-  {
-    searchTerm = searchTerm.toUpperCase(); //Cannot read property 'toUpperCase' of undefined
-  }
-	var children = document.getElementById("beacons").childNodes;
-	var child = children[0];
-	//clear current data
-	for(var l = 0; l < children.length; l++){
-		children[l].style.display = 'block'; //an issue of Cannot set property 'display' of undefined
+
+	//clear the dom
+	var parent = document.getElementById("beacons");
+	while(parent.firstChild){
+		parent.removeChild(parent.firstChild);
 	}
-	var searchValue = "";
-	for(var i = 0; i < children.length; i++){
-		child = children[i].childNodes;
-		searchValue = child[0].value;
-    if (searchValue != "")
-    {
-      searchValue = searchValue.toUpperCase(); //same error as above
-    }
-		//if match
-		if ( searchValue.indexOf( searchTerm ) > -1 ) {
-			console.log(searchValue + ":" + searchTerm);
-		}
-		//if not match
-		else{
-			children[i].style.display = 'none';
-		}
-	}
-	//if none displayed
-	var count = 0;
-	for(var i = 0; i < children.length; i++){
-		child = children[i].childNodes;
-		if(children[i].style.display == 'none'){
-			count ++;
-			if (count == children.length){
-				console.log("No Results Found");
-			}
-		}
-	}
+
+	//create query
+	db.collection('beacons').where('name', '==', searchTerm).get()
+		.then(snapshot => {
+			if (snapshot.empty) {
+				console.log('No matching documents.');
+				return;
+			} 
+			//repopulate the dom	
+			snapshot.forEach(doc => {
+				console.log(doc.id, '=>', doc.data());
+				renderBeacons(doc);
+			  });
+		})
 }
 
 //get data

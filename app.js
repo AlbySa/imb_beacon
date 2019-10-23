@@ -9,20 +9,6 @@ var urlPostParser = bodyParser.urlencoded({extended: false});
 var app = express();
 
 app.use(express.static(__dirname + '/public'));
-/*app.get('/', function(req, res){
-    console.log(req.body);
-    res.sendFile('login.html', {
-        root: path.join(__dirname, './')
-    });
-})
-
-app.get('/index', function(req, res){
-    console.log(req.body);
-    res.sendFile('index.html', {
-        root: path.join(__dirname, './')
-    });
-})*/
-
 
 //Initialise firestore admin sdk
 var admin = require("firebase-admin");
@@ -45,6 +31,7 @@ app.get('/createuser', function(req,res){
     res.sendfile('./public/createUser.html');
 })
 
+//Server process for creating a new user
 app.post('/createuser', urlPostParser ,function(req, res){
     var body = req.body;
     console.log(body);
@@ -83,6 +70,8 @@ app.post('/createuser', urlPostParser ,function(req, res){
     res.send('User ' + body.firstName + " " + body.lastName + " Successfully added to database");
 })
 
+
+//request users 
 app.get('/requestUsers', function(req, res, next){    
     var userCol = [];
     var usersRef = db.collection('users');
@@ -104,37 +93,32 @@ app.get('/requestUsers', function(req, res, next){
 
 })
 
-app.post('/deleteUser', urlPostParser, function (req, res){
-    var body = req.body;
-    var usersRef = db.collection('users').where('fname', '==', body.firstName).where('lname', '==', body.lastName).get().then(snapshot => {
-        usersRef.where('email', '==', body.email).get().then(snapshot =>{
-            res.send(snapshot);
-        })
-    })
-    console.log(body);
-})
-
+//Query database for search 
 app.post('/searchUser', urlPostParser, function(req, res){
     var body = req.body;
-    var usersCol = [];
-    var usersRef = db.collection('users').where('fname', '==', body.fname).get().then(snapshot =>{
+    var queryResponse = [];
+    var usersRef = db.collection('users').where('email','==', body.email).get()
+    .then((snapshot)=>{
+        if(snapshot.empty){
+            console.log('No matching emails were found');
+        }
         snapshot.forEach(doc =>{
-            usersCol.push(doc.data());
+            queryResponse.push(doc.data());
         })
-        }).catch(err =>{
-            console.log("error occurred: " + err);
-    }).then(() =>{
-        userJSON = JSON.stringify(usersCol);
-        res.send(userJSON);
     }).catch(err =>{
-        console.log(err);
+        console.log('error retrieving data', err);
+    }).then(()=>{        
+        usersJSON = JSON.stringify(queryResponse);
+        res.send(usersJSON);
     })
-
 })
 
+
+//Retrieve user information for display in admin application
 app.post('/getuserinformation', urlPostParser, function(req, res){
     var body = req.body;
     var response = '';
+    var userRef = '';
     var usersRef = db.collection('users').where('fname', '==', body.firstname).where('lname', '==', body.lastname).get()
     .then(snapshot =>{
         snapshot.forEach(doc =>{
@@ -145,6 +129,97 @@ app.post('/getuserinformation', urlPostParser, function(req, res){
     }).then(()=>{
         userJSON = JSON.stringify(response);
         res.send(userJSON);
+    })
+})
+
+//Authenticate sysAdmin 
+app.post('/authenticatesysadmin', urlPostParser, function (req,res){
+    console.log('post request sent to authenticate sysadmin');
+    var body = req.body;
+    var response = false;
+    var sysAdmin = admin.auth().getUser('Vn9SJEjXwfMYp3TS9n5W0OSX3Q83').then(function(userRecord){
+        userRecord.toJSON();
+        if (userRecord.email != body.email){
+            console.log(body.email);
+            console.log('This user is not a sysadmin');
+            res.send(response);
+        }
+        else if (userRecord.email == body.email){
+            console.log('this user is a system admin');
+            response = true;
+            res.send(response);
+        }
+    }).catch(err =>{
+        console.log("error occurred " + err);
+    });
+})
+
+//delete users
+app.post('/deleteUser', urlPostParser, function(req,res){
+    var body = req.body;
+    admin.auth().getUserByEmail(body.email).then(function(userRecord){
+        userID = userRecord.uid;
+        admin.auth().deleteUser(userID).catch(function(error) {
+            console.log('Error deleting user:', error);
+          });
+    }).catch(err =>{
+        console.log("user could not be found");
+    }).then(() =>{
+       var userRefDelete = db.collection('users').where('email', '==', body.email).get()
+       .then(snapshot =>{
+           if (snapshot.empty){
+               console.log('user could not be found in database');
+               return;
+           }
+           snapshot.forEach(doc =>{
+                var userID = doc.id;
+                console.log(userID);
+                db.collection('users').doc(userID).delete();
+                res.send('User successfully deleted');
+           })
+       }).catch(err =>{
+           console.log(" an error has occurred retrieving user from database", err);
+       }) 
+    }).catch(err =>{
+        console.log(err);
+    })
+    
+})
+
+//update user Information after it has been submitted 
+app.post('/updateuserinformation', urlPostParser, function(req, res){
+    var body = req.body;
+    var newData = {
+        fname: body.newfname,
+        lname: body.newlname,
+        email: body.newemail,
+        dob: body.newdob,
+        phonenumber: body.newphonenumber
+    }
+    var userRef = db.collection('users').where('fname','==', body.oldfname).where('lname','==', body.oldlname).get();
+    userRef.then(snapshot =>{
+        if(snapshot.empty){
+            console.log('user could not be identified for modification');
+            return;
+        }
+        snapshot.forEach(doc =>{
+            docid = doc.id;
+        })
+    }).catch(err =>{
+        console.log('there was an error retrieving user from database', err)
+    }).then(() =>{
+        db.collection('users').doc(docid).set(newData);
+        admin.auth().getUserByEmail(body.oldemail).then(function(userRecord){
+            admin.auth().updateUser(userRecord.uid,{
+                email: body.newemail
+            });
+        }).catch(err =>{
+            console.log('emailupdate failed');
+        })
+    }).catch(err =>{
+        console.log("error occurred updating database: ", err);
+    }).then(() =>{
+        res.send('user ' + body.oldfname + ' ' + body.oldlname + ' was successfully updated');
     })
 })
 
