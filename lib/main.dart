@@ -21,6 +21,7 @@ import 'package:flutter/services.dart';
 import 'package:imb_beacon/home.dart';
 import 'package:imb_beacon/eventInfo.dart';
 import 'package:imb_beacon/signUp.dart';
+import 'package:imb_beacon/rewards.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -58,6 +59,8 @@ String byteListToHexString(List<int> bytes) => bytes
 //Colours
 final bgColor = const Color(0xFFF5F5F5); // background colour
 final barColor = const Color(0xFF02735E);// Bar/button colour
+
+class PastEventsList{}
 
 //Build app
 void main() {
@@ -172,8 +175,54 @@ class LoginFormState extends State<LoginForm> {
   //What happens when you click the notification
   Future selectNotification(String payload){
     if(signedIn){
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EventInfo()));
+      showDialog(context: context,builder:(_)=> AlertDialog(
+        title: Text('Welcome to ${activeEvent.data['title']}'),
+        content: SizedBox(
+          height: 200.0,
+          width: 200.0,
+          child: Text("Thank you for attending ${activeEvent.data['title']}. We are so glad you could make it!"),
+        ),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+
+              Padding(
+                padding: EdgeInsets.only(right:10),
+                child: RaisedButton(
+                  child: Text(
+                    "Rewards",
+                    style: TextStyle(
+                      color: bgColor,
+                    ),
+                  ),
+                  color: barColor,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => Rewards(user.user.uid)));
+                  },
+                ),
+              ),
+
+              RaisedButton(
+                child: Text(
+                  "Event Info",
+                  style: TextStyle(
+                    color: bgColor,
+                  ),
+                ),
+                color: barColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => EventInfo()));
+                },
+              ),
+
+            ],
+          )
+        ]
+        ));
     }
     else{
       debugPrint("payload : $payload");
@@ -457,22 +506,24 @@ class LoginFormState extends State<LoginForm> {
 
   void _setRewardInfo() {
 
+    Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).get().then((querySnapshot){
+      if(!(querySnapshot.exists)){
+        Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({});
+      }
+    });
+
     //iterate through each reward
     Firestore.instance.collection('events').document(activeEventName).collection('rewards').getDocuments().then((querySnapshot) {
       querySnapshot.documents.forEach((doc){
-
-        var attr = doc.documentID;
 
         DocumentReference document = Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName);
         document.get().then((documentSnapshot){
 
           //if the reward hasn't already been claimed
-
-          if(documentSnapshot.data[doc.data['name']]!=true){
-            //add each reward as 'false' in users/pastEvents
-            Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).setData({
+          if(documentSnapshot.data["${doc.documentID}"] != true){
+            Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).updateData({
               "${doc.documentID}": false,
-          });
+            });
           }
         });
       });

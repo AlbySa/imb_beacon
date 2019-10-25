@@ -321,6 +321,8 @@ class SignUpFormState extends State<SignUpForm> {
   //Final push to the database
   void _pushData(String id) {
 
+    print("CREATED USER******************************************************");
+
     Firestore.instance.collection('users').document(id).setData({
       "email": _email,
       "fname": _fname,
@@ -328,5 +330,6 @@ class SignUpFormState extends State<SignUpForm> {
       "phnumber": _phnumber,
       "dob": _date,
     });
+
   }
 }

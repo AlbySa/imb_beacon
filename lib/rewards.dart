@@ -19,6 +19,7 @@ class Rewards extends StatefulWidget {
   String id;
 
   Rewards(this.id);
+
 }
 
 class RewardsState extends State<Rewards> {
@@ -26,7 +27,6 @@ class RewardsState extends State<Rewards> {
 //  final barColor = const Color(0xFF02735E);
 
   RewardsState(this.id);
-
   String id;
 
   @override
@@ -55,29 +55,8 @@ class RewardsState extends State<Rewards> {
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data.documents[index];
             return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 5,
-                child: new InkWell(
-                  onTap:() => showCoupon(document),
-                  child:Padding(
-                    padding: const EdgeInsets.symmetric(vertical:20.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Image.asset('assets/logoSmall.png'),
-                          ),
-                          title: Text("${document.data['name']}"),
-                          subtitle: Text("Click Me!"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              padding: const EdgeInsets.only(right: 8.0,left:8.0,top: 2.0),
+              child: createCard(document),
             );
           },
         );
@@ -86,39 +65,49 @@ class RewardsState extends State<Rewards> {
   }
 
   //A popup showing the coupon provided by a reward
-  void showCoupon(DocumentSnapshot document){
+  void showCoupon(DocumentSnapshot document, Widget qrCode){
 
-
-    print("${id}::${activeEventName}::${document.data['name']}");
+    print("${id}::${activeEventName}::${document.documentID}");
 
     var alert = new AlertDialog(
-      title: Text(document.data['name']),
+      //title: Text(document.data['name']),
+      contentPadding: EdgeInsets.only(),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SizedBox(
-            height: 250.0,
-            width: 250.0,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom:20),
-              child: QrImage(data:"${id}::${activeEventName}::${document.documentID}"),
+          Padding(
+            padding: const EdgeInsets.only(bottom:20.0),
+            child: InkWell(
+              child: Container(
+                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                decoration: BoxDecoration(
+                  color: barColor,
+                ),
+                child: Text(
+                  "${document.data['name']}",
+                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
           ),
-          Text(
-            document.data['description'],
-            textAlign: TextAlign.center,
-          )
+
+
+          qrCode,
         ],
       ),
       actions: <Widget>[
-        new FlatButton(
-          child: new Text('OK'),
-          onPressed: () { Navigator.pop(context); },
+        RaisedButton(
+          child: Text("OK",style: TextStyle(color: bgColor),),
+          color: barColor,
+          onPressed: () {Navigator.pop(context);},
         )
       ],
     );
 
     showDialog(context: context, builder: (context) => alert);
+
   }
 
   _eventCheck(){
@@ -161,6 +150,88 @@ class RewardsState extends State<Rewards> {
     );
   }
 
+  Widget createCard(DocumentSnapshot document) {
 
+    print("create Cards");
 
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').document(activeEventName).snapshots(),
+      builder: (BuildContext context, snapshot) {
+        if (!snapshot.hasData) return new Text("Now Loading...");
+
+        var used = snapshot.data[document.documentID];
+
+        Color cardColour = bgColor;
+        double _opacity = 1.0;
+        String claimedText = "";
+        Widget qrCode;
+
+        if(used){
+          cardColour = Colors.grey;
+          _opacity = 0.5;
+          claimedText = " - claimed";
+          qrCode = Align(
+            alignment: Alignment.center,
+              child: Text("This reward has already been claimed\n",
+                textAlign: TextAlign.center,
+              )
+          );
+        }
+
+        else{
+          qrCode = Column(
+            children: <Widget>[
+              SizedBox(
+                height: 250.0,
+                width: 250.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom:20),
+                  child: QrImage(data:"${id}::${activeEventName}::${document.documentID}"),
+                ),
+              ),
+              Text(
+                document.data['description'],
+                textAlign: TextAlign.center,
+              ),
+            ],
+          );
+        }
+
+        return Card(
+            elevation: 5,
+            color: cardColour,
+            child: Opacity(
+              opacity: _opacity,
+              child: InkWell(
+                onTap: () => showCoupon(document, qrCode),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Image.asset('assets/logoSmall.png'),
+                        ),
+                        title: Row(
+                          children: <Widget>[
+                            Text(document.data['name']),
+                            Text(
+                              claimedText,
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            )
+                          ],
+                        ),
+                        subtitle: Text("Click Me!"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+        );
+      }
+    );
+  }
 }
