@@ -33,132 +33,167 @@ class MyAccountState extends State<MyAccount> {
         backgroundColor: barColor,
       ),
       body: StreamBuilder<DocumentSnapshot>(
-          stream:
-              Firestore.instance.collection('users').document(_id).snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text("Error: ${snapshot.error}");
-            }
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Text("Loading...");
+            stream:
+                Firestore.instance.collection('users').document(_id).snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text("Error: ${snapshot.error}");
+              }
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Text("Loading...");
 
-              default:
-                return Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Card(
-                          elevation: 8.0,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 6.0),
-                          child: Padding(
-                              padding: const EdgeInsets.all(18.0),
-                              child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    Row(
+                default:
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical:20.0),
+                          child: Card(
+                              elevation: 8.0,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: <Widget>[
-                                        Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text("Name: \n",
-                                                  style: TextStyle(
-                                                    color: barColor,
-                                                    fontSize: 19,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                              Text("Email: \n",
-                                                  style: TextStyle(
-                                                    color: barColor,
-                                                    fontSize: 19,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                              Text("Phone: \n",
-                                                  style: TextStyle(
-                                                    color: barColor,
-                                                    fontSize: 19,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                              Text("DOB: ",
-                                                  style: TextStyle(
-                                                    color: barColor,
-                                                    fontSize: 19,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                            ]),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 12.0),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                    "${snapshot.data['fname']} ${snapshot.data['lname']}\n",
-                                                    style: TextStyle(
-                                                        fontSize: 19)),
-                                                Text(
-                                                    "${snapshot.data['email']}\n",
-                                                    style: TextStyle(
-                                                        fontSize: 19)),
-                                                Text(
-                                                    "${snapshot.data['phnumber']}\n",
-                                                    style: TextStyle(
-                                                        fontSize: 19)),
-                                                Text("${snapshot.data['dob']}",
-                                                    style: TextStyle(
-                                                        fontSize: 19)),
-                                              ]),
-                                        ),
-                                        //Buttons to edit data
-                                        Expanded(
-                                          child: Container(
-                                            child: Column(
+                                        Row(
+                                          children: <Widget>[
+                                            Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
+                                                    CrossAxisAlignment.start,
                                                 children: <Widget>[
-                                                  IconButton(
-                                                    icon: Icon(Icons.edit),
-                                                    color: Colors.black38,
-                                                    onPressed: () {
-                                                      editName();
-                                                    },
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(Icons.edit),
-                                                    color: Colors.black38,
-                                                    onPressed: () {
-                                                      editEmail();
-                                                    },
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(Icons.edit),
-                                                    color: Colors.black38,
-                                                    onPressed: () {
-                                                      editPhone();
-                                                    },
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(Icons.edit),
-                                                    color: Colors.black38,
-                                                    onPressed: () {
-                                                    },
-                                                  ),
+                                                  Text("Name: \n",
+                                                      style: TextStyle(
+                                                        color: barColor,
+                                                        fontSize: 19,
+                                                        fontWeight: FontWeight.bold,
+                                                      )),
+                                                  Text("Email: \n",
+                                                      style: TextStyle(
+                                                        color: barColor,
+                                                        fontSize: 19,
+                                                        fontWeight: FontWeight.bold,
+                                                      )),
+                                                  Text("Phone: \n",
+                                                      style: TextStyle(
+                                                        color: barColor,
+                                                        fontSize: 19,
+                                                        fontWeight: FontWeight.bold,
+                                                      )),
+                                                  Text("DOB: ",
+                                                      style: TextStyle(
+                                                        color: barColor,
+                                                        fontSize: 19,
+                                                        fontWeight: FontWeight.bold,
+                                                      )),
                                                 ]),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ]))),
-                    ],
-                  ),
-                );
-            }
-          }),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(left: 12.0),
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                        "${snapshot.data['fname']} ${snapshot.data['lname']}\n",
+                                                        style: TextStyle(
+                                                            fontSize: 19)),
+                                                    Text(
+                                                        "${snapshot.data['email']}\n",
+                                                        style: TextStyle(
+                                                            fontSize: 19)),
+                                                    Text(
+                                                        "${snapshot.data['phnumber']}\n",
+                                                        style: TextStyle(
+                                                            fontSize: 19)),
+                                                    Text("${snapshot.data['dob']}",
+                                                        style: TextStyle(
+                                                            fontSize: 19)),
+                                                  ]),
+                                            ),
+                                            //Buttons to edit data
+                                            Expanded(
+                                              child: Container(
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: <Widget>[
+                                                      IconButton(
+                                                        icon: Icon(Icons.edit),
+                                                        color: Colors.black38,
+                                                        onPressed: () {
+                                                          editName();
+                                                        },
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(Icons.edit),
+                                                        color: Colors.black38,
+                                                        onPressed: () {
+                                                          editEmail();
+                                                        },
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(Icons.edit),
+                                                        color: Colors.black38,
+                                                        onPressed: () {
+                                                          editPhone();
+                                                        },
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(Icons.edit),
+                                                        color: Colors.black38,
+                                                        onPressed: () {
+                                                        },
+                                                      ),
+                                                    ]),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ]
+                                  )
+                              )
+                          ),
+                        ),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom:20.0),
+                              child: InkWell(
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                                  decoration: BoxDecoration(
+                                    color: barColor,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:20.0),
+                                    child: Text(
+                                      "Past Events",
+                                      style: TextStyle(color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                      ),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        _pastEventList(),
+                      ]
+                    ),
+                  );
+              }
+            }),
     );
   }
   //All of the edit functions for each field
@@ -423,4 +458,56 @@ class MyAccountState extends State<MyAccount> {
               ]);
         });
   }
-}
+
+  _pastEventList(){
+    print("Building past event List ");
+    return StreamBuilder(
+        stream: Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) return new Text("Now Loading...");
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot document = snapshot.data.documents[index];
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0,left:8.0,top: 2.0),
+                child: createCard(document),
+              );
+            },
+          );
+        }
+    );
+  }
+
+  Widget createCard(DocumentSnapshot document) {
+    return Card(
+        elevation: 5,
+          child: InkWell(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Image.asset('assets/logoSmall.png'),
+                    ),
+                    title: Row(
+                      children: <Widget>[
+                        Text("${document.documentID}"),
+                      ],
+                    ),
+                    //subtitle: Text("Click Me!"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+  }
+
+

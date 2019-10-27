@@ -118,7 +118,6 @@ class RewardsState extends State<Rewards> {
         child: _showDialog(),
       );
     }
-
     else {
       return _rewardList();
     }
