@@ -85,13 +85,12 @@ class HomeState extends State<Home> {
                           style: TextStyle(color: barColor, fontSize: 30),
                         );
                     }
-
                   }),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 21.0, top: 10.0),
-            child: _returnTitle(),
+            child: _returnTitleStream(),
           ),
           Center(
             child: Column(
@@ -306,18 +305,22 @@ class HomeState extends State<Home> {
   }
 
   //Updating the title at the top of the page
-  Text _returnTitle(){
-    if(activeEventName == ""){
-      return Text(
-        "Welcome to our app!",
-        style: TextStyle(color: barColor, fontSize: 20),
-      );
+  StreamBuilder _returnTitleStream(){
+
+    return StreamBuilder(
+      initialData: "our app!",
+      stream: eventNameStream,
+      builder:(BuildContext context, snapshot) => _returnTitle(snapshot),
+    );
+  }
+
+  Widget _returnTitle(var snapshot){
+
+    String title = "our app!";
+
+    if(!(snapshot.data == "")){
+      title = snapshot.data;
     }
-    else{
-      return Text(
-        "Welcome to ${activeEvent.data['title']}",
-        style: TextStyle(color: barColor, fontSize: 20),
-      );
-    }
+    return Text("Welcome to $title", style: TextStyle(color: barColor, fontSize: 20.0));
   }
 }

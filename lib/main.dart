@@ -25,6 +25,8 @@ import 'package:imb_beacon/rewards.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:transparent_image/transparent_image.dart';
+
 
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
 const EddystoneServiceIdAndroid = "0000feaa-0000-1000-8000-00805f9b34fb";
@@ -40,6 +42,10 @@ bool beaconFound = false;
 bool initialLoad = true;
 // A variable to store the Firebase user
 AuthResult user;
+
+StreamController streamListController = StreamController<String>.broadcast();
+Sink get nameSink => streamListController.sink;
+Stream<String> get eventNameStream => streamListController.stream;
 
 Timer timer;
 
@@ -121,6 +127,7 @@ class LoginFormState extends State<LoginForm> {
   TextEditingController _controller = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
 
+
   @override
   void initState() {
     super.initState();
@@ -160,77 +167,6 @@ class LoginFormState extends State<LoginForm> {
     var initSettings = new InitializationSettings(androidSettings, iOSSettings);
     flutterLocalNotificationsPlugin.initialize(initSettings,onSelectNotification:selectNotification);
     //End notification setup
-
-
-  }
-
-  //Show the notification
-  showNotification(DocumentSnapshot event) async{
-    var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription');
-    var iOS = new IOSNotificationDetails();
-    var platform = new NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(0,'Welcome to ${event.documentID}','Click here for more information',platform);
-  }
-
-  //What happens when you click the notification
-  Future selectNotification(String payload){
-    if(signedIn){
-      showDialog(context: context,builder:(_)=> AlertDialog(
-        title: Text('Welcome to ${activeEvent.data['title']}'),
-        content: SizedBox(
-          height: 200.0,
-          width: 200.0,
-          child: Text("Thank you for attending ${activeEvent.data['title']}. We are so glad you could make it!"),
-        ),
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-
-              Padding(
-                padding: EdgeInsets.only(right:10),
-                child: RaisedButton(
-                  child: Text(
-                    "Rewards",
-                    style: TextStyle(
-                      color: bgColor,
-                    ),
-                  ),
-                  color: barColor,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => Rewards(user.user.uid)));
-                  },
-                ),
-              ),
-
-              RaisedButton(
-                child: Text(
-                  "Event Info",
-                  style: TextStyle(
-                    color: bgColor,
-                  ),
-                ),
-                color: barColor,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => EventInfo()));
-                },
-              ),
-
-            ],
-          )
-        ]
-        ));
-    }
-    else{
-      debugPrint("payload : $payload");
-      showDialog(context: context,builder:(_)=> new AlertDialog(
-        title: new Text('Notification'),
-        content: new Text('$payload'),
-      ));
-    }
   }
 
   //Building the content of the page
@@ -245,9 +181,13 @@ class LoginFormState extends State<LoginForm> {
               child: Column(children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 45, right: 45, top: 37, bottom: 20),
+                      left: 45, right: 45,top:20),
                   child: Container(
-                    child: Image.asset('assets/logo.png'),
+                    //child: Image.asset('assets/IMBLogo.png'),
+                    child: FadeInImage(
+                      placeholder: MemoryImage(kTransparentImage),
+                      image: AssetImage("assets/IMBLogo.png"),
+                    ),
                   ),
                 ),
                 Container(
@@ -301,7 +241,7 @@ class LoginFormState extends State<LoginForm> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        padding: const EdgeInsets.only(bottom: 15.0),
                         child: RaisedButton(
                           textColor: bgColor,
                           color: barColor,
@@ -320,16 +260,33 @@ class LoginFormState extends State<LoginForm> {
                         'Don\'t have an account?',
                       ),
                       FlatButton(
-                          textColor: barColor,
-                          child: Text('Sign up.'),
-                          onPressed: () {
-                            emptyText();
-                            //Moves app to a different page, by calling another widget builder
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUpForm()));
-                          }),
+
+                        textColor: barColor,
+                        child: Text('Sign up.'),
+                        onPressed: () {
+                          emptyText();
+                          //Moves app to a different page, by calling another widget builder
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpForm()));
+                      }),
+                      Padding(
+                        padding: const EdgeInsets.only(top:20.0),
+                        child: Opacity(
+                          opacity: 0.5,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Designed by "),
+                              SizedBox(
+                                  height:40,
+                                  child: Image.asset('assets/pineappleLogo.png')
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -388,6 +345,8 @@ class LoginFormState extends State<LoginForm> {
       activeEvent = event;
       activeEventName = event.documentID;
 
+      nameSink.add(activeEvent.data['title']);
+
       if(signedIn){
         _setRewardInfo();
       }
@@ -432,6 +391,75 @@ class LoginFormState extends State<LoginForm> {
         });
       }
     });
+  }
+
+  //Show the notification
+  showNotification(DocumentSnapshot event) async{
+    var android = new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription');
+    var iOS = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin.show(0,'Welcome to ${event.documentID}','Click here for more information',platform);
+  }
+
+  //What happens when you click the notification
+  Future selectNotification(String payload){
+    if(signedIn){
+      showDialog(context: context,builder:(_)=> AlertDialog(
+          title: Text('Welcome to ${activeEvent.data['title']}'),
+          content: SizedBox(
+            height: 200.0,
+            width: 200.0,
+            child: Text("Thank you for attending ${activeEvent.data['title']}. We are so glad you could make it!"),
+          ),
+          actions: <Widget>[
+            Row(
+              children: <Widget>[
+
+                Padding(
+                  padding: EdgeInsets.only(right:10),
+                  child: RaisedButton(
+                    child: Text(
+                      "Rewards",
+                      style: TextStyle(
+                        color: bgColor,
+                      ),
+                    ),
+                    color: barColor,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => Rewards(user.user.uid)));
+                    },
+                  ),
+                ),
+
+                RaisedButton(
+                  child: Text(
+                    "Event Info",
+                    style: TextStyle(
+                      color: bgColor,
+                    ),
+                  ),
+                  color: barColor,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => EventInfo()));
+                  },
+                ),
+
+              ],
+            )
+          ]
+      ));
+    }
+    else{
+      debugPrint("payload : $payload");
+      showDialog(context: context,builder:(_)=> new AlertDialog(
+        title: new Text('Notification'),
+        content: new Text('$payload'),
+      ));
+    }
   }
 
   //-------------The following is code to implement short duration scans -----------------------
@@ -491,6 +519,9 @@ class LoginFormState extends State<LoginForm> {
 
   void resetConnection(){
     setState(() {
+
+      nameSink.add("");
+
       activeBeacon = null;
       activeBeaconName = 'not connected';
       activeEvent = null;

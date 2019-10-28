@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:imb_beacon/main.dart';
 import 'package:firebase_storage_image/firebase_storage_image.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 
 class EventInfo extends StatefulWidget {
@@ -95,7 +96,10 @@ class EventInfoState extends State<EventInfo> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                             child: Center(
-                                child: fetchImage(),
+                                child: FadeInImage(
+                                  placeholder: MemoryImage(kTransparentImage),
+                                  image: fetchImage(),
+                                ),
                             ),
                           ),
                           Padding(
@@ -143,14 +147,15 @@ class EventInfoState extends State<EventInfo> {
   }
 
   //Grabbing the image from Firebase
-  Image fetchImage(){
+  FirebaseStorageImage fetchImage(){
 
     String photoPath = "gs://pineappleproximity.appspot.com/$activeEventName.png";
     print("IMAGE IS HERE: $photoPath");
 
-      Image image = Image(image: FirebaseStorageImage(photoPath));
-      return image;
+      //Image image = Image(image: FirebaseStorageImage(photoPath));
+      //return image;
 
+      return FirebaseStorageImage(photoPath);
   }
 }
 

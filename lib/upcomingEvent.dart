@@ -47,26 +47,30 @@ class UpcomingEventState extends State<UpcomingEvent> {
           itemBuilder: (context, index) {
             DocumentSnapshot document = snapshot.data.documents[index];
             return Card(
-              child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              title: new Text(document['title']),
-              subtitle: new Text(document['description']),
-            ),
-            //If this button is pressed, the user is presented with more event details
-            ButtonTheme.bar(
-              child: ButtonBar(
-                children: <Widget>[
-                  FlatButton(
-                    child: new Text('View Details'),
-                    onPressed: () {_showDialog(document);},
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
+              elevation: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      title: new Text(document['title']),
+                      subtitle: subtitle(document['description']),
+                    ),
+                    //If this button is pressed, the user is presented with more event details
+                    ButtonTheme.bar(
+                      child: ButtonBar(
+                        children: <Widget>[
+                          FlatButton(
+                            child: new Text('View Details'),
+                            onPressed: () {_showDialog(document);},
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
             );
           },
         );
@@ -79,8 +83,32 @@ class UpcomingEventState extends State<UpcomingEvent> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-        title: Text(document['title']),
-        content: Text("Description:\n" + document['description'] + "\n\nStart Date: " + document['startDate'] + "\n\nEnd Date: " + document['endDate'] + "\n\nStart Time: " + document['startTime'] + "\n\nEnd Time: " + document['endTime']),
+        //title: Text(document['title']),
+          contentPadding: EdgeInsets.only(),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom:20.0),
+                child: InkWell(
+                  child: Container(
+                    decoration: BoxDecoration(color: barColor),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(document.data["title"],
+                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 20),
+                        textAlign: TextAlign.center),
+                    ),
+                  )
+                ),
+            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:20.0),
+                child: eventInfoAlert(document),
+              )
+          ],
+        ),
         actions: <Widget>[
           Row(
             children: <Widget>[
@@ -103,6 +131,78 @@ class UpcomingEventState extends State<UpcomingEvent> {
       }
     );
     
+  }
+
+  Text subtitle(String desc){
+
+    if(desc.length>106){
+      desc = desc.substring(0,105);
+      desc = "${desc}...";
+    }
+
+    return Text(desc);
+
+  }
+
+  Widget eventInfoAlert(DocumentSnapshot document){
+
+    //Text(document['description'] + "\n\nStart Date: " + document['startDate'] + "\n\nEnd Date: " + document['endDate'] + "\n\nStart Time: " + document['startTime'] + "\n\nEnd Time: " + document['endTime']);
+
+    return Column(
+      children: <Widget>[
+        Text("${document['description']}\n"),
+        Row(
+          children: <Widget>[
+            Text(
+              "Start Date:   ",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "${document['startDate']}",
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom:10.0),
+          child: Row(
+            children: <Widget>[
+              Text(
+                "End Date:     ",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "${document['endDate']}",
+              )
+            ],
+          ),
+        ),
+        Row(
+          children: <Widget>[
+            Text(
+              "Start Time:   ",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              document['startTime'],
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Text(
+              "End Time:    ",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              document['endTime'],
+            )
+          ],
+        ),
+
+
+    ],
+    );
+
   }
 
 }

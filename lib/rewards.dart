@@ -92,8 +92,6 @@ class RewardsState extends State<Rewards> {
               ),
             ),
           ),
-
-
           qrCode,
         ],
       ),
