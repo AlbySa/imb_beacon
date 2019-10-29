@@ -37,7 +37,7 @@ class HomeState extends State<Home> {
 
   String id;
   String event;
-  String title = "Welcome to our app!";
+
 
   //Building the page content
   @override
@@ -93,167 +93,170 @@ class HomeState extends State<Home> {
             child: _returnTitleStream(),
           ),
           Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Material(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0))),
-                                elevation: 5.0,
-                                color: barColor,
-                                child: MaterialButton(
-                                  height: 175.0,
-                                  minWidth: 175.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.local_activity,
-                                        size: 90,
-                                        color: buttonShadow,
-                                      ),
-                                      Text(
-                                        "Rewards",
-                                        style: TextStyle(color: bgColor),
-                                      ),
-                                    ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5.0))),
+                                  elevation: 5.0,
+                                  color: barColor,
+                                  child: MaterialButton(
+                                    height: 175.0,
+                                    minWidth: 175.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.local_activity,
+                                          size: 90,
+                                          color: buttonShadow,
+                                        ),
+                                        Text(
+                                          "Rewards",
+                                          style: TextStyle(color: bgColor),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Rewards(id)));
+                                    },
                                   ),
-                                  onPressed: () {
-                                    Navigator.push(
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5.0))),
+                                  elevation: 5.0,
+                                  color: barColor,
+                                  child: MaterialButton(
+                                    height: 175.0,
+                                    minWidth: 175.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.search,
+                                          size: 90,
+                                          color: buttonShadow,
+                                        ),
+                                        Text(
+                                          "Event Info.",
+                                          style: TextStyle(color: bgColor),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => EventInfo()));
+                                    },
+                                  ),
+                                ),
+                              ),
+                            )
+                          ]),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5.0))),
+                                  elevation: 5.0,
+                                  color: barColor,
+                                  child: MaterialButton(
+                                    height: 175.0,
+                                    minWidth: 175.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.event,
+                                          size: 90,
+                                          color: buttonShadow,
+                                        ),
+                                        Text(
+                                          "Upcoming Events",
+                                          style: TextStyle(color: bgColor),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  UpcomingEvent()));
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5.0))),
+                                  elevation: 5.0,
+                                  color: barColor,
+                                  child: MaterialButton(
+                                    height: 175.0,
+                                    minWidth: 175.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.person,
+                                          size: 90,
+                                          color: buttonShadow,
+                                        ),
+                                        Text(
+                                          "My Account",
+                                          style: TextStyle(color: bgColor),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Rewards(id)));
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Material(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0))),
-                                elevation: 5.0,
-                                color: barColor,
-                                child: MaterialButton(
-                                  height: 175.0,
-                                  minWidth: 175.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.search,
-                                        size: 90,
-                                        color: buttonShadow,
-                                      ),
-                                      Text(
-                                        "Event Info.",
-                                        style: TextStyle(color: bgColor),
-                                      ),
-                                    ],
+                                            builder: (context) => MyAccount(id)
+                                        )
+                                      );
+                                    },
                                   ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => EventInfo()));
-                                  },
                                 ),
                               ),
                             ),
-                          )
-                        ]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Material(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0))),
-                                elevation: 5.0,
-                                color: barColor,
-                                child: MaterialButton(
-                                  height: 175.0,
-                                  minWidth: 175.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.event,
-                                        size: 90,
-                                        color: buttonShadow,
-                                      ),
-                                      Text(
-                                        "Upcoming Events",
-                                        style: TextStyle(color: bgColor),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UpcomingEvent()));
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Material(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0))),
-                                elevation: 5.0,
-                                color: barColor,
-                                child: MaterialButton(
-                                  height: 175.0,
-                                  minWidth: 175.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.person,
-                                        size: 90,
-                                        color: buttonShadow,
-                                      ),
-                                      Text(
-                                        "My Account",
-                                        style: TextStyle(color: bgColor),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MyAccount(id)
-                                      )
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ]),
-                  ),
-                ]),
+                          ]),
+                    ),
+                  ]),
+            ),
           )
         ])));
   }
@@ -308,7 +311,7 @@ class HomeState extends State<Home> {
   StreamBuilder _returnTitleStream(){
 
     return StreamBuilder(
-      initialData: "our app!",
+      initialData: _InitialTitle(),
       stream: eventNameStream,
       builder:(BuildContext context, snapshot) => _returnTitle(snapshot),
     );
@@ -318,9 +321,23 @@ class HomeState extends State<Home> {
 
     String title = "our app!";
 
-    if(!(snapshot.data == "")){
+    if(activeEvent!=null){
+      title = activeEvent.data['title'];
+    }
+
+    if(snapshot.data != ""){
       title = snapshot.data;
     }
     return Text("Welcome to $title", style: TextStyle(color: barColor, fontSize: 20.0));
+  }
+
+  String _InitialTitle(){
+
+    if(activeEvent!=null){
+      return activeEvent.data['title'];
+    }
+
+    return "our app";
+
   }
 }

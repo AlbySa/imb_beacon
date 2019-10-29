@@ -112,7 +112,7 @@ class SignUpFormState extends State<SignUpForm> {
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
                               borderSide:
-                                  BorderSide(color: borderColor, width: 2.0),
+                              BorderSide(color: borderColor, width: 2.0),
                             ),
                             hintText: 'First Name',
                             helperText: '',
@@ -132,7 +132,7 @@ class SignUpFormState extends State<SignUpForm> {
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
                               borderSide:
-                                  BorderSide(color: barColor, width: 2.0),
+                              BorderSide(color: barColor, width: 2.0),
                             ),
                             hintText: 'Last Name',
                             helperText: '',
@@ -212,7 +212,7 @@ class SignUpFormState extends State<SignUpForm> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0, top: 5),
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   child: RaisedButton(
                     textColor: bgColor,
                     color: barColor,
@@ -230,6 +230,7 @@ class SignUpFormState extends State<SignUpForm> {
                 ),
                 Text(
                   _emailConfirmationTip,
+                  textAlign: TextAlign.center,
                 ),
                 FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -239,6 +240,7 @@ class SignUpFormState extends State<SignUpForm> {
                     Navigator.of(context).pop();
                   },
                 ),
+                Text("By Signing up you agree to IMB may send you updates and promotions", textAlign: TextAlign.center,),
               ],
             ),
           ),
@@ -281,7 +283,7 @@ class SignUpFormState extends State<SignUpForm> {
         setState(() {
           _printEmail = '\'$_email\'';
           _emailConfirmationTip =
-              'A confirmation Email has been sent to\n$_printEmail';
+          'A confirmation Email has been sent to\n$_printEmail';
         });
         AuthResult user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);

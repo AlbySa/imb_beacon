@@ -27,7 +27,6 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-
 //Base UID for eddystone -  this is used to calculate the UID we receive from the beacon
 const EddystoneServiceIdAndroid = "0000feaa-0000-1000-8000-00805f9b34fb";
 const EddystoneServiceIdIOS = "FEAA";
@@ -42,6 +41,10 @@ bool beaconFound = false;
 bool initialLoad = true;
 // A variable to store the Firebase user
 AuthResult user;
+//DateTime
+DateTime now = DateTime.now();
+DateTime eventTime;
+
 
 StreamController streamListController = StreamController<String>.broadcast();
 Sink get nameSink => streamListController.sink;
@@ -110,7 +113,6 @@ class LoginFormState extends State<LoginForm> {
   bool adapterOn = false;
   bool isScanning = true;
 
-
   //Loading circle
   bool _saving = false;
 
@@ -127,7 +129,6 @@ class LoginFormState extends State<LoginForm> {
   TextEditingController _controller = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
 
-
   @override
   void initState() {
     super.initState();
@@ -135,11 +136,14 @@ class LoginFormState extends State<LoginForm> {
     // FlutterBlue Setup -----------------------------------------------
     _flutterBlue.state.then((s) {
       setState(() {
+        now = DateTime.now();
         state = s;
       });
       print("Initial State: $state");
       if(state == BluetoothState.on && initialLoad){//Bluetooth is on at startup
-        _periodicScan();
+        //_periodicScan();
+        _startScan();
+        _checkEvent();
         initialLoad = false;
       }
     });
@@ -148,12 +152,14 @@ class LoginFormState extends State<LoginForm> {
         state = s;
 
         if(state == BluetoothState.on){//Bluetooth has just been turned on
-          _periodicScan();
+          _startScan();
+          _checkEvent();
         }
-        if(state == BluetoothState.off) { //Bluetooth has just been turned off
+        if(state == BluetoothState.off){ //Bluetooth has just been turned off
           _stopScan();
-          //_stopPeriodicScan();
+          _stopCheckEvent();
           resetConnection();
+          //timer.cancel();
         }
       });
     });
@@ -339,6 +345,9 @@ class LoginFormState extends State<LoginForm> {
 
     setState((){
 
+      eventTime = DateTime.now();
+
+
       activeBeacon = beacon;
       activeBeaconName = beacon.data['name'];
 
@@ -362,7 +371,6 @@ class LoginFormState extends State<LoginForm> {
 
       //--------------- Check beacons ---------------
       if(beaconSnapshot.exists) { //if the beacon exists
-
         //create reference to event (look for event)
         DocumentReference eventReference = Firestore.instance.collection("events").document(beaconSnapshot.data['event']);
         eventReference.get().then((eventSnapshot) {
@@ -370,23 +378,35 @@ class LoginFormState extends State<LoginForm> {
           //--------------- Check events ---------------
           if (eventSnapshot.exists) { //if the event exists
 
+
+
             //No active beacon
             if(activeBeacon == null){
+              print("Connecting");
               connectBeacon(beaconSnapshot, eventSnapshot);
               showNotification(eventSnapshot);
+              _checkEvent();
+            }
+
+            //same event
+            if(activeEvent.documentID == eventSnapshot.documentID){
+              eventTime = DateTime.now();
             }
 
             //New beacon / same event
             else if(activeBeacon.documentID != beaconSnapshot.documentID && activeEvent.documentID == eventSnapshot.documentID){
+              print("Connecting");
+
               connectBeacon(beaconSnapshot, eventSnapshot);
             }
 
             //New beacon / different event
             else if(activeBeacon.documentID != beaconSnapshot.documentID && activeEvent.documentID != eventSnapshot.documentID){
+              print("Connecting");
+
               connectBeacon(beaconSnapshot, eventSnapshot);
               showNotification(eventSnapshot);
             }
-
           }
         });
       }
@@ -455,36 +475,40 @@ class LoginFormState extends State<LoginForm> {
     }
     else{
       debugPrint("payload : $payload");
-      showDialog(context: context,builder:(_)=> new AlertDialog(
-        title: new Text('Notification'),
-        content: new Text('$payload'),
-      ));
+//      showDialog(context: context,builder:(_)=> new AlertDialog(
+//        title: new Text('Notification'),
+//        content: new Text('$payload'),
+//      ));
     }
   }
 
   //-------------The following is code to implement short duration scans -----------------------
   _startScan() {
 
+
     // ignore: cancel_subscriptions
     var scanSubscription = _flutterBlue.scan(
-      timeout: const Duration(seconds: 3),
+      //timeout: const Duration(seconds: 3),
     ).listen((scanResult) {
-      if (scanResult.device.type == BluetoothDeviceType.le) {
-        List<int> rawBytes;
-        if (Platform.isIOS) {
-          rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdIOS];
+        if (scanResult.device.type == BluetoothDeviceType.le) {
+          if(scanResult.rssi>=-75){
+            print("${scanResult.rssi}>= -75");
+            List<int> rawBytes;
+            if (Platform.isIOS) {
+              rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdIOS];
+            }
+            else {
+              rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdAndroid];
+            }
+            //Once a beacon has been found, it is then checked against the database
+            if (rawBytes != null) {
+              print("found:${scanResult.device.name}");
+              String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
+              findBeacon(beaconId);
+            }
+          }
         }
-        else {
-          rawBytes = scanResult.advertisementData.serviceData[EddystoneServiceIdAndroid];
-        }
-        //Once a beacon has been found, it is then checked against the database
-        if (rawBytes != null) {
-          print("found:${scanResult.device.name}");
-          String beaconId = byteListToHexString(rawBytes.sublist(2, 18));
-          findBeacon(beaconId);
-        }
-      }
-    }, onDone: _stopScan);
+    });
 
     setState(() {
       isScanning = true;
@@ -502,18 +526,36 @@ class LoginFormState extends State<LoginForm> {
     });
   }
 
-  void _periodicScan(){
+//  void _periodicScan(){
+//
+//    //start first async scan
+//    Timer(Duration(seconds: 0), () {
+//      print("starting first scan");
+//      _startScan();
+//    });
+//
+//    //run another scan every minute
+////    timer = Timer.periodic(Duration(minutes: 1), (timer) {
+////      print("starting Periodic scan");
+////      _startScan();
+////    });
+//  }
 
-    //start first async scan
-    Timer(Duration(seconds: 0), () {
-      print("starting first scan");
-      _startScan();
-    });
+  void _checkEvent(){
+    print("Check event started*");
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
 
-    //run another scan every minute
-    timer = Timer.periodic(Duration(minutes: 1), (timer) {
-      print("starting Periodic scan");
-      _startScan();
+      if(activeEventName != ""){
+        if(eventTime!=null&& activeEventName!=null){
+          now = DateTime.now();
+          print("Current time is: $now");
+          print("last at event: $eventTime");
+          var maxTime = eventTime.add(Duration(seconds: 10));
+          if(now.isAfter(maxTime)){
+            resetConnection();
+          }
+        }
+      }
     });
   }
 
@@ -527,10 +569,12 @@ class LoginFormState extends State<LoginForm> {
       activeEvent = null;
       activeEventName = "";
     });
+    _stopCheckEvent();
   }
 
-  void _stopPeriodicScan(){
-    timer.cancel();
+  void _stopCheckEvent(){
+    print("Stopping event check");
+    //timer.cancel();
   }
 
 //-------------------------------------End scan code-------------------------------------------
