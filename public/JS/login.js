@@ -23,8 +23,6 @@ loginForm.addEventListener("submit", (e) =>{
     const password = loginForm['password'].value;
     var errorCode = '';
     var errorMessage = '';
-    //const email = "new.admin@gmail.com"
-    //const password = "ChangeMe"
 
     //Sign in with username and password credentials
     var userInfo = db.collection('users').where('email','==', email)

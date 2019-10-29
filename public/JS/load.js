@@ -51,10 +51,10 @@ function renderEvents(doc){
 	let btnadd = document.createElement('input');
 	let TimesVisited = document.createElement('p');
 
-	sDate.className += " datePicker";
-	eDate.className += " datePicker";
-	sTime.className += " timePicker";
-	eTime.className += " timePicker";
+  sDate.classList.add("sDatePicker");
+  eDate.classList.add("eDatePicker");
+  sTime.classList.add("sTimePicker");
+  eTime.classList.add("eTimePicker");
 
 	//create type text box
 	name.type = 'text';
@@ -115,8 +115,44 @@ function renderEvents(doc){
 	btnEdit.id = "edit";
 	TimesVisited.textContent = getVisits(name.value);
 
+  //divs for styling - steph
+  //row 1
+  let dateRow1 = document.createElement('div');
+  dateRow1.classList.add("form-group");
+  dateRow1.classList.add("row");
+  let r1c1 = document.createElement("div");
+  r1c1.classList.add("col");
+  let r1c2 = document.createElement("div");
+  r1c2.classList.add("col");
+  let r1c3 = document.createElement("div");
+  r1c3.classList.add("col");
+  let r1c4 = document.createElement("div");
+  r1c4.classList.add("col");
+  //row2
+  let dateRow2 = document.createElement('div');
+  dateRow2.classList.add("form-group");
+  dateRow2.classList.add("row");
+  let r2c1 = document.createElement("div");
+  r2c1.classList.add("col");
+  let r2c2 = document.createElement("div");
+  r2c2.classList.add("col");
+  let r2c3 = document.createElement("div");
+  r2c3.classList.add("col");
+  let r2c4 = document.createElement("div");
+  r2c4.classList.add("col");
+
+  //divs for cards
+  let card = document.createElement('div');
+  let cardBody = document.createElement('div');
+  card.className = 'card';
+  cardBody.className = 'card-body';
+
   //styling
   name.className += "form-control";
+  sTime.style.width += "100%";
+  eTime.style.width += "100%";
+  sDate.style.width += "100%";
+  eDate.style.width += "100%";
   sTime.className += "form-control";
   sDate.className += "form-control";
   eTime.className += "form-control";
@@ -124,19 +160,27 @@ function renderEvents(doc){
   description.className += "form-control";
   code.className += "form-control";
   codeName.className += "form-control";
-  btnUpdate.className += "btn btn-sm";
+  addtoBeacon.className += 'form-control'
+
+  btnUpdate.className += "btn";
   btnUpdate.style.backgroundColor = "#007f6a";
   btnUpdate.style.color = 'white';
-  btnEdit.className += "btn btn-sm";
+  btnUpdate.style.marginRight = "10px";
+
+  btnEdit.className += "btn ";
   btnEdit.style.backgroundColor = "#007f6a";
   btnEdit.style.color = 'white';
-  btnRemove.className += "btn btn-sm";
+  btnEdit.style.marginRight = "10px";
+
+  btnRemove.className += "btn";
   btnRemove.style.backgroundColor = "#007f6a";
   btnRemove.style.color = 'white';
-  addtoBeacon.className += 'form-control'
+
   btnadd.className += "btn btn-sm";
   btnadd.style.backgroundColor = "#007f6a";
   btnadd.style.color = 'white';
+  btnadd.style.marginRight = '10px';
+
   btnremBeacon.className += "btn btn-sm";
   btnremBeacon.style.backgroundColor = "#007f6a";
   btnremBeacon.style.color = 'white';
@@ -160,19 +204,20 @@ function renderEvents(doc){
 		var parent = e.target.parentNode.id;
 		var disabledElements = document.getElementById(parent).children;
 
-		for (var i = 0; i < disabledElements.length-3; i++) {
+    let id = e.target.parentElement.getAttribute('data-id');
+		let chil = e.target.parentElement.children;
+
+		for (var i = 0; i < disabledElements.length-4; i++) {
 			disabledElements[i].disabled = true;
         }
 
-		let id = e.target.parentElement.getAttribute('data-id');
-		let chil = e.target.parentElement.children;
 		db.collection('events').doc(id).update({
-			title: chil[0].value,
-			startDate: chil[1].value,
-			startTime: chil[2].value,
-			endDate: chil[3].value,
-			endTime: chil[4].value,
-			description: chil[6].value
+			title: chil[1].value,
+			startDate: chil[3].children[3].children[0].value,
+			startTime: chil[3].children[1].children[0].value,
+			endDate: chil[4].children[3].children[0].value,
+			endTime: chil[4].children[1].children[0].value,
+			description: chil[12].value
 		})
 		.then((e) =>{
 			var rewardID = "";
@@ -180,7 +225,7 @@ function renderEvents(doc){
 				snapshot.forEach(doc => {
 					rewardID = doc.id;
 					db.collection('events').doc(id).collection('rewards').doc(rewardID).update({
-						Name: chil[5].value
+						Name: chil[9].value
 					});
 				});
 			});
@@ -259,36 +304,60 @@ function renderEvents(doc){
 		});
 	});
 
+  //append - steph
+  //row1 - for selecting dates
+  dateRow1.appendChild(r1c1);
+  dateRow1.appendChild(r1c2);
+  dateRow1.appendChild(r1c3);
+  dateRow1.appendChild(r1c4);
+  r1c1.appendChild(stimeLabel);
+  r1c2.appendChild(sTime);
+  r1c3.appendChild(sdateLabel);
+  r1c4.appendChild(sDate);
+  //row2 - for selecting dates
+  dateRow2.appendChild(r2c1);
+  dateRow2.appendChild(r2c2);
+  dateRow2.appendChild(r2c3);
+  dateRow2.appendChild(r2c4);
+  r2c1.appendChild(etimeLabel);
+  r2c2.appendChild(eTime);
+  r2c3.appendChild(edateLabel);
+  r2c4.appendChild(eDate);
+
   //attach to elements
-	li.appendChild(nameLabel);
-	li.appendChild(name);
-	li.appendChild(sdateLabel);
-	li.appendChild(sDate);
-	li.appendChild(stimeLabel);
-	li.appendChild(sTime);
-	li.appendChild(edateLabel);
-	li.appendChild(eDate);
-	li.appendChild(etimeLabel);
-	li.appendChild(eTime);
-  	li.appendChild(codeTitleLabel);
-  	li.appendChild(codeName);
-	li.appendChild(codeLabel);
-	li.appendChild(code);
-	li.appendChild(descriptionLabel);
-	li.appendChild(description);
-	li.appendChild(document.createElement('br'));
-	li.appendChild(addtoBeacon);
-	li.appendChild(btnadd);
-	li.appendChild(btnremBeacon);
-	li.appendChild(document.createElement('br'));
-	li.appendChild(document.createElement('br'));
-	li.appendChild(TimesVisited);
-	li.appendChild(document.createElement('br'));
-	li.appendChild(document.createElement('br'));
-	li.appendChild(btnUpdate);
-	li.appendChild(btnEdit);
-	li.appendChild(btnRemove);
-	li.appendChild(document.createElement('br'));
+	cardBody.appendChild(nameLabel);
+	cardBody.appendChild(name);
+  cardBody.appendChild(document.createElement('br'));
+
+  cardBody.appendChild(dateRow1);
+  cardBody.appendChild(dateRow2);
+
+  cardBody.appendChild(codeTitleLabel);
+  cardBody.appendChild(codeName);
+  cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(codeLabel);
+	cardBody.appendChild(code);
+  cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(descriptionLabel);
+	cardBody.appendChild(description);
+	cardBody.appendChild(document.createElement('br'));
+
+  cardBody.appendChild(addtoBeacon);
+  cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(btnadd);
+	cardBody.appendChild(btnremBeacon);
+  cardBody.appendChild(document.createElement('br'));
+	cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(btnUpdate);
+	cardBody.appendChild(btnEdit);
+	cardBody.appendChild(btnRemove);
+  card.appendChild(cardBody);
+  li.appendChild(card);
+  li.appendChild(document.createElement('br'));
 
 	eventsList.appendChild(li);
 }
@@ -303,7 +372,7 @@ function getVisits(documentID)
 	let documents = db.collection("users").get()
 	  .then(snapshot => {
 		snapshot.forEach(doc => {
-  
+
 		  let subCollectionDocs = db.collection("users").doc(doc.id).collection("pastEvents").get()
 			.then(snapshot => {
 				visits ++;
@@ -313,7 +382,7 @@ function getVisits(documentID)
 				  }
 			  })
 			}).catch(err => {
-			  
+
 			})
 		});
 	  }).catch(err => {
@@ -352,8 +421,8 @@ function eventSearch(){
 			if (snapshot.empty) {
 				console.log('No matching documents.');
 				return;
-			} 
-			//repopulate the dom	
+			}
+			//repopulate the dom
 			snapshot.forEach(doc => {
 				renderEvents(doc);
 			  });
@@ -397,8 +466,6 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	let btnEdit = document.createElement('input');
 	let btnRemove = document.createElement('input');
 
-
-
 	//populate elements
 	li.setAttribute('data-id', doc.id);
   li.setAttribute("id", "beaconListSteph")
@@ -413,24 +480,32 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	btnUpdate.value = "Update Entry";
 	btnEdit.type = 'button';
 	btnEdit.id = doc.id;
-	btnEdit.value = "Edit";
+	btnEdit.value = "Edit Entry";
 	btnRemove.type = "button";
 	btnRemove.value = "Remove Entry";
+
+  //divs for cards
+  let card = document.createElement('div');
+  let cardBody = document.createElement('div');
+  card.className = 'card';
+  cardBody.className = 'card-body';
 
   //styling
   bID.className += "form-control";
   event.className += "form-control";
   name.className += "form-control";
 
-  btnUpdate.className += "btn btn-sm";
+  btnUpdate.className += "btn";
   btnUpdate.style.backgroundColor = "#007f6a";
   btnUpdate.style.color = 'white';
+  btnUpdate.style.marginRight = "10px";
 
-  btnEdit.className += "btn btn-sm";
+  btnEdit.className += "btn";
   btnEdit.style.backgroundColor = "#007f6a";
   btnEdit.style.color = 'white';
+  btnEdit.style.marginRight = "10px";
 
-  btnRemove.className += "btn btn-sm";
+  btnRemove.className += "btn";
   btnRemove.style.backgroundColor = "#007f6a";
   btnRemove.style.color = 'white';
 
@@ -480,7 +555,7 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 	//sends updated beacon to database
-	btnUpdate.addEventListener("click", (e) => { 
+	btnUpdate.addEventListener("click", (e) => {
 		//update data
 		e.stopPropagation();
 		var parent = e.target.parentNode.id;
@@ -522,20 +597,29 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	event.disabled = true;
 	btnUpdate.disabled = true;
 
+  //cardBody.appendChild(li);
+
 	//attach to list
-	li.appendChild(nameLabel)
-	li.appendChild(name);
-	li.appendChild(bIDLabel);
-	li.appendChild(bID);
-	li.appendChild(eventLabel);
-	li.appendChild(event);
-	li.appendChild(document.createElement('br'));
-	li.appendChild(btnUpdate);
-	li.appendChild(btnEdit);
-	li.appendChild(btnRemove);
+	cardBody.appendChild(nameLabel);
+	cardBody.appendChild(name);
+  cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(bIDLabel);
+	cardBody.appendChild(bID);
+  cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(eventLabel);
+	cardBody.appendChild(event);
+  cardBody.appendChild(document.createElement('br'));
+
+	cardBody.appendChild(btnUpdate);
+	cardBody.appendChild(btnEdit);
+	cardBody.appendChild(btnRemove);
+  card.appendChild(cardBody);
+  li.appendChild(card);
+  li.appendChild(document.createElement('br'));
 
 	document.getElementById('beacons').appendChild(li);
-
 }
 
 function beaconSearch(){
@@ -553,8 +637,8 @@ function beaconSearch(){
 			if (snapshot.empty) {
 				console.log('No matching documents.');
 				return;
-			} 
-			//repopulate the dom	
+			}
+			//repopulate the dom
 			snapshot.forEach(doc => {
 				renderBeacons(doc);
 			  });
@@ -580,12 +664,28 @@ db.collection('beacons').orderBy('name').onSnapshot(snapshot => {
 //												Date & Time Picker
 //=======================================================================================================================
 
+/*$(document).onload( function() {
+  $( "#datePicker" ).datepicker();
+} );*/
 
-$(document).on("focus", ".datePicker", function(){
+
+
+//$(document).ready('.sDatePicker').datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
+
+
+$(document).on("focus", ".sDatePicker", function(){
 	$(this).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
 });
 
-$(document).on("focus", ".timePicker", function(){
+$(document).on("focus", ".eDatePicker", function(){
+	$(this).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
+});
+
+$(document).on("focus", ".sTimePicker", function(){
+	$(this).timepicker({});
+});
+
+$(document).on("focus", ".eTimePicker", function(){
 	$(this).timepicker({});
 });
 
@@ -600,7 +700,7 @@ firebase.auth().onAuthStateChanged(function(user){
 var logoutListener = document.querySelector("#logout");
 logoutListener.addEventListener('click',(e) =>{
 	firebase.auth().signOut().then(function(){
-		window.location.assign('./index.html');
+		window.location.assign('/index.html');
 	}).catch(function(error){
 		console.log(error);
 	})

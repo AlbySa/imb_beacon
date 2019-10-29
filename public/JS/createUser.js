@@ -16,7 +16,7 @@ firebase.initializeApp(firebaseConfig);
 //database connection
 const db = firebase.firestore();
 
-loginPrompt();
+//loginPrompt();
 
 var retrievedUserInformation = {};
 
@@ -63,7 +63,7 @@ const submitUser = document.querySelector('#submitNewUser');
 submitUser.addEventListener("submit", (e) =>{
     e.preventDefault();
     var userValues = {
-        firstName: submitNewUser['firstName'].value.toLowerCase(), 
+        firstName: submitNewUser['firstName'].value.toLowerCase(),
         lastName: submitNewUser['lastName'].value.toLowerCase(),
         email: submitNewUser['email'].value,
         dob: submitNewUser['dob'].value,
@@ -74,7 +74,7 @@ submitUser.addEventListener("submit", (e) =>{
     })
 })
 
-//Admin Login 
+//Admin Login
 const userLogin = document.querySelector("#userLogin");
 userLogin.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -86,10 +86,13 @@ userLogin.addEventListener("submit", (e) => {
     }
     $.post('http://localhost:9000/authenticatesysadmin', loginCredentials, function(data){
         if (data == false){
-            document.getElementById("loginErrorText").innerHTML = 'This user does not have administrative privileges'
+          firebase.auth().signInWithEmailAndPassword(loginCredentials.email, loginCredentials.password).catch(function (error){
+
+            document.getElementById("loginErrorText").innerHTML = 'This user does not have administrative privileges';
             document.getElementById("userLogin").reset();
-        }
-        else{
+        })
+      }
+        else {
             firebase.auth().signInWithEmailAndPassword(loginCredentials.email, loginCredentials.password).catch(function (error){
                 errorCode = error.code;
                 errorMessage = error.message;
@@ -144,7 +147,7 @@ function renderUserInformation(userInformation){
 
 }
 
-//create the form to edit user information 
+//create the form to edit user information
 function editUserInformationForm(userInformation){
     var userinfo = document.getElementById('userinformation');
     var html = "<form id = editUserInformation>";
@@ -218,7 +221,7 @@ tablerowvalue = '';
 
 function tablequery(){
     $(document).ready(function(){
-        $(".names").click(function(){  
+        $(".names").click(function(){
             tablerowvalue = $(this).children("td").get();
             $.post('http://localhost:9000/getuserinformation', {firstname: tablerowvalue[0].innerHTML, lastname: tablerowvalue[1].innerHTML}, function(data){
                 console.log(data);
