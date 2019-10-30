@@ -516,33 +516,31 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	//enable edit
 	btnEdit.addEventListener("click", function(event){
-		var parentID = event.target.closest('div').id;
-		console.log(document.getElementById(event.target.closest('div').id));
-		var enabledElements = document.getElementById(parentID).childNodes;
+		var id = event.target.parentNode;
+		console.log(id);
+		var enabledElements = id.childNodes;
 
 		for (var i = 0; i < enabledElements.length; i++) {
-			enabledElements[i].disabled = false;
+			if(i != 4)
+				enabledElements[i].disabled = false;
         }
 	});
 
 	//sends updated beacon to database
-	btnUpdate.addEventListener("click", (e) => {
+	btnUpdate.addEventListener("click", (event) => {
 		//update data
-		e.stopPropagation();
-		var parent = e.target.parentNode.id;
-		var disabledElements = document.getElementById(parent).children;
-		let chil = e.target.parentElement.children;
-		var id = chil[3].value;
-		console.log(disabledElements);
+		var id = event.target.parentNode;
+		var enabledElements = id.childNodes;
+		id = id.childNodes[4].value;
 
-		for (var i = 0; i < disabledElements.length-2; i++) {
-			disabledElements[i].disabled = true;
+		for (var i = 0; i < (enabledElements.length-2); i++) {
+			enabledElements[i].disabled = true;
         }
 
-			db.collection('beacons').doc(id).update({
-				name: chil[1].value,
-				event: chil[5].value
-			});
+		db.collection('beacons').doc(id).update({
+			name: enabledElements[1].value,
+			event: enabledElements[7].value
+		});
 	});
 
 	//deletes event
@@ -551,7 +549,6 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//event.stopPropagation();
 		var id = event.target.parentNode;
 		id = id.childNodes[4].value;
-		console.log(id);
 		if(confirm("Are you sure you want to delete this event?")){
 			//delete event
 			db.collection('beacons').doc(id).delete();
