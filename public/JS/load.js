@@ -15,7 +15,6 @@ firebase.initializeApp(firebaseConfig);
 //database connection
 const db = firebase.firestore();
 
-
 //------------------------------------------------------------------------------------------------------------------------
 
 //load event data
@@ -69,6 +68,9 @@ function renderEvents(doc){
 	btnRemove.type = 'button';
 	btnadd.type = 'button';
 	btnremBeacon.type = 'button';
+
+	//id dates
+	sDate.id = "sDatePicker";
 
 	//disable elements for editing
 	name.disabled = true;
@@ -146,6 +148,8 @@ function renderEvents(doc){
   let cardBody = document.createElement('div');
   card.className = 'card';
   cardBody.className = 'card-body';
+  card.id = doc.id;
+  cardBody.id = doc.id;
 
   //styling
   name.className += "form-control";
@@ -188,36 +192,49 @@ function renderEvents(doc){
 
 
 	//enable editing
-	btnEdit.addEventListener("click", function(){
-		var parentID = this.parentNode.id;
-		var enabledElements = document.getElementById(parentID).children;
+	btnEdit.addEventListener("click", function(event){
+		var parentID = event.target.closest('div').id;
+		var enabledElements = document.getElementById(parentID).childNodes;
+		enabledElements = enabledElements[0].childNodes;
+		enabledElements = enabledElements[0].childNodes;
 
 		for (var i = 0; i < enabledElements.length; i++) {
 			enabledElements[i].disabled = false;
+			if(i==3 || i==4)
+			{
+				var internal = enabledElements[i].childNodes;
+				internal[1].childNodes[0].disabled = false;
+				internal[3].childNodes[0].disabled = false;
+			}
         }
 	});
 
 	//send updated document to database
 	btnUpdate.addEventListener("click", (e) => {
 		//update data
-		e.stopPropagation();
-		var parent = e.target.parentNode.id;
-		var disabledElements = document.getElementById(parent).children;
+		var parentID = event.target.closest('div').id;
+		var enabledElements = document.getElementById(parentID).childNodes;
+		enabledElements = enabledElements[0].childNodes;
+		enabledElements = enabledElements[0].childNodes;
+		console.log(enabledElements);
 
-    let id = e.target.parentElement.getAttribute('data-id');
-		let chil = e.target.parentElement.children;
 
-		for (var i = 0; i < disabledElements.length-4; i++) {
-			disabledElements[i].disabled = true;
+		for (var i = 0; i < enabledElements.length-2; i++) {
+			enabledElements[i].disabled = true;
+			if(i == 14 || i ==16 || i ==17)
+			{
+				console.log(i);
+				enabledElements[i].disabled = false;
+			}
         }
 
 		db.collection('events').doc(id).update({
-			title: chil[1].value,
-			startDate: chil[3].children[3].children[0].value,
-			startTime: chil[3].children[1].children[0].value,
-			endDate: chil[4].children[3].children[0].value,
-			endTime: chil[4].children[1].children[0].value,
-			description: chil[12].value
+			title:  enabledElements[1].value,
+			startDate: enabledElements[3].children[3].children[0].value,
+			startTime: enabledElements[3].children[1].children[0].value,
+			endDate: enabledElements[4].children[3].children[0].value,
+			endTime: enabledElements[4].children[1].children[0].value,
+			description: enabledElements[12].value
 		})
 		.then((e) =>{
 			var rewardID = "";
@@ -225,7 +242,7 @@ function renderEvents(doc){
 				snapshot.forEach(doc => {
 					rewardID = doc.id;
 					db.collection('events').doc(id).collection('rewards').doc(rewardID).update({
-						Name: chil[9].value
+						Name: enabledElements[9].value
 					});
 				});
 			});
@@ -236,7 +253,8 @@ function renderEvents(doc){
 	btnRemove.addEventListener("click", (e) => {
 		//remove LI elements
 		e.stopPropagation();
-		let id = e.target.parentElement.getAttribute('data-id');
+		var id = event.target.closest('div').id;
+		console.log(id);
 		var beacID = "";
 		if(confirm("Are you sure you want to delete this event?")){
 			//remove event from beacons
@@ -262,7 +280,6 @@ function renderEvents(doc){
 		var eventID = e.target.parentElement.id;
 		//get beacon variable
 		var beaconID = addtoBeacon[addtoBeacon.selectedIndex].id;
-		var beaconname = addtoBeacon.value;
 		//add beacon document to event
 		db.collection('beacons').doc(beaconID).update({
 			event: eventID
@@ -270,7 +287,6 @@ function renderEvents(doc){
 	});
 
 	btnremBeacon.addEventListener("click", (e) => {
-		//@TODO remove beacons from the display list
 		e.stopPropagation();
 		//get beacon id
 		var eventID = e.target.parentElement.id;
@@ -394,17 +410,6 @@ function getVisits(documentID)
 	});
 }
 
-
-//-----------------------------------------------------------
-function currentDisplayBeacons(beaconList, bul){
-	for (var i = 0; i<beaconList.length; i++){
-		let bli = document.createElement('li');
-		bli.textContent = beaconList[i];
-		bul.style.display = 'none';
-		bul.appendChild(bli);
-	}
-}
-
 //limits displayed events to those that meet the search
 function eventSearch(){
 	var searchTerm = document.getElementById('eventsearch').value;
@@ -468,7 +473,7 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	//populate elements
 	li.setAttribute('data-id', doc.id);
-  li.setAttribute("id", "beaconListSteph")
+  li.setAttribute("id", doc.id)
 	nameLabel.textContent = 'Beacon Name:'
 	name.value = doc.data().name;
 	bIDLabel.textContent = 'Beacon ID:'
@@ -510,49 +515,15 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   btnRemove.style.color = 'white';
 
 	//enable edit
-	btnEdit.addEventListener("click", function(){
-		var parentID = this.parentNode.id;
-		var enabledElements = document.getElementById(parentID).children;
+	btnEdit.addEventListener("click", function(event){
+		var parentID = event.target.closest('div').id;
+		console.log(document.getElementById(event.target.closest('div').id));
+		var enabledElements = document.getElementById(parentID).childNodes;
 
 		for (var i = 0; i < enabledElements.length; i++) {
 			enabledElements[i].disabled = false;
         }
 	});
-
-	btnUpdate.addEventListener("click", (e) => {
-		//update data
-		e.stopPropagation();
-		var parent = e.target.parentNode.id;
-		var disabledElements = document.getElementById(parent).children;
-
-		for (var i = 0; i < disabledElements.length-3; i++) {
-			disabledElements[i].disabled = true;
-        }
-
-		let id = e.target.parentElement.getAttribute('data-id');
-		console.log(id);
-		let chil = e.target.parentElement.children;
-		db.collection('events').doc(id).update({
-			title: chil[0].value,
-			startDate: chil[1].value,
-			startTime: chil[2].value,
-			endDate: chil[3].value,
-			endTime: chil[4].value,
-			description: chil[6].value
-		})
-		.then((e) =>{
-			var rewardID = "";
-			db.collection('events').doc(id).collection('rewards').get().then(snapshot => {
-				snapshot.forEach(doc => {
-					rewardID = doc.id;
-					db.collection('events').doc(id).collection('rewards').doc(rewardID).update({
-						Name: chil[5].value
-					});
-				});
-			});
-		});
-	});
-
 
 	//sends updated beacon to database
 	btnUpdate.addEventListener("click", (e) => {
@@ -568,28 +539,23 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			disabledElements[i].disabled = true;
         }
 
-			/*db.collection('beacons').doc(id).update({
+			db.collection('beacons').doc(id).update({
 				name: chil[1].value,
 				event: chil[5].value
-			});*/
+			});
 	});
 
-	btnEdit.addEventListener("click", (e) => {
-		e.stopPropagation();
-		let chil = e.target.parentElement.children;
-
-		for (var i = 0; i < chil.length; i++) {
-			chil[i].disabled = false;
-        }
-	})
-
 	//deletes event
-	btnRemove.addEventListener("click", (e) => {
-		//remove LI elements
-		e.stopPropagation();
-		let id = e.target.parentElement.getAttribute('data-id');
-		if(confirm("Are you sure you want to delete this beacon?"))
+	btnRemove.addEventListener("click", (event) => {
+
+		//event.stopPropagation();
+		var id = event.target.parentNode;
+		id = id.childNodes[4].value;
+		console.log(id);
+		if(confirm("Are you sure you want to delete this event?")){
+			//delete event
 			db.collection('beacons').doc(id).delete();
+		}
 	});
 
 	name.disabled = true;
@@ -664,21 +630,15 @@ db.collection('beacons').orderBy('name').onSnapshot(snapshot => {
 //												Date & Time Picker
 //=======================================================================================================================
 
-/*$(document).onload( function() {
-  $( "#datePicker" ).datepicker();
-} );*/
-
-
-
-//$(document).ready('.sDatePicker').datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
-
-
-$(document).on("focus", ".sDatePicker", function(){
-	$(this).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
-});
-
-$(document).on("focus", ".eDatePicker", function(){
-	$(this).datepicker({ minDate: 0, dateFormat: 'dd-mm-yy' });
+$(document).ready(function() {
+	
+	$(document).on("focus", ".sDatePicker", function(){
+			$(this).datepicker({ 
+								minDate: 0, 
+								dateFormat: 'dd-mm-yy',
+								showOtherMonths: true,
+								selectOtherMonths: true});
+	});
 });
 
 $(document).on("focus", ".sTimePicker", function(){
