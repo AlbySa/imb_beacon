@@ -455,7 +455,7 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 	});
 });
 
-setInterval(updateVisits, 5000);
+setInterval(updateVisits, 30000);
 
 //=======================================================================================================================
 //												Beacon Render
