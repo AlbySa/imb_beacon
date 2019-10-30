@@ -49,6 +49,12 @@ function renderEvents(doc){
 	let addtoBeacon = document.createElement('select');
 	let btnadd = document.createElement('input');
 	let TimesVisited = document.createElement('p');
+	let load = document.createElement('img');
+
+	load.src = "https://www.borkistanbul.com/static/img/Loader.gif";
+	load.height = 50;
+	load.id = doc.id + "load";
+	load.position = "relative"
 
   sDate.classList.add("sDatePicker");
   eDate.classList.add("eDatePicker");
@@ -319,8 +325,7 @@ function renderEvents(doc){
 			addtoBeacon.appendChild(opt);
 		});
 	});
-
-	TimesVisited.textContent = "Getting Information....";
+;
 	TimesVisited.id = "visits" + doc.id;
 
   //append - steph
@@ -377,6 +382,7 @@ function renderEvents(doc){
 	cardBody.appendChild(document.createElement('br'));
 	cardBody.appendChild(document.createElement('br'));
 	cardBody.appendChild(TimesVisited);
+	TimesVisited.appendChild(load);
   card.appendChild(cardBody);
   li.appendChild(card);
   li.appendChild(document.createElement('br'));
@@ -387,34 +393,37 @@ function renderEvents(doc){
 //counts how many times the event has been visited
 function updateVisits(){
 	var visits = 0;
-	var curID = "";
 	//get count of visits
-	db.collection('events').get().then(snapshot => {
-		snapshot.forEach(doc =>{
-			documentID = doc.id;
-			el = document.getElementById("visits"+documentID)
-			el.textContent= "";
-		})
+	var events;
+	//get events from DOM
+	events = document.getElementById("events").childNodes;
+	for(var i = 1; i<events.length; i++)
+	{
+		console.log(events[i].id)
+		visits = 0;
+		console.log(visits);
+		documentID = events[i].id;
+		let el = document.getElementById("visits"+documentID);
+		//get user	
 		db.collection('users').get().then(snapshot => {
-			snapshot.forEach(doc =>{
-				curID = doc.id;
-				db.collection('users').doc(curID).collection('pastEvents').get().then(snapshot => {
-					snapshot.forEach(doc =>{
-						if(doc.id == documentID)
-						{
-							visits = visits +1;
-							if (visits > 0)
-								el.textContent = documentID  + " has been visited " + visits + " times.";
-							else if (visits == 1)
-								el.textContent = documentID + " has been visited 1 time."
-							else if (visits == 0)
-								el.textContent = documentID + " has not yet been attended yet.";
-						}
+		snapshot.forEach(doc =>{
+			curID = doc.id;
+			db.collection('users').doc(curID).collection('pastEvents').get().then(snapshot => {
+				snapshot.forEach(doc =>{
+					if(doc.id == documentID)
+					{
+						console.log(doc.id + visits);
+						visits = visits +1;
+						if (visits > 0)
+							el.textContent = "Visits: " + visits;
+						else if (visits == 0)
+							el.textContent = documentID + " has not yet been attended yet.";
+					}
 					});
 				});
 			});
 		});
-	});
+	}
 }
 
 //limits displayed events to those that meet the search
@@ -455,7 +464,7 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 	});
 });
 updateVisits();
-setInterval(updateVisits(), 30000);
+setInterval(updateVisits, 3000);
 
 //=======================================================================================================================
 //												Beacon Render
