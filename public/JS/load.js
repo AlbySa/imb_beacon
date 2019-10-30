@@ -115,7 +115,6 @@ function renderEvents(doc){
 	codeName.placeholder = "Discount Name";
 	description.textContent = doc.data().description;
 	btnEdit.id = "edit";
-	TimesVisited.textContent = getVisits(name.value);
 
   //divs for styling - steph
   //row 1
@@ -216,14 +215,12 @@ function renderEvents(doc){
 		var enabledElements = document.getElementById(parentID).childNodes;
 		enabledElements = enabledElements[0].childNodes;
 		enabledElements = enabledElements[0].childNodes;
-		console.log(enabledElements);
 
 
 		for (var i = 0; i < enabledElements.length-2; i++) {
 			enabledElements[i].disabled = true;
 			if(i == 14 || i ==16 || i ==17)
 			{
-				console.log(i);
 				enabledElements[i].disabled = false;
 			}
         }
@@ -254,7 +251,6 @@ function renderEvents(doc){
 		//remove LI elements
 		e.stopPropagation();
 		var id = event.target.closest('div').id;
-		console.log(id);
 		var beacID = "";
 		if(confirm("Are you sure you want to delete this event?")){
 			//remove event from beacons
@@ -320,6 +316,9 @@ function renderEvents(doc){
 		});
 	});
 
+	TimesVisited.textContent = "Getting Information....";
+	TimesVisited.id = "visits" + doc.id;
+
   //append - steph
   //row1 - for selecting dates
   dateRow1.appendChild(r1c1);
@@ -371,6 +370,9 @@ function renderEvents(doc){
 	cardBody.appendChild(btnUpdate);
 	cardBody.appendChild(btnEdit);
 	cardBody.appendChild(btnRemove);
+	cardBody.appendChild(document.createElement('br'));
+	cardBody.appendChild(document.createElement('br'));
+	cardBody.appendChild(TimesVisited);
   card.appendChild(cardBody);
   li.appendChild(card);
   li.appendChild(document.createElement('br'));
@@ -379,34 +381,35 @@ function renderEvents(doc){
 }
 
 //counts how many times the event has been visited
-function getVisits(documentID)
-{
-	var visits = 0
-
-
-	// Get reference to all of the documents
-	let documents = db.collection("users").get()
-	  .then(snapshot => {
-		snapshot.forEach(doc => {
-
-		  let subCollectionDocs = db.collection("users").doc(doc.id).collection("pastEvents").get()
-			.then(snapshot => {
-				visits ++;
-			  snapshot.forEach(doc => {
-				  if(doc.id == documentIDe.replace(/ /g,"_")){
-					  visits ++;
-				  }
-			  })
-			}).catch(err => {
-
-			})
+function updateVisits(){
+	var visits = 0;
+	var curID = "";
+	//get count of visits
+	db.collection('events').get().then(snapshot => {
+		snapshot.forEach(doc =>{
+			documentID = doc.id;
+			el = document.getElementById("visits"+documentID)
+			el.textContent= documentID  + " Has yet to revieve an atendee";
+		})
+		db.collection('users').get().then(snapshot => {
+			snapshot.forEach(doc =>{
+				curID = doc.id;
+				db.collection('users').doc(curID).collection('pastEvents').get().then(snapshot => {
+					snapshot.forEach(doc =>{
+						if(doc.id == documentID)
+						{
+							visits = visits +1;
+							if (visits > 0)
+								el.textContent = documentID  + " has been visited " + visits + " times.";
+							else if (visits == 1)
+								el.textContent = documentID + " has been visited 1 time."
+							else if (visits == 0)
+								el.textContent = documentID + " has not yet been attended yet.";
+						}
+					});
+				});
+			});
 		});
-	  }).catch(err => {
-	}).then(function(){
-	if (visits > 0)
-		return documentID  + " has been visited " + visits + " times";
-	else
-		return documentID + "has not yet been attended yet";
 	});
 }
 
@@ -429,7 +432,7 @@ function eventSearch(){
 			}
 			//repopulate the dom
 			snapshot.forEach(doc => {
-				renderEvents(doc);
+				renderEvents(doc)
 			  });
 		})
 }
@@ -447,6 +450,8 @@ db.collection('events').orderBy('title').onSnapshot(snapshot => {
 		}
 	});
 });
+
+setInterval(updateVisits, 5000);
 
 //=======================================================================================================================
 //												Beacon Render
@@ -517,7 +522,6 @@ function renderBeacons(doc){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//enable edit
 	btnEdit.addEventListener("click", function(event){
 		var id = event.target.parentNode;
-		console.log(id);
 		var enabledElements = id.childNodes;
 
 		for (var i = 0; i < enabledElements.length; i++) {
