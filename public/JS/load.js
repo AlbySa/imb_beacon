@@ -393,7 +393,7 @@ function updateVisits(){
 		snapshot.forEach(doc =>{
 			documentID = doc.id;
 			el = document.getElementById("visits"+documentID)
-			el.textContent= documentID  + " Has yet to revieve an atendee";
+			el.textContent= "";
 		})
 		db.collection('users').get().then(snapshot => {
 			snapshot.forEach(doc =>{
