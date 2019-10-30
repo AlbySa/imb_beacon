@@ -69,8 +69,12 @@ function renderEvents(doc){
 	btnadd.type = 'button';
 	btnremBeacon.type = 'button';
 
-	//id dates
-	sDate.id = "sDatePicker";
+	//id dates & TIme
+	sDate.id = "DatePicker";
+	eDate.id = "DatePicker";
+	sTime.id = "TimePicker";
+	eTime.id = "TimePicker";
+
 
 	//disable elements for editing
 	name.disabled = true;
@@ -633,21 +637,19 @@ db.collection('beacons').orderBy('name').onSnapshot(snapshot => {
 
 $(document).ready(function() {
 	
-	$(document).on("focus", ".sDatePicker", function(){
+	$(document).on("focus", "#DatePicker", function(){
 			$(this).datepicker({ 
 								minDate: 0, 
-								dateFormat: 'dd-mm-yy',
+								dateFormat: 'dd/mm/yy',
 								showOtherMonths: true,
 								selectOtherMonths: true});
 	});
-});
 
-$(document).on("focus", ".sTimePicker", function(){
-	$(this).timepicker({});
-});
-
-$(document).on("focus", ".eTimePicker", function(){
-	$(this).timepicker({});
+	$(document).on("focus", "#TimePicker", function(){
+		$(this).timepicker({});
+		console.log($(this));
+	});
+	
 });
 
 //Redirect if user is not signed in
