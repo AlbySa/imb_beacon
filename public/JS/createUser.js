@@ -16,7 +16,7 @@ firebase.initializeApp(firebaseConfig);
 //database connection
 const db = firebase.firestore();
 
-//loginPrompt();
+loginPrompt();
 
 var retrievedUserInformation = {};
 
