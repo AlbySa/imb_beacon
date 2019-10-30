@@ -390,25 +390,13 @@ function renderEvents(doc){
 	eventsList.appendChild(li);
 }
 
-//counts how many times the event has been visited
-function updateVisits(){
+async function count(documentID)
+{
 	var visits = 0;
-	//get count of visits
-	var events;
-	//get events from DOM
-	events = document.getElementById("events").childNodes;
-	for(var i = 1; i<events.length; i++)
-	{
-		console.log(events[i].id)
-		visits = 0;
-		console.log(visits);
-		documentID = events[i].id;
-		let el = document.getElementById("visits"+documentID);
-		//get user	
-		db.collection('users').get().then(snapshot => {
+	let el = document.getElementById("visits"+documentID);
+	db.collection('users').get().then(snapshot => {
 		snapshot.forEach(doc =>{
-			curID = doc.id;
-			db.collection('users').doc(curID).collection('pastEvents').get().then(snapshot => {
+			db.collection('users').doc(doc.id).collection('pastEvents').get().then(snapshot => {
 				snapshot.forEach(doc =>{
 					if(doc.id == documentID)
 					{
@@ -423,6 +411,21 @@ function updateVisits(){
 				});
 			});
 		});
+}
+
+//counts how many times the event has been visited
+function updateVisits(){
+	//get count of visits
+	var events;
+	//get events from DOM
+	events = document.getElementById("events").childNodes;
+
+	for(var i = 1; i<events.length; i++)
+	{
+		console.log(events[i].id)
+		documentID = events[i].id;
+		//get user	
+		count(documentID);
 	}
 }
 
