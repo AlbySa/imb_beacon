@@ -107,8 +107,12 @@
               <label for="dob">Date of Birth: </label>
               <input type="text" class="form-control" name="dob" id ="dob">
 
-              <label for="phonenumber">Phone Number: </label>
-              <input type="text" class="form-control" name="phonenumber" id="phonenumber">
+              <label for="phnumber">Phone Number: </label>
+              <input type="text" class="form-control" name="phnumber" id="phnumber">
+
+              <label for="password">Password: </label>
+              <input type = "password" class="form-control" name = "psswd" id="password">
+
               <br>
               <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="Add User">
             </form>
@@ -119,13 +123,22 @@
           <h1>Search for an Account</h1>
           <div class="form-group">
             <form method = "POST" id = "searchUsers">
-               <label for="emailSearch"> Enter the desired user's email: </label>
+               <label for="emailSearch"> search by user's email: </label>
                <div class="row">
                  <div class="col">
-                   <input type="email" name="emailsearch" class="form-control" id='emailsearch'>
+                   <input type="email" name="emailSearch" class="form-control" id='emailSearch'>
                  </div>
-                 <div class="col">
-                   <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="Search">
+                 <label for = "fnameSearch">search by first name: </label>
+                 <div class="row">
+                  <div class="col">
+                    <input type = "text" name = "fnameSearch" id = 'fnameSearch'>
+                  </div>
+                  <label for = "lnameSearch">search by last name: </label>
+                  <div class="row">
+                    <div class="col">
+                      <input type = "text" name = "lnameSearch" id = 'lnameSearch'> 
+                    </div>
+                   <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="search">
                  </div>
                </div>
             </form>

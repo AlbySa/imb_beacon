@@ -1,5 +1,5 @@
 //Written By Max Huber
-// Firebase Configuration
+//Firebase Configuration
 var firebaseConfig = {
     apiKey: "AIzaSyBWmDzF9QNXx40-IClE-NOnR7C10Dur7HQ",
     authDomain: "pineappleproximity.firebaseapp.com",
@@ -23,10 +23,11 @@ var retrievedUserInformation = {};
 
 function renderUsers(userInformation){
     var usersList = document.getElementById("useraccounts");
-    var html = "<table border = 0 id= 'userstable'>";
-    html += "<tr><th>First name</th><th>Last Name</th><th>Delete</th></tr>";
+	var html = "<h1> User Information </h1>";
+    html += "<table border = 0 id= 'userstable' style = 'width: 500px; margin-bottom: 70px'>";
+    html += "<tr><th>First name</th><th>Last Name</th></tr>";
     for (var i = 0; i < userInformation.length; i++){
-        html +="<tr class = 'names'>";
+        html +="<tr class = 'names' style = 'cursor: pointer;'>";
         html +="<td>" + userInformation[i].fname + "</td><td>"+ userInformation[i].lname  + '</td>';
         html +="</tr>"
     }
@@ -67,7 +68,8 @@ submitUser.addEventListener("submit", (e) =>{
         lastName: submitNewUser['lastName'].value.toLowerCase(),
         email: submitNewUser['email'].value,
         dob: submitNewUser['dob'].value,
-        phonenumber: submitNewUser['phonenumber'].value
+        phnumber: submitNewUser['phnumber'].value,
+        psswd: submitNewUser['psswd'].value
         }
     $.post('http://localhost:9000/createuser', userValues, function(data){
         document.getElementById('createUserMessage').innerHTML = data;
@@ -120,9 +122,11 @@ function logoutSysAdmin() {
 
 tablerowvalue = '';
 
+
+//Function renders user information upon database query 
 function renderUserInformation(userInformation){
     var userinfo = document.getElementById('userinformation');
-    var html = "<table border = 0 id ='singleusertable'>";
+    var html = "<table border = 0 id ='singleusertable' style = 'width: 500px'>";
     html += "<tr>";
     html += "<td> First Name: </td><td>" + userInformation.fname +"</td>"
     html += "</tr>";
@@ -135,7 +139,7 @@ function renderUserInformation(userInformation){
     html += "<td> Date of Birth: </td><td>" + userInformation.dob +"</td>"
     html += "</tr>";
     html += "<tr>";
-    html += "<td> Phone Number: </td><td>" + userInformation.phonenumber +"</td>"
+    html += "<td> Phone Number: </td><td>" + userInformation.phnumber +"</td>"
     html += "</tr>";
     html +="</table>";
     html +="<button id = 'deleteUserButton'> delete user </button> <button id = 'editInformation'>Edit info</button>";
@@ -151,22 +155,24 @@ function renderUserInformation(userInformation){
 function editUserInformationForm(userInformation){
     var userinfo = document.getElementById('userinformation');
     var html = "<form id = editUserInformation>";
-    html += "<label for = 'firstname'>First name: </label>";
+    html += "<label for = 'firstname' style = 'margin-right: 50px'>First name: </label>";
     html +="<input type = 'text' name ='firstname' id='firstnameedit' value = '"+ userInformation.fname + "'>";
-    html +="<br /><label for ='lastname'>lastname: </label>";
+    html +="<br /><label for ='lastname' style = 'margin-right: 50px'>lastname: </label>";
     html +="<input type ='text' name='lastname' id='lastnameedit' value = '"+ userInformation.lname + "'>";
-    html +="<br /><label for ='email'>lemail: </label>";
+    html +="<br /><label for ='email' style = 'margin-right: 50px'>lemail: </label>";
     html +="<input type ='text' name='email' id='emailedit' value = '"+ userInformation.email + "'>";
-    html +="<br /><label for ='dob'>d.o.b: </label>";
+    html +="<br /><label for ='dob' style = 'margin-right: 50px'>d.o.b: </label>";
     html +="<input type ='text' name='dob' id='dobedit' value = '"+ userInformation.dob + "'>";
-    html +="<br /><label for ='phoneNumber'>Phone Number: </label>";
-    html +="<input type ='text' name='phoneNumber' id='phoneNumberedit' value = '"+ userInformation.phonenumber + "'>";
+    html +="<br /><label for ='phoneNumber' style = 'margin-right: 50px'>Phone Number: </label>";
+    html +="<input type ='text' name='phnumber' id='phoneNumberedit' value = '"+ userInformation.phnumber + "'>";
     html +="<br /><input type ='submit' name ='updateUser' id = 'updateusersubmit'> <button id = 'cancelEdit'> cancel </button>";
     userinfo.innerHTML = html;
 
     submitEditedUserListener(userInformation);
 }
 
+
+//Edit User Event Listener 
 function editUserEventListener(userInformation){
     var editUserButton = document.querySelector("#editInformation");
     editUserButton.addEventListener('click', (e) =>{
@@ -182,7 +188,7 @@ function submitEditedUserListener(userInformation){
         newlname: submitEditedUser['lastname'].value,
         newemail: submitEditedUser['email'].value,
         newdob: submitEditedUser['dob'].value,
-        newphonenumber: submitEditedUser['phoneNumber'].value,
+        newphonenumber: submitEditedUser['phnumber'].value,
         oldfname: userInformation.fname,
         oldlname: userInformation.lname,
         oldemail: userInformation.email
@@ -212,6 +218,8 @@ function deleteUser(userInformation){
     delUserButton.addEventListener('click', (e) => {
         $.post('http://localhost:9000/deleteUser', {fname: userInformation.fname, lname: userInformation.lname, email: userInformation.email}, function(data){
             document.getElementById('accountdeleteinfo').innerHTML = data;
+            document.getElementById('userinformation').innerHTML = '';
+            document.getElementById('useraccounts').innerHTML = '';
         })
     })
 }
@@ -232,15 +240,16 @@ function tablequery(){
     })
 }
 
-
+//listener on search button. Retrieves users from database
 const userSearch = document.querySelector("#searchUsers");
 userSearch.addEventListener("submit", (e) =>{
     e.preventDefault();
-    var emailSearch = {email: searchUsers['emailsearch'].value};
-    emailSearch.email.trim();
-    console.log(emailSearch);
-    $.post('http://localhost:9000/searchUser', emailSearch, function(data){
+    var search = {email: searchUsers['emailSearch'].value,
+    fname: searchUsers['fnameSearch'].value,
+    lname: searchUsers['lnameSearch'].value};
+    $.post('http://localhost:9000/searchUser', search, function(data){
         console.log(data);
+        document.getElementById('accountdeleteinfo').innerHTML = '';
         userData = JSON.parse(data);
         renderUsers(userData);
     });

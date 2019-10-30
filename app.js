@@ -48,13 +48,13 @@ app.post('/createuser', urlPostParser ,function(req, res){
                         fname: body.firstName,
                         isAdmin: true,
                         lname: body.lastName,
-                        phnumber: body.phonenumber
+                        phnumber: body.phnumber
                     });
                     admin.auth().createUser({
                         email: body.email,
-                        password: 'ChangeMe'
+                        password: body.psswd
                     }).catch(function(error){
-                        console.log('Error Updating User:', error)
+                        console.log('Error Creating User:', error)
                         res.send(error);
                     })
                 }
@@ -98,20 +98,20 @@ app.get('/requestUsers', function(req, res, next){
 //Query database for search 
 app.post('/searchUser', urlPostParser, function(req, res){
     var body = req.body;
+    console.log(body);
     var queryResponse = [];
-    var usersRef = db.collection('users').where('email','==', body.email).get()
-    .then((snapshot)=>{
-        if(snapshot.empty){
-            console.log('No matching emails were found');
-        }
-        snapshot.forEach(doc =>{
-            queryResponse.push(doc.data());
+    var usersRef = db.collection('users').get();
+        usersRef.then(snapshot =>{
+            snapshot.forEach(doc =>{
+                if (doc.data().email == body.email || doc.data().fname == body.fname || doc.data().lname == body.lname){
+                    queryResponse.push(doc.data());
+                }
         })
     }).catch(err =>{
-        console.log('error retrieving data', err);
-    }).then(()=>{        
+        console.log('error creating search query');
+    }).then(() =>{
         usersJSON = JSON.stringify(queryResponse);
-        res.send(usersJSON);
+        res.send(usersJSON);    
     })
 })
 
@@ -196,6 +196,7 @@ app.post('/updateuserinformation', urlPostParser, function(req, res){
         lname: body.newlname,
         email: body.newemail,
         dob: body.newdob,
+        isAdmin: true,
         phonenumber: body.newphonenumber
     }
     var userRef = db.collection('users').where('fname','==', body.oldfname).where('lname','==', body.oldlname).get();
@@ -216,7 +217,7 @@ app.post('/updateuserinformation', urlPostParser, function(req, res){
                 email: body.newemail
             });
         }).catch(err =>{
-            console.log('emailupdate failed');
+            console.log('email update failed');
         })
     }).catch(err =>{
         console.log("error occurred updating database: ", err);

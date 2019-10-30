@@ -54,7 +54,8 @@ form.addEventListener('submit', (e) =>{
 			})
 			.then(function(){
 				db.collection('events').doc(eNameNo).collection('rewards').doc(eventCodeName).set({
-					Name:eventCode
+					name:eventCodeName,
+					description:eventCode,
 				});
 				var uuid = "";
 				for (var i = 0; i < beaconListIDArray.length; i++){
