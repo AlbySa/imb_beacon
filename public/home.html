@@ -57,49 +57,50 @@
     </nav>
 
     <!--Events List-->
-    <div class="container">
-      <br>
-      <h1>View and Search Events</h1>
-    </div>
-    <br>
+    <div class="container-fluid">
+      <div class="mx-auto" style="width: 800px;">
+        <br>
+        <h1>View and Search Events</h1>
+        <br>
 
-		<div class="container" style="width: 50vw; margin-left: 5vw;" id ="beaconDisplayWindow">
-      <h5>Search Events</h5>
-        <div class="row">
-          <div class="col">
-            <input class="form-control" type="text" id="eventsearch"/>
-          </div>
-          <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch()">Search</button>
-          </div>
+    		<div id ="beaconDisplayWindow">
+          <h5>Search Events</h5>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" type="text" id="eventsearch"/>
+              </div>
+              <div class="col">
+                <button class="btn" style="background-color:#007f6a; color:white;" id="eventSearchButton" onclick="eventSearch()">Search</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <ul id="events" style="margin-left: -40px;" class="events">
+
+              </ul>
+            </div>
         </div>
         <br>
-        <div class="container" style="width: 50vw; margin-left: -55px;">
-          <ul id="events" class="events">
 
-          </ul>
-        </div>
-    </div>
+        <!--Beacon List-->
+        <div id="EventDisplayWindow">
+          <h1>View and Search Beacons</h1>
+          <h5>Search Beacons</h5>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" type = "text" id = "beaconsearch"/>
+              </div>
+              <div class="col">
+                <button class="btn" style="background-color:#007f6a; color:white;" id="beaconSearchButton" onclick="beaconSearch()">Search</button>
+              </div>
+            </div>
+          <br>
+          <div style="margin-left: -40px;">
+            <ul id="beacons">
 
-    <br>
-
-    <!--Beacon List-->
-    <div class="container" style="width: 50vw; margin-left: 5vw;" id="EventDisplayWindow">
-      <h1>View and Search Beacons</h1>
-      <h5>Search Beacons</h5>
-        <div class="row ">
-          <div class="col">
-            <input class="form-control" type = "text" id = "beaconsearch"/>
+            </ul>
           </div>
-          <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" id="beaconSearchButton" onclick="beaconSearch()">Search</button>
-          </div>
         </div>
-      <br>
-      <div class="container" style="width: 50vw; margin-left: -55px;">
-        <ul id="beacons">
-
-        </ul>
       </div>
     </div>
 

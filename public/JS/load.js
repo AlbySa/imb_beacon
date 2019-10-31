@@ -405,7 +405,7 @@ async function count(documentID)
 						if (visits > 0)
 							el.textContent = "Visits: " + visits;
 						else if (visits == 0)
-							el.textContent = documentID + " has not yet been attended yet.";
+							el.textContent = "Visits:....";
 					}
 					});
 				});
@@ -424,7 +424,7 @@ function updateVisits(){
 	{
 		console.log(events[i].id)
 		documentID = events[i].id;
-		//get user	
+		//get user
 		count(documentID);
 	}
 }
@@ -648,10 +648,10 @@ db.collection('beacons').orderBy('name').onSnapshot(snapshot => {
 //=======================================================================================================================
 
 $(document).ready(function() {
-	
+
 	$(document).on("focus", "#DatePicker", function(){
-			$(this).datepicker({ 
-								minDate: 0, 
+			$(this).datepicker({
+								minDate: 0,
 								dateFormat: 'dd/mm/yy',
 								showOtherMonths: true,
 								selectOtherMonths: true});
@@ -661,7 +661,7 @@ $(document).ready(function() {
 		$(this).timepicker({});
 		console.log($(this));
 	});
-	
+
 });
 
 //Redirect if user is not signed in

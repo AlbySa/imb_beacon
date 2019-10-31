@@ -22,13 +22,13 @@
   	<!--Date & Time Picker-->
   	<script>
   		$(document).ready(function(){
-  			$( "#sdatepicker" ).datepicker({ 
-                              minDate: 0, 
+  			$( "#sdatepicker" ).datepicker({
+                              minDate: 0,
                               dateFormat: 'dd/mm/yy',
                               showOtherMonths: true,
                               selectOtherMonths: true});
-  			$( "#edatepicker" ).datepicker({ 
-                              minDate: 0, 
+  			$( "#edatepicker" ).datepicker({
+                              minDate: 0,
                               dateFormat: 'dd/mm/yy',
                               showOtherMonths: true,
                               selectOtherMonths: true});
@@ -74,98 +74,100 @@
       </div>
     </nav>
 
-    <br>
-    <!--Form details-->
-    <div class="container">
-      <h1>Create an Event</h1>
+    <div class="container-fluid">
+      <div class="mx-auto" style="width: 800px;">
+        <br>
+        <!--Form details-->
+        <h1>Create an Event</h1>
+        <br>
+    		<div>
+    			<form id="eventForm" autocomplete="off">
+    				<!--event name-->
+    				<div class="form-group">
+    				  <label for="eName">Name:</label>
+    				  <input type="text" class="form-control" name ="eName" id = "eName" required = "true" onchange="CheckFileName()">
+    				</div>
+    				<!--sDate time-->
+
+            <div class="form-group row">
+              <div class="col">
+                Start Date:
+                <input class="form-control" type="text" name="startDate" id = "sdatepicker" required = "true">
+              </div>
+              <div class="col">
+                  Start Time:
+                  <input class="form-control" type="text" name="startTime" id = "sTime" required = "true">
+              </div>
+            </div>
+            <div class="form-group row">
+      				<!--end Date-->
+              <div class="col">
+                End Date: <input class="form-control" type="text" name="endDate" id = "edatepicker" required = "true">
+              </div>
+              <div class="col">
+                End Time: <input class="form-control" type="text" name="endTime" id = "eTime" required = "true">
+              </div>
+            </div>
+
+            <!--Image Upload-->
+            <div class="form-group row">
+              <div class="col">
+                <br>
+                Select your Image (800x480):
+              </div>
+              <div class="col">
+                <br>
+                <label class="btn" style="background-color:#007f6a; color:white;">
+                  Click to Select File<input type="file" name="myFile" id = "ImageUpload" accept="image/png" style="display: none;" onchange="addImage()"; disabled = "true">
+                </label>
+              </div>
+            </div>
+
+
+            <!--Beacon Select-->
+            <div class="form-group row">
+              <div class="col">
+                Select your beacon:
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col">
+                <select class="form-control" name="beacons" id ='beaconList' >
+                  <option>None</option>
+                </select>
+              </div>
+              <div class="col">
+                <button class="btn" style="background-color:#007f6a; color:white;" type='button' id ='addDisplayingBeacon' onClick='addBeacon()'>Add Beacon</button></p>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col">
+                Chosen beacons will be displayed here:
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" name="beaconListString" id ="blist" disabled='true' style = "background-color: white; color:black" required="true">
+              </div>
+            </div>
+
+    				<!--discount Code-->
+    				<div class="form-group">
+    					<label for="dCode">Promo Name:</label>
+    					<input type="text" class="form-control" name="dCodeName" id = "dCodeName">
+    				  </div>
+    				<div class="form-group">
+    				  <label for="dCode">Promo Description:</label>
+    				  <input type="text" class="form-control" name="dCode" id = "dCode">
+    				</div>
+    				<!--Event Description-->
+    				<div class="form-group">
+    				  <label for="eventD">Event Description:</label>
+    				  <textarea class="form-control" rows="5" name ="eventD" id = "eventD" required = "true"></textarea>
+    				</div>
+    				<input style="background-color:#007f6a; color:white;" class="btn" type="submit" value="Submit">
+    			</form>
+    		</div>
+      </div>
     </div>
-    <br>
-		<div class="container" style="width: 50vw; margin-left: 5vw;">
-			<form id="eventForm" autocomplete="off">
-				<!--event name-->
-				<div class="form-group">
-				  <label for="eName">Name:</label>
-				  <input type="text" class="form-control" name ="eName" id = "eName" required = "true" onchange="CheckFileName()">
-				</div>
-				<!--sDate time-->
-
-        <div class="form-group row">
-          <div class="col">
-            Start Date:
-            <input class="form-control" type="text" name="startDate" id = "sdatepicker" required = "true">
-          </div>
-          <div class="col">
-              Start Time:
-              <input class="form-control" type="text" name="startTime" id = "sTime" required = "true">
-          </div>
-        </div>
-        <div class="form-group row">
-  				<!--end Date-->
-          <div class="col">
-            End Date: <input class="form-control" type="text" name="endDate" id = "edatepicker" required = "true">
-          </div>
-          <div class="col">
-            End Time: <input class="form-control" type="text" name="endTime" id = "eTime" required = "true">
-          </div>
-        </div>
-
-        <!--Image Upload-->
-        <div class="form-group row">
-          <div class="col">
-            <br>
-            Select your Image (800x480):
-          </div>
-          <div class="col">
-            <br>
-            <label class="btn" style="background-color:#007f6a; color:white;">
-              Click to Select File<input type="file" name="myFile" id = "ImageUpload" accept="image/png" style="display: none;" onchange="addImage()"; disabled = "true">
-            </label>
-          </div>
-        </div>
-
-
-        <!--Beacon Select-->
-        <div class="form-group row">
-          <div class="col">
-            Select your beacon:
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col">
-            <select class="form-control" name="beacons" id ='beaconList' >
-              <option>None</option>
-            </select>
-          </div>
-          <div class="col">
-            <button class="btn" style="background-color:#007f6a; color:white;" type='button' id ='addDisplayingBeacon' onClick='addBeacon()'>Add Beacon</button></p>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col">
-            Chosen beacons will be displayed here:
-          </div>
-          <div class="col">
-            <input class="form-control" type="text" name="beaconListString" id ="blist" disabled='true' style = "background-color: white; color:black" required="true">
-          </div>
-        </div>
-
-				<!--discount Code-->
-				<div class="form-group">
-					<label for="dCode">Promo Name:</label>
-					<input type="text" class="form-control" name="dCodeName" id = "dCodeName">
-				  </div>
-				<div class="form-group">
-				  <label for="dCode">Promo Description:</label>
-				  <input type="text" class="form-control" name="dCode" id = "dCode">
-				</div>
-				<!--Event Description-->
-				<div class="form-group">
-				  <label for="eventD">Event Description:</label>
-				  <textarea class="form-control" rows="5" name ="eventD" id = "eventD" required = "true"></textarea>
-				</div>
-				<input style="background-color:#007f6a; color:white;" class="btn" type="submit" value="Submit">
-			</form>
-		</div>
 
     <div class="container-fluid align-items-end">
       <hr>

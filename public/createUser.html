@@ -81,72 +81,65 @@
 
         <br>
         <div class="container-fluid">
-          <div class="row">
-            <div class="col">
-              <h1 style="margin-left: 5vw;">Create User</h1>
-            </div>
-            <div class="col float-right">
-              <button id='logoutSysAdmin' class="btn float-right" style="background-color:#007f6a; color:white;" onClick = "logoutSysAdmin()">Logout</button>
-            </div>
-          </div>
-        </div>
-        <br>
+          <div class="mx-auto" style="width: 800px;">
+              <div class="row">
+                <div class="col">
+                  <h1>Create User</h1>
+                </div>
+                <div class="col float-right">
+                  <button id='logoutSysAdmin' class="btn float-right" style="background-color:#007f6a; color:white;" onClick = "logoutSysAdmin()">Logout</button>
+                </div>
+              </div>
+            <br>
 
-        <div class="container" style="width: 50vw; margin-left: 5vw;">
-          <div class="form-group">
-            <form method="POST" id ="submitNewUser">
-              <label for = "first name">First Name: </label>
-              <input type="text" class="form-control" name="firstName" id="firstName">
+            <div>
+              <div class="form-group">
+                <form method="POST" id ="submitNewUser">
+                  <label for = "first name">First Name: </label>
+                  <input type="text" class="form-control" name="firstName" id="firstName">
 
-              <label for="last name">Last Name: </label>
-              <input type="text" class="form-control" name="lastName" id="lastName">
+                  <label for="last name">Last Name: </label>
+                  <input type="text" class="form-control" name="lastName" id="lastName">
 
-              <label for="email">Email: </label>
-              <input type="email" class="form-control" name="email" id="email">
+                  <label for="email">Email: </label>
+                  <input type="email" class="form-control" name="email" id="newemail">
 
-              <label for="dob">Date of Birth: </label>
-              <input type="text" class="form-control" name="dob" id ="dob">
+                  <label for="dob">Date of Birth: </label>
+                  <input type="text" class="form-control" name="dob" id ="dob">
 
-              <label for="phnumber">Phone Number: </label>
-              <input type="text" class="form-control" name="phnumber" id="phnumber">
+                  <label for="phnumber">Phone Number: </label>
+                  <input type="text" class="form-control" name="phnumber" id="phnumber">
 
-              <label for="password">Password: </label>
-              <input type = "password" class="form-control" name = "psswd" id="password">
+                  <label for="password">Password: </label>
+                  <input type = "password" class="form-control" name = "psswd" id="newpassword">
 
+                  <br>
+                  <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="Add User">
+                </form>
+              </div>
               <br>
-              <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="Add User">
-            </form>
-          </div>
-          <br>
 
-          <p><span id="createUserMessage"></span></p>
-          <h1>Search for an Account</h1>
-          <div class="form-group">
-            <form method = "POST" id = "searchUsers">
-               <label for="emailSearch"> search by user's email: </label>
-               <div class="row">
-                 <div class="col">
-                   <input type="email" name="emailSearch" class="form-control" id='emailSearch'>
-                 </div>
-                 <label for = "fnameSearch">search by first name: </label>
-                 <div class="row">
-                  <div class="col">
-                    <input type = "text" name = "fnameSearch" id = 'fnameSearch'>
-                  </div>
-                  <label for = "lnameSearch">search by last name: </label>
-                  <div class="row">
-                    <div class="col">
-                      <input type = "text" name = "lnameSearch" id = 'lnameSearch'> 
-                    </div>
-                   <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="search">
-                 </div>
-               </div>
-            </form>
-          </div>
+              <p><span id="createUserMessage"></span></p>
+              <h1>Search for an Account</h1>
+              <div class="form-group">
+                <form method = "POST" id = "searchUsers">
+                  <label for="emailSearch"> Search for a user's email: </label>
+                  <input type="email" name="emailSearch" class="form-control" id='emailSearch'>
 
-          <span id="useraccounts"></span>
-          <span id="userinformation"></span>
-          <p><span id="accountdeleteinfo"></span></p>
+                  <label for = "fnameSearch">Search by first name: </label>
+                  <input type = "text" class="form-control" name="fnameSearch" id = 'fnameSearch'>
+
+                  <label for = "lnameSearch">Search by last name: </label>
+                  <input type = "text" class="form-control" name = "lnameSearch" id = 'lnameSearch'>
+                  <br>
+                  <input type="submit" class="btn" style="background-color:#007f6a; color:white;" value="Search">
+                </form>
+              </div>
+              <span id="useraccounts"></span>
+              <span id="userinformation"></span>
+              <p><span id="accountdeleteinfo"></span></p>
+            </div>
+          </div>
         </div>
 
 

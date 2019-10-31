@@ -24,14 +24,15 @@ var retrievedUserInformation = {};
 function renderUsers(userInformation){
     var usersList = document.getElementById("useraccounts");
 	var html = "<h1> User Information </h1>";
-    html += "<table border = 0 id= 'userstable' style = 'width: 500px; margin-bottom: 70px'>";
-    html += "<tr><th>First name</th><th>Last Name</th></tr>";
+    html += "<table border = 0 id= 'userstable' class='table' style = 'width: 500px; margin-bottom: 70px'>";
+    html += "<tr><th>First name</th><th colspan='2'>Last Name</th></tr>";
     for (var i = 0; i < userInformation.length; i++){
         html +="<tr class = 'names' style = 'cursor: pointer;'>";
         html +="<td>" + userInformation[i].fname + "</td><td>"+ userInformation[i].lname  + '</td>';
-        html +="</tr>"
+        html +="<td><input type='submit' class='btn-sm' style='background-color:#007f6a; color:white;' value='View Details'></td>";
+        html +="</tr>";
     }
-    html+= "</table>"
+    html+= "</table>";
     usersList.innerHTML = html;
     tablequery();
 }
@@ -123,10 +124,10 @@ function logoutSysAdmin() {
 tablerowvalue = '';
 
 
-//Function renders user information upon database query 
+//Function renders user information upon database query
 function renderUserInformation(userInformation){
     var userinfo = document.getElementById('userinformation');
-    var html = "<table border = 0 id ='singleusertable' style = 'width: 500px'>";
+    var html = "<table border = 0 class='table' id ='singleusertable' style = 'width: 500px'>";
     html += "<tr>";
     html += "<td> First Name: </td><td>" + userInformation.fname +"</td>"
     html += "</tr>";
@@ -142,7 +143,7 @@ function renderUserInformation(userInformation){
     html += "<td> Phone Number: </td><td>" + userInformation.phnumber +"</td>"
     html += "</tr>";
     html +="</table>";
-    html +="<button id = 'deleteUserButton'> delete user </button> <button id = 'editInformation'>Edit info</button>";
+    html +="<button class='btn' style='background-color:#007f6a; color:white;' id = 'deleteUserButton'>Delete User</button> <button style='background-color:#007f6a; color:white;' class='btn' id='editInformation'>Edit Information</button>";
     html +="</div>"
     userinfo.innerHTML = html;
     retrievedUserInformation = userInformation;
@@ -154,25 +155,25 @@ function renderUserInformation(userInformation){
 //create the form to edit user information
 function editUserInformationForm(userInformation){
     var userinfo = document.getElementById('userinformation');
-    var html = "<form id = editUserInformation>";
+    var html = "<form class='form-group' id = editUserInformation>";
     html += "<label for = 'firstname' style = 'margin-right: 50px'>First name: </label>";
-    html +="<input type = 'text' name ='firstname' id='firstnameedit' value = '"+ userInformation.fname + "'>";
+    html +="<input class='form-control' type = 'text' name ='firstname' id='firstnameedit' value = '"+ userInformation.fname + "'>";
     html +="<br /><label for ='lastname' style = 'margin-right: 50px'>lastname: </label>";
-    html +="<input type ='text' name='lastname' id='lastnameedit' value = '"+ userInformation.lname + "'>";
+    html +="<input class='form-control' type ='text' name='lastname' id='lastnameedit' value = '"+ userInformation.lname + "'>";
     html +="<br /><label for ='email' style = 'margin-right: 50px'>lemail: </label>";
-    html +="<input type ='text' name='email' id='emailedit' value = '"+ userInformation.email + "'>";
+    html +="<input class='form-control' type ='text' name='email' id='emailedit' value = '"+ userInformation.email + "'>";
     html +="<br /><label for ='dob' style = 'margin-right: 50px'>d.o.b: </label>";
-    html +="<input type ='text' name='dob' id='dobedit' value = '"+ userInformation.dob + "'>";
+    html +="<input class='form-control' type ='text' name='dob' id='dobedit' value = '"+ userInformation.dob + "'>";
     html +="<br /><label for ='phoneNumber' style = 'margin-right: 50px'>Phone Number: </label>";
-    html +="<input type ='text' name='phnumber' id='phoneNumberedit' value = '"+ userInformation.phnumber + "'>";
-    html +="<br /><input type ='submit' name ='updateUser' id = 'updateusersubmit'> <button id = 'cancelEdit'> cancel </button>";
+    html +="<input class='form-control' type ='text' name='phnumber' id='phoneNumberedit' value = '"+ userInformation.phnumber + "'>";
+    html +="<br /><input type ='submit' class='btn' style='background-color:#007f6a; color:white;' name ='Update User' id = 'updateusersubmit'> <button class='btn' style='background-color:#007f6a; color:white;' id='cancelEdit'>Cancel</button>";
     userinfo.innerHTML = html;
 
     submitEditedUserListener(userInformation);
 }
 
 
-//Edit User Event Listener 
+//Edit User Event Listener
 function editUserEventListener(userInformation){
     var editUserButton = document.querySelector("#editInformation");
     editUserButton.addEventListener('click', (e) =>{
