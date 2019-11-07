@@ -465,17 +465,19 @@ class MyAccountState extends State<MyAccount> {
         stream: Firestore.instance.collection('users').document(user.user.uid).collection('pastEvents').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) return new Text("Now Loading...");
-          return ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot document = snapshot.data.documents[index];
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0,left:8.0,top: 2.0),
-                child: createCard(document),
-              );
-            },
+          return Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = snapshot.data.documents[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0,left:8.0,top: 2.0),
+                  child: createCard(document),
+                );
+              },
+            ),
           );
         }
     );
@@ -508,6 +510,6 @@ class MyAccountState extends State<MyAccount> {
           ),
     );
   }
-  }
+}
 
 
