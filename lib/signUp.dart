@@ -331,6 +331,7 @@ class SignUpFormState extends State<SignUpForm> {
       "lname": _lname,
       "phnumber": _phnumber,
       "dob": _date,
+      "isAdmin": false,
     });
 
   }

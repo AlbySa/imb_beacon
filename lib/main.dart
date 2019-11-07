@@ -397,7 +397,12 @@ class LoginFormState extends State<LoginForm> {
             else if(activeBeacon.documentID != beaconSnapshot.documentID && activeEvent.documentID == eventSnapshot.documentID){
               print("Connecting");
 
-              connectBeacon(beaconSnapshot, eventSnapshot);
+              //connectBeacon(beaconSnapshot, eventSnapshot);
+              eventTime = DateTime.now();
+              activeBeacon = beaconSnapshot;
+              //activeBeaconName = beaconSnapshot.documentID;
+              activeBeaconName = beaconSnapshot.data['name'];
+
             }
 
             //New beacon / different event
